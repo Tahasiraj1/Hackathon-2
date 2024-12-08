@@ -8,7 +8,7 @@ const Cart = () => {
     <div className='flex flex-col text-start px-10 font-clashDisplay'>
       <h1 className='text-3xl mb-10'>Your shoping cart</h1>
       <Table>
-        <TableHeader className='flex-col '>
+        <TableHeader className='hidden md:table-header-group'>
             <TableRow>
                 <TableHead>
                     Product
@@ -35,12 +35,13 @@ const Cart = () => {
                         <p>A timeless ceramic vase with<br /> 
                         a tri color grey glaze</p>
                         <span>£85</span>
+                        <span className='flex md:hidden'>-{" "}{" "}1{" "}{" "}+</span>
                     </div>
                 </TableCell>
-                <TableCell>
+                <TableCell className='hidden md:table-cell'>
                     -{" "}{" "}1{" "}{" "}+
                 </TableCell>
-                <TableCell className='hidden md:flex'>
+                <TableCell className='hidden md:table-cell'>
                     £85
                 </TableCell>
             </TableRow>
@@ -58,17 +59,18 @@ const Cart = () => {
                         <p>Beautifull and simple this is<br /> 
                         one for the classic</p>
                         <span>£85</span>
+                        <span className='flex md:hidden'>-{" "}{" "}1{" "}{" "}+</span>
                     </div>
                 </TableCell>
-                <TableCell>
+                <TableCell className='hidden md:table-cell'>
                     -{" "}{" "}1{" "}{" "}+
                 </TableCell>
-                <TableCell className='hidden md:flex'>
+                <TableCell className='hidden md:table-cell'>
                     £85
                 </TableCell>
             </TableRow>
         </TableBody>
-        <TableFooter>
+        <TableFooter className='flex w-full items-center justify-center'>
             <TableRow>
                 <TableCell colSpan={3} className="flex flex-col items-end justify-end space-y-4 w-full text-right">
                 <div className="w-full flex justify-between px-4">
