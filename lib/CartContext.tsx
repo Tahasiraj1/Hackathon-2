@@ -96,7 +96,7 @@ export default function CartProvider ({ children }: { children: ReactNode }) {
                 : item
                 );
             } else {
-                return [...prevCart, { ...product, quantity: 1 }]
+                return [...prevCart, { ...product }]
             }
         });
     };
