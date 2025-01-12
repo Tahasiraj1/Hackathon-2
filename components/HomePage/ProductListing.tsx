@@ -1,16 +1,40 @@
+"use client"
+
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Checkbox } from '../ui/checkbox'
 import { Label } from '../ui/label'
 import { Button } from '../ui/button'
 import { ChevronDown } from 'lucide-react';
-import { Products } from '@/lib/products'
+// import { Products } from '@/lib/products'
+import { urlFor } from "@/sanity/lib/image";
+
+
+interface Product {
+  id: string
+  name: string
+  quantity: number
+  price: number
+  images: { asset: { _ref: string } }[]
+  ratings: string
+  sizes: string[]
+  colors: string[]
+  tags: string[]
+  description: string
+}
 
 const ProductListing = () => {
   const productTypes = ["Furniture", "Homeware", "Sofas", "Light fittings", "Accessories"]
   const price = ["0 - 100", "101 - 250", "250+"]
   const Designer = ["Robert Smith", "Liam Gallagher", "Biggie Smalls", "Thom Yorke"]
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    fetch("/api/products")
+    .then((res) => res.json())
+    .then((data) => setProducts(data));
+  })
 
   return (
     <div className='w-full flex flex-col items-center justify-center pb-10'>
@@ -80,11 +104,11 @@ const ProductListing = () => {
           <Button className='md:hidden bg-gray-100 hover:bg-gray-200 text-black'>
               Sorting <ChevronDown />
           </Button>
-            {Products.map((product) => (
+            {products.map((product) => (
               <Link href={`/products/${product.id}`} key={product.id} className="block">
                 <div className="overflow-hidden">
                   <Image
-                    src={product.image}
+                    src={urlFor(product.images).url()}
                     alt={product.name}
                     width={300}
                     height={300}
