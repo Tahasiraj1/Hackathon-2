@@ -1,8 +1,8 @@
 import React from 'react'
-import { Input } from '../ui/input'
-import { Button } from '../ui/button'
+import { Input } from './ui/input'
+import { Button } from './ui/button'
 
-const JoinClud = () => {
+const JoinClub = () => {
   return (
     <div className='bg-gray-100 flex w-full px-4 md:px-10 py-6 md:py-10 items-center justify-center'>
         <div className='flex flex-col w-full items-center justify-center gap-6 bg-white py-10 px-10'>
@@ -30,4 +30,4 @@ const JoinClud = () => {
   )
 }
 
-export default JoinClud
+export default JoinClub

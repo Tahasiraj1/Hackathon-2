@@ -8,12 +8,13 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../ui/table";
+} from "./ui/table";
 import Image from "next/image";
-import { Button } from "../ui/button";
+import { Button } from "./ui/button";
 import { useCart } from "@/lib/CartContext";
 import { urlFor } from "@/sanity/lib/image";
 import { Plus, Minus } from "lucide-react";
+import Link from "next/link";
 
 const Cart = () => {
   const {
@@ -120,9 +121,11 @@ const Cart = () => {
                 <span>Taxes and shipping are calculated at checkout</span>
               </div>
               <div className="w-full flex justify-end px-4">
-                <Button className="bg-[#2A254B] text-white rounded-none px-6 py-4">
-                  Go to Checkout
-                </Button>
+                <Link href="/checkout">
+                  <Button disabled={cart.length === 0} className="bg-[#2A254B] text-white rounded-none px-6 py-4">
+                    Go to Checkout
+                  </Button>
+                </Link>
               </div>
             </TableCell>
           </TableRow>

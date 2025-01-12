@@ -3,9 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { Checkbox } from "../ui/checkbox";
-import { Label } from "../ui/label";
-import { Button } from "../ui/button";
+import { Checkbox } from "./ui/checkbox";
+import { Label } from "./ui/label";
+import { Button } from "./ui/button";
 import { ChevronDown } from "lucide-react";
 // import { Products } from '@/lib/products'
 import { urlFor } from "@/sanity/lib/image";

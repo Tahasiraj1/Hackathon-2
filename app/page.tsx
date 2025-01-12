@@ -1,9 +1,9 @@
-import BriefAbout from "@/components/HomePage/BriefAbout";
-import Hero from "@/components/HomePage/Hero";
-import JoinClud from "@/components/HomePage/JoinClud";
-import NewCeramics from "@/components/HomePage/NewCeramics";
-import PopularProducts from "@/components/HomePage/PopularProducts";
-import WhatMakesUsDiff from "@/components/HomePage/WhatMakesUsDiff";
+import BriefAbout from "@/components/BriefAbout";
+import Hero from "@/components/Hero";
+import JoinClub from "@/components/JoinClub";
+import NewCeramics from "@/components/NewCeramics";
+import PopularProducts from "@/components/PopularProducts";
+import WhatMakesUsDiff from "@/components/WhatMakesUsDiff";
 
 export default function Home() {
   return (
@@ -12,7 +12,7 @@ export default function Home() {
       <WhatMakesUsDiff />
       <NewCeramics />
       <PopularProducts />
-      <JoinClud />
+      <JoinClub />
       <BriefAbout />
     </>
   );

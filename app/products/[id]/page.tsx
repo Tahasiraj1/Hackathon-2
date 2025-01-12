@@ -4,8 +4,8 @@ import { useParams } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Dot } from "lucide-react";
-import WhatMakesUsDiff from "@/components/HomePage/WhatMakesUsDiff";
-import JoinClud from "@/components/HomePage/JoinClud";
+import WhatMakesUsDiff from "@/components/WhatMakesUsDiff";
+import JoinClub from "@/components/JoinClub";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { urlFor } from "@/sanity/lib/image";
@@ -276,7 +276,7 @@ const ProductDetails = () => {
         </div>
       </div>
       <WhatMakesUsDiff />
-      <JoinClud />
+      <JoinClub />
     </>
   );
 };
