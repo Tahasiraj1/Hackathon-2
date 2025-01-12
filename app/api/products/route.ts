@@ -37,7 +37,7 @@ export async function GET() {
     const sanityOperations = [];
 
     for (const product of products) {
-      await delay(1000); // Adjust delay as needed
+      await delay(1000); 
       console.log("Processing product:", product);
       console.log("Image URL:", product.image);
 

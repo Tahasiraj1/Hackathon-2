@@ -10,6 +10,8 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { urlFor } from "@/sanity/lib/image";
 import { Image as SanityImage } from "@sanity/types";
+import { client } from "@/sanity/lib/client";
+
 
 interface Product {
   id: number;
@@ -28,10 +30,29 @@ const ProductDetails = () => {
   const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    fetch("/api/products")
-      .then((res) => res.json())
-      .then((data) => setProducts(data));
-  });
+    const fetchProducts = async () => {
+      const query = `*[_type == "product"]{
+        id,
+        name,
+        price,
+        "images": images[].asset->_id,
+        ratings,
+        sizes,
+        colors,
+        tags,
+        description
+      }`;
+
+      try {
+        const fetchedProducts = await client.fetch(query);
+        setProducts(fetchedProducts);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   const params = useParams();
   const productId = parseInt(params.id as string, 10);
