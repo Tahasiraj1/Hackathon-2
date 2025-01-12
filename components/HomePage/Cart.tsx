@@ -11,7 +11,7 @@ import {
 } from "../ui/table";
 import Image from "next/image";
 import { Button } from "../ui/button";
-import { useCart, CartItem } from "@/lib/CartContext";
+import { useCart } from "@/lib/CartContext";
 import { urlFor } from "@/sanity/lib/image";
 import { Plus, Minus } from "lucide-react";
 
