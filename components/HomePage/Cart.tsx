@@ -18,7 +18,6 @@ import { Plus, Minus } from "lucide-react";
 const Cart = () => {
   const {
     cart,
-    removeFromCart,
     clearCart,
     incrementQuantity,
     decrementQuantity,
@@ -31,9 +30,9 @@ const Cart = () => {
 
   const subTotal = cart.reduce((sum, item) => item.price * item.quantity + sum, 0);
 
-  const handleRemoveFromCart = (item: CartItem) => {
-    removeFromCart(item);
-  };
+//   const handleRemoveFromCart = (item: CartItem) => {
+//     removeFromCart(item);
+//   };
 
   return (
     <div className="flex flex-col text-start px-10 font-clashDisplay">

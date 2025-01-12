@@ -35,6 +35,10 @@ const ProductDetails = () => {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
 
+  const params = useParams();
+  const productId = params.id as string;
+  const product = products.find((p) => String(p.id) === productId);
+
   useEffect(() => {
     const fetchProducts = async () => {
       const query = `*[_type == "product" && id == $productId]{
@@ -72,11 +76,8 @@ const ProductDetails = () => {
     };
 
     fetchProducts();
-  }, []);
+  }, [productId]);
 
-  const params = useParams();
-  const productId = params.id as string;
-  const product = products.find((p) => String(p.id) === productId);
 
   const handleAddToCart = () => {
     if (selectedColor && selectedSize && product && product.images.length > 0) {
