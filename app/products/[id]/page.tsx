@@ -49,6 +49,7 @@ const ProductDetails = () => {
           metadata
         },
         ratings,
+        quantity,
         sizes,
         colors,
         tags,
@@ -108,7 +109,6 @@ const ProductDetails = () => {
   const handleIncrement = () => {
     if (product && quantity < product.quantity) {
       setQuantity((prevQuantity) => {
-        console.log("Incrementing quantity:", prevQuantity + 1);
         return prevQuantity + 1;
       });
     }
@@ -117,7 +117,6 @@ const ProductDetails = () => {
   const handleDecrement = () => {
     if (quantity > 1) {
       setQuantity((prevQuantity) => {
-        console.log("Decrementing quantity:", prevQuantity - 1);
         return prevQuantity - 1;
       });
     }
@@ -205,25 +204,25 @@ const ProductDetails = () => {
 
           <div className="md:flex-row flex flex-col mt-10 gap-2 justify-between">
             <div className="md:flex hidden">
-              <span className="mr-6 mt-2">Amount:</span>
+              <span className="mr-6 mt-2">Quantity:</span>
               <div className="bg-gray-100 flex items-center justify-center">
                 <Button
                   onClick={handleDecrement}
-                  className="rounded-none bg-gray-100 hover:bg-gray-200 text-black"
+                  className="rounded-none bg-gray-100 hover:bg-gray-200 text-black active:scale-95 transition-transform transform duration-300"
                 >
                   <Minus size={15} />
                 </Button>
                 <span>{quantity}</span>
                 <Button
                   onClick={handleIncrement}
-                  className="rounded-none bg-gray-100 hover:bg-gray-200 text-black"
+                  className="rounded-none bg-gray-100 hover:bg-gray-200 text-black active:scale-95 transition-transform transform duration-300"
                 >
                   <Plus size={15} />
                 </Button>
               </div>
             </div>
             <div className="flex flex-col md:hidden space-y-4">
-              <span className="mr-6 mt-2">Quantity</span>
+              <span className="mr-6 mt-2">Quantity:</span>
               <div className="bg-gray-100 flex items-center justify-center w-full">
                 <Button
                   onClick={handleDecrement}
