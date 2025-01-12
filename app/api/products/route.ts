@@ -9,7 +9,7 @@ interface Product {
   quantity: number;
   price: number;
   image: string | string[];
-  ratings: string;
+  rating: string;
   sizes: string[];
   colors: string[];
   tags: string[];
@@ -51,7 +51,7 @@ export async function GET() {
           description: product.description,
           images,
           quantity: product.quantity,
-          ratings: product.ratings,
+          ratings: product.rating,
           sizes: product.sizes,
           colors: product.colors,
           tags: product.tags,
