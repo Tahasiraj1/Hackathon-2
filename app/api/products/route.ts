@@ -1,6 +1,7 @@
 import { client } from "@/sanity/lib/client";
 import axios from "axios";
 import { NextResponse } from "next/server";
+import { nanoid } from 'nanoid';
 
 interface Product {
   id: string;
@@ -112,6 +113,7 @@ async function uploadImagesToSanity(image: string | string[]) {
 
         return {
           _type: "image",
+          _key: nanoid(),
           asset: { _type: "reference", _ref: asset._id },
         };
       } catch (error) {
