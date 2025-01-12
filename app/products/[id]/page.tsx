@@ -11,7 +11,9 @@ import { useState, useEffect } from "react";
 import { urlFor } from "@/sanity/lib/image";
 import { Image as SanityImage } from "@sanity/types";
 import { client } from "@/sanity/lib/client";
-
+import { useCart } from "@/lib/CartContext";
+import { toast } from "@/hooks/use-toast";
+import { Plus, Minus } from "lucide-react";
 
 interface Product {
   id: number;
@@ -27,7 +29,11 @@ interface Product {
 }
 
 const ProductDetails = () => {
+  const { addToCart } = useCart();
   const [products, setProducts] = useState<Product[]>([]);
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [quantity, setQuantity] = useState<number>(1);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -50,7 +56,6 @@ const ProductDetails = () => {
       }`;
 
       try {
-
         const fetchedProducts = await client.fetch(query, {
           productId: productId,
         });
@@ -71,6 +76,53 @@ const ProductDetails = () => {
   const params = useParams();
   const productId = params.id as string;
   const product = products.find((p) => String(p.id) === productId);
+
+  const handleAddToCart = () => {
+    if (selectedColor && selectedSize && product && product.images.length > 0) {
+      addToCart({
+        id: product?.id.toString(),
+        image: product?.images?.[0],
+        name: product?.name as string,
+        price: product?.price as number,
+        quantity: quantity,
+        color: selectedColor,
+        size: selectedSize,
+      });
+      toast({
+        className: "rounded-none",
+        title: "Success!",
+        description: "Item is added to cart.",
+        duration: 5000,
+      });
+    } else {
+      toast({
+        className: "rounded-none text-black",
+        variant: "destructive",
+        title: "⚠️ Error!",
+        description: "Please select color and size.",
+        duration: 5000,
+      });
+    }
+  }
+
+  const handleIncrement = () => {
+    if (product && quantity < product.quantity) {
+      setQuantity((prevQuantity) => {
+        console.log("Incrementing quantity:", prevQuantity + 1);
+        return prevQuantity + 1;
+      });
+    }
+  };
+  
+  const handleDecrement = () => {
+    if (quantity > 1) {
+      setQuantity((prevQuantity) => {
+        console.log("Decrementing quantity:", prevQuantity - 1);
+        return prevQuantity - 1;
+      });
+    }
+  };
+  
 
   if (!product) {
     return (
@@ -93,9 +145,9 @@ const ProductDetails = () => {
           />
         </div>
         <div className="flex flex-col lg:pl-20 pr-5 w-full max-w-2xl px-10 md:px-0">
-          <h1 className="text-3xl mb-5 mt-10 font-bold">{product.name}</h1>
+          <h1 className="text-3xl mb-5 mt-4 font-bold">{product.name}</h1>
 
-          <p className="text-lg font-bold mb-8">PKR {product.price}</p>
+          <p className="text-lg font-bold mb-4">PKR {product.price}</p>
 
           <span className="mb-4">Description</span>
 
@@ -121,46 +173,77 @@ const ProductDetails = () => {
             </li>
           </ul>
 
-          <h2 className="mb-4">Dimensions</h2>
+          <h2 className="mb-4 mt-2">Sizes</h2>
 
-          <ul className="flex gap-10 mb-6">
-            <li>Height</li>
-            <li>Width</li>
-            <li>Depth</li>
+          <ul className="flex gap-5">
+            {product.sizes.map((size) => (
+              <li key={size}>
+                <Button
+                  className="bg-gray-100 hover:bg-gray-200 rounded-none text-black"
+                  onClick={() => setSelectedSize(size)}
+                >
+                  {size}
+                </Button>
+              </li>
+            ))}
           </ul>
 
-          <ul className="flex gap-10">
-            <li>100cm</li>
-            <li>75cm</li>
-            <li>50cm</li>
+          <h2 className="mb-4 mt-4">Colors</h2>
+
+          <ul className="flex gap-5">
+            {product.colors.map((color) => (
+              <li key={color}>
+                <Button
+                  className="bg-gray-100 hover:bg-gray-200 rounded-none text-black"
+                  onClick={() => setSelectedColor(color)}
+                >
+                  {color}
+                </Button>
+              </li>
+            ))}
           </ul>
 
           <div className="md:flex-row flex flex-col mt-10 gap-2 justify-between">
             <div className="md:flex hidden">
               <span className="mr-6 mt-2">Amount:</span>
-              <div className="bg-gray-100">
-                <Button className="rounded-none bg-gray-100 hover:bg-gray-200 text-black">
-                  -
+              <div className="bg-gray-100 flex items-center justify-center">
+                <Button
+                  onClick={handleDecrement}
+                  className="rounded-none bg-gray-100 hover:bg-gray-200 text-black"
+                >
+                  <Minus size={15} />
                 </Button>
-                <span>1</span>
-                <Button className="rounded-none bg-gray-100 hover:bg-gray-200 text-black">
-                  +
+                <span>{quantity}</span>
+                <Button
+                  onClick={handleIncrement}
+                  className="rounded-none bg-gray-100 hover:bg-gray-200 text-black"
+                >
+                  <Plus size={15} />
                 </Button>
               </div>
             </div>
             <div className="flex flex-col md:hidden space-y-4">
               <span className="mr-6 mt-2">Quantity</span>
               <div className="bg-gray-100 flex items-center justify-center w-full">
-                <Button className="rounded-none bg-gray-100 hover:bg-gray-200 text-black">
-                  -
+                <Button
+                  onClick={handleDecrement}
+                  className="rounded-none bg-gray-100 hover:bg-gray-200 text-black"
+                >
+                  <Minus size={15} />
                 </Button>
-                <span>{product.quantity}</span>
-                <Button className="rounded-none bg-gray-100 hover:bg-gray-200 text-black">
-                  +
+                <span>{quantity}</span>
+                <Button
+                  onClick={handleIncrement}
+                  className="rounded-none bg-gray-100 hover:bg-gray-200 text-black"
+                >
+                  <Plus size={15} />
                 </Button>
               </div>
             </div>
-            <Button className="mt-4 md:mt-0 text-lg rounded-none w-full md:w-fit">
+            <Button
+              onClick={handleAddToCart}
+              className="mt-4 md:mt-0 text-lg rounded-none w-full md:w-fit"
+            >
               ADD TO CART
             </Button>
           </div>

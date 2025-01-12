@@ -2,8 +2,17 @@ import React from 'react'
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '../ui/table'
 import Image from 'next/image'
 import { Button } from '../ui/button'
+// import { useCart, CartItem } from '@/lib/CartContext';
 
 const Cart = () => {
+    // const { cart, removeFromCart, clearCart, incrementQuantity, decrementQuantity } = useCart();
+
+    // const totalPrice = cart.reduce((sum, item) => item.price * item.quantity + sum, 0 );
+
+    // const handleRemoveFromCart = (item: CartItem) => {
+    //     removeFromCart(item);
+    // };
+
   return (
     <div className='flex flex-col text-start px-10 font-clashDisplay'>
       <h1 className='text-3xl mb-10'>Your shoping cart</h1>

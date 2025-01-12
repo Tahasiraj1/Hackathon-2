@@ -59,8 +59,8 @@ export default function CartProvider ({ children }: { children: ReactNode }) {
             description
             }`;
 
-            const products = await client.fetch(query);
-            setProducts(products);
+            const fetchedProducts = await client.fetch(query);
+            setProducts(fetchedProducts);
         };
         fetchProducts();
     }, []);

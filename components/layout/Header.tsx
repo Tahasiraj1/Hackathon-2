@@ -56,6 +56,7 @@ const Header = () => {
         </div>
         <hr className='w-full mt-4' />
         <div className='hidden md:flex items-center justify-center gap-8 mt-4 font-satoshi'>
+            <Link href="/products">All Products</Link>
             <h2 className='hover:cursor-pointer'>Plant pots</h2>
             <h2 className='hover:cursor-pointer'>Ceramics</h2>
             <h2 className='hover:cursor-pointer'>Tables</h2>
