@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import dynamic from 'next/dynamic'
+// import dynamic from 'next/dynamic'
 // import OrderConfirmationDialog from './OrderConfirmationDialog';
 import {
   Accordion,
@@ -28,12 +28,12 @@ import {
 
 // const DynamicConfetti = dynamic(() => import('react-confetti'), {ssr: false})
 
-type confettiProps = {
-  width: number;
-  height: number;
-}
+// type confettiProps = {
+//   width: number;
+//   height: number;
+// }
 
-const confettiColors = ['#2C3E50', '#34495E', '#8E44AD', '#D35400', '#C0392B', '#7F8C8D', '#16A085'];
+// const confettiColors = ['#2C3E50', '#34495E', '#8E44AD', '#D35400', '#C0392B', '#7F8C8D', '#16A085'];
 
 const formSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
@@ -49,23 +49,23 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 export default function CheckoutForm() {
-  const { toast } = useToast();
-  const { cart } = useCart();
+  // const { toast } = useToast();
+  const { clearCart } = useCart();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [windowSize, setWindowSize] = useState<confettiProps>({width: 0, height: 0});
-  const [orderPlaced, setOrderPlaced] = useState<boolean>(false)
-  const [orderId, setOrderId] = useState<string | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  // const [windowSize, setWindowSize] = useState<confettiProps>({width: 0, height: 0});
+  // const [orderPlaced, setOrderPlaced] = useState<boolean>(false)
+  // const [orderId, setOrderId] = useState<string | null>(null);
+  // const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  useEffect(() => {
-    const handleResize = () => {
-        setWindowSize({width: window.innerWidth, height: window.innerHeight})
-    }
-    handleResize()
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //       setWindowSize({width: window.innerWidth, height: window.innerHeight})
+  //   }
+  //   handleResize()
+  //   window.addEventListener('resize', handleResize)
+  //   return () => window.removeEventListener('resize', handleResize)
+  // }, [])
 
 
   const form = useForm<FormData>({
@@ -82,59 +82,67 @@ export default function CheckoutForm() {
     },
   });
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = () => {
     setIsSubmitting(true);
     setErrorMessage(null);
-    try {
-      const orderData = {
-        customerDetails: data,
-        items: cart.map(item => ({
-          productId: item.id,
-          name: item.name,
-          price: item.price,
-          quantity: item.quantity,
-          color: item.color,
-          size: item.size,
-        })),
-        totalAmount: cart.reduce((total, item) => total + item.price * item.quantity, 0),
-      };
+    alert("Order Placed successfully")
+    clearCart();
+    setIsSubmitting(false);
+  }
 
-      const response = await fetch('/api/orders', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(orderData),
-      });
+  // const onSubmit = async (data: FormData) => {
+  //   setIsSubmitting(true);
+  //   setErrorMessage(null);
+  //   try {
+  //     const orderData = {
+  //       customerDetails: data,
+  //       items: cart.map(item => ({
+  //         productId: item.id,
+  //         name: item.name,
+  //         price: item.price,
+  //         quantity: item.quantity,
+  //         color: item.color,
+  //         size: item.size,
+  //       })),
+  //       totalAmount: cart.reduce((total, item) => total + item.price * item.quantity, 0),
+  //     };
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to place order');
-      }
+  //     const response = await fetch('/api/orders', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(orderData),
+  //     });
 
-      const result = await response.json();
-      console.log('Order placed successfully:', result);
-      setOrderId(result.orderId);
-      setIsDialogOpen(true);
-      setOrderPlaced(true);
-      toast({
-        title: "Congratulations!",
-        description: "Your order has been placed successfully.",
-        duration: 5000,
-      });
-    } catch (error) {
-      console.error('Error placing order:', error);
-      setErrorMessage(error instanceof Error ? error.message : 'An unexpected error occurred');
-      toast({
-        title: "Error",
-        description: "Failed to place order. Please try again.",
-        variant: "destructive",
-        duration: 5000,
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  //     if (!response.ok) {
+  //       const errorData = await response.json();
+  //       throw new Error(errorData.error || 'Failed to place order');
+  //     }
+
+  //     const result = await response.json();
+  //     console.log('Order placed successfully:', result);
+  //     setOrderId(result.orderId);
+  //     setIsDialogOpen(true);
+  //     setOrderPlaced(true);
+  //     toast({
+  //       title: "Congratulations!",
+  //       description: "Your order has been placed successfully.",
+  //       duration: 5000,
+  //     });
+  //   } catch (error) {
+  //     console.error('Error placing order:', error);
+  //     setErrorMessage(error instanceof Error ? error.message : 'An unexpected error occurred');
+  //     toast({
+  //       title: "Error",
+  //       description: "Failed to place order. Please try again.",
+  //       variant: "destructive",
+  //       duration: 5000,
+  //     });
+  //   } finally {
+  //     setIsSubmitting(false);
+  //   }
+  // };
 
   return (
     <div>

@@ -31,7 +31,7 @@ const Checkout = () => {
             <div className='flex flex-col items-center justify-center h-screen'>
                 <p className='text-xl font-bold'>Your cart is empty!</p>
                 <Link href="/products">
-                    <Button className='bg-emerald-800 text-white rounded-none hover:bg-emerald-600 mt-4'>Back to Shop</Button>
+                    <Button className='bg-[#2A254B] hover:bg-[#27224b] text-white rounded-none mt-4'>Back to Shop</Button>
                 </Link>
             </div>
         );
@@ -49,9 +49,9 @@ const Checkout = () => {
                         <div key={item.id} className='flex items-center gap-4 rounded-none'>
                         <div>
                             <button 
-                            className='flex justify-center rounded-full hover:bg-red-200'
+                            className='flex justify-center rounded-full group'
                             onClick={() => handleRemoveFromCart(item)}>
-                                <X className='text-red-500 active:rotate-180 transition-transform transform duration-300' />
+                                <X className='text-[#2A254B] group-hover:-rotate-90 active:rotate-180 transition-transform transform duration-300' />
                             </button>
                         </div>
                             <Image
