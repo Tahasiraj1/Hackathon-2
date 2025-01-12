@@ -86,6 +86,7 @@ const ProductDetails = () => {
         name: product?.name as string,
         price: product?.price as number,
         quantity: quantity,
+        description: product.description,
         color: selectedColor,
         size: selectedSize,
       });
@@ -148,16 +149,10 @@ const ProductDetails = () => {
 
           <p className="text-lg font-bold mb-4">PKR {product.price}</p>
 
-          <span className="mb-4">Description</span>
+          <span className="mb-4">Description:</span>
 
-          <p className="mb-4">
-            A timeless design, with premium materials features as one of our
-            most
-            <br />
-            popular and iconic pieces. The dandy chair is perfect for any
-            stylish
-            <br />
-            living space with beech legs and lambskin leather upholstery.
+          <p className="mb-4 max-w-lg">
+            {product.description}
           </p>
 
           <ul className="flex flex-col mb-4">
