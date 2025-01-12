@@ -7,7 +7,7 @@ interface Product {
   name: string;
   quantity: number;
   price: number;
-  imageUrl: string | string[];
+  image: string | string[];
   ratings: string;
   sizes: string[];
   colors: string[];
@@ -20,6 +20,7 @@ const MOCK_API_URL = `${process.env.NEXT_MOCK_API}`;
 export async function GET() {
   try {
     const { data: products } = await axios.get<Product[]>(MOCK_API_URL);
+    console.log("Fetched products:", products);
 
     if (!Array.isArray(products) || products.length === 0) {
       return NextResponse.json(
@@ -36,9 +37,11 @@ export async function GET() {
 
     for (const product of products) {
       await delay(1000); // Adjust delay as needed
+      console.log("Processing product:", product);
+      console.log("Image URL:", product.image);
 
       const operation = (async () => {
-        const images = await uploadImagesToSanity(product.imageUrl);
+        const images = await uploadImagesToSanity(product.image);
         const sanityProduct = {
           _type: "product",
           id: product.id,
@@ -85,13 +88,13 @@ export async function GET() {
   }
 }
 
-async function uploadImagesToSanity(imageUrls: string | string[]) {
-  if (!imageUrls) {
+async function uploadImagesToSanity(image: string | string[]) {
+  if (!image) {
     console.warn("No image URLs provided.");
     return [];
   }
 
-  const urls = Array.isArray(imageUrls) ? imageUrls : [imageUrls];
+  const urls = Array.isArray(image) ? image : [image];
   console.log("Processing the following URLs:", urls);
 
   const assets = await Promise.all(
