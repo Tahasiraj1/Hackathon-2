@@ -2,7 +2,6 @@ import { client } from "@/sanity/lib/client";
 import axios from "axios";
 import { NextResponse } from "next/server";
 
-
 interface Product {
   id: string;
   name: string;
@@ -87,35 +86,39 @@ export async function GET() {
 }
 
 async function uploadImagesToSanity(imageUrls: string | string[]) {
-    if (!imageUrls) return [];
-  
-    const urls = Array.isArray(imageUrls) ? imageUrls : [imageUrls];
-  
-    const assets = await Promise.all(
-      urls.map(async (url) => {
-        try {
-          console.log("Uploading image from URL:", url);
-          const response = await axios.get(url, { responseType: "arraybuffer" });
-          console.log("Fetched image response status:", response.status);
-  
-          const buffer = Buffer.from(response.data, "binary");
-          const asset = await client.assets.upload("image", buffer, {
-            filename: `product_image_${Date.now()}.jpg`,
-          });
-          console.log("Uploaded image asset:", asset);
-  
-          return {
-            _type: "image",
-            asset: { _type: "reference", _ref: asset._id },
-          };
-        } catch (error) {
-          console.error(`Error uploading image from ${url}:`, error);
-          return null;
-        }
-      })
-    );
-  
-    console.log("Final assets after filtering:", assets.filter(Boolean));
-    return assets.filter(Boolean); // Remove null entries
+  if (!imageUrls) {
+    console.warn("No image URLs provided.");
+    return [];
   }
-  
+
+  const urls = Array.isArray(imageUrls) ? imageUrls : [imageUrls];
+  console.log("Processing the following URLs:", urls);
+
+  const assets = await Promise.all(
+    urls.map(async (url) => {
+      try {
+        console.log("Fetching image URL:", url);
+        const response = await axios.get(url, { responseType: "arraybuffer" });
+        console.log("Fetched image response status:", response.status);
+
+        const buffer = Buffer.from(response.data, "binary");
+        const asset = await client.assets.upload("image", buffer, {
+          filename: `product_image_${Date.now()}.jpg`,
+        });
+        console.log("Successfully uploaded asset:", asset);
+
+        return {
+          _type: "image",
+          asset: { _type: "reference", _ref: asset._id },
+        };
+      } catch (error) {
+        console.error(`Error uploading image from ${url}:`, error);
+        return null;
+      }
+    })
+  );
+
+  const filteredAssets = assets.filter(Boolean);
+  console.log("Final filtered assets:", filteredAssets);
+  return filteredAssets;
+}
