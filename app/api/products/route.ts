@@ -2,6 +2,7 @@ import { client } from "@/sanity/lib/client";
 import axios from "axios";
 import { NextResponse } from "next/server";
 
+
 interface Product {
   id: string;
   name: string;
