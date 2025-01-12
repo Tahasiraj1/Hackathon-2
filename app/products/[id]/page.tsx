@@ -31,11 +31,17 @@ const ProductDetails = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const query = `*[_type == "product"]{
+      const query = `*[_type == "product" && id == $productId]{
         id,
         name,
         price,
-        "images": images[].asset->_id,
+          "images": images[].asset->{
+          _id,
+          _key,
+          _ref,
+          url,
+          metadata
+        },
         ratings,
         sizes,
         colors,
@@ -44,7 +50,15 @@ const ProductDetails = () => {
       }`;
 
       try {
-        const fetchedProducts = await client.fetch(query);
+
+        const fetchedProducts = await client.fetch(query, {
+          productId: productId,
+        });
+
+        if (fetchedProducts.length > 0) {
+          console.log("Fetched product images:", fetchedProducts[0].images);
+        }
+
         setProducts(fetchedProducts);
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -55,11 +69,15 @@ const ProductDetails = () => {
   }, []);
 
   const params = useParams();
-  const productId = parseInt(params.id as string, 10);
-  const product = products.find((p) => p.id === productId);
+  const productId = params.id as string;
+  const product = products.find((p) => String(p.id) === productId);
 
   if (!product) {
-    return <div>Product not found</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center text-xl font-bold text-red-500">
+        Product not found
+      </div>
+    );
   }
 
   return (
@@ -67,7 +85,7 @@ const ProductDetails = () => {
       <div className="flex lg:flex-row flex-col">
         <div className="flex space-x-2">
           <Image
-            src={urlFor(product.images).url()}
+            src={urlFor(product.images[0]).url()}
             alt={`Image of ${product.name}`}
             width={1000}
             height={1000}
@@ -159,7 +177,7 @@ const ProductDetails = () => {
                 <div key={index} className="flex flex-col">
                   <div className="relative aspect-[4/5] w-full mb-4">
                     <Image
-                      src={urlFor(product.images).url()}
+                      src={urlFor(product.images[0]).url()}
                       alt={product.name}
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
