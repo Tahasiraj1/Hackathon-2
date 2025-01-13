@@ -78,7 +78,6 @@ const ProductDetails = () => {
     fetchProducts();
   }, [productId]);
 
-
   const handleAddToCart = () => {
     if (selectedColor && selectedSize && product && product.images.length > 0) {
       addToCart({
@@ -92,21 +91,21 @@ const ProductDetails = () => {
         size: selectedSize,
       });
       toast({
-        className: "rounded-none",
+        className: "rounded-none border border-[#27224b]",
         title: "Success!",
         description: "Item is added to cart.",
         duration: 5000,
       });
     } else {
       toast({
-        className: "rounded-none text-black",
+        className: "rounded-none text-white",
         variant: "destructive",
         title: "⚠️ Error!",
         description: "Please select color and size.",
         duration: 5000,
       });
     }
-  }
+  };
 
   const handleIncrement = () => {
     if (product && quantity < product.quantity) {
@@ -115,7 +114,7 @@ const ProductDetails = () => {
       });
     }
   };
-  
+
   const handleDecrement = () => {
     if (quantity > 1) {
       setQuantity((prevQuantity) => {
@@ -123,7 +122,6 @@ const ProductDetails = () => {
       });
     }
   };
-  
 
   if (!product) {
     return (
@@ -152,9 +150,7 @@ const ProductDetails = () => {
 
           <span className="mb-4">Description:</span>
 
-          <p className="mb-4 max-w-lg">
-            {product.description}
-          </p>
+          <p className="mb-4 max-w-lg">{product.description}</p>
 
           <ul className="flex flex-col mb-4">
             <li className="flex mr-2">
@@ -174,7 +170,11 @@ const ProductDetails = () => {
             {product.sizes.map((size) => (
               <li key={size}>
                 <Button
-                  className="bg-gray-100 hover:bg-gray-200 rounded-none text-black"
+                  className={`rounded-none text-black ${
+                    selectedSize === size
+                      ? "bg-gray-300 hover:bg-gray-300"
+                      : "bg-gray-100 hover:bg-gray-200"
+                  }`}
                   onClick={() => setSelectedSize(size)}
                 >
                   {size}
@@ -189,7 +189,11 @@ const ProductDetails = () => {
             {product.colors.map((color) => (
               <li key={color}>
                 <Button
-                  className="bg-gray-100 hover:bg-gray-200 rounded-none text-black"
+                  className={`rounded-none text-black ${
+                    selectedColor === color
+                      ? "bg-gray-300 hover:bg-gray-300"
+                      : "bg-gray-100 hover:bg-gray-200"
+                  }`}
                   onClick={() => setSelectedColor(color)}
                 >
                   {color}

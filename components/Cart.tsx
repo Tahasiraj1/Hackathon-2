@@ -36,7 +36,7 @@ const Cart = () => {
 //   };
 
   return (
-    <div className="flex flex-col text-start px-10 font-clashDisplay">
+    <div className="flex flex-col text-start px-4 md:px-10 font-clashDisplay">
       <h1 className="text-3xl mb-10">Your shoping cart</h1>
       <Table>
         <TableHeader className="hidden md:table-header-group">
@@ -48,7 +48,7 @@ const Cart = () => {
         </TableHeader>
         <TableBody>
           {cart.map((item) => (
-            <TableRow key={item.id}>
+            <TableRow key={`${item.id}-${item.color}-${item.size}`}>
               <TableCell className="flex gap-x-4">
                 <Image
                   src={urlFor(item.image).url()}
@@ -100,17 +100,18 @@ const Cart = () => {
               </TableCell>
             </TableRow>
           ))}
-          <TableRow className="flex justify-between items-center">
-            <TableCell>
+          </TableBody>
+      </Table>
+      <div className="flex justify-between items-center mb-10 border border-x-0 border-b-0 px-4 py-4">
+            <div>
               <Button
                 className="rounded-none bg-gray-200 hover:bg-gray-300 text-black active:scale-95 transition-transform transform duration-300"
                 onClick={clearCart}
               >
                 Clear Cart
               </Button>
-            </TableCell>
-            <TableCell
-              colSpan={3}
+            </div>
+            <div
               className="flex flex-col items-end justify-end space-y-4 w-full text-right"
             >
               <div className="w-full flex justify-end items-center gap-4 px-4">
@@ -127,10 +128,8 @@ const Cart = () => {
                   </Button>
                 </Link>
               </div>
-            </TableCell>
-          </TableRow>
-          </TableBody>
-      </Table>
+            </div>
+          </div>
     </div>
   );
 };
