@@ -93,7 +93,7 @@ const ProductDetails = () => {
       toast({
         className: "rounded-none border border-[#27224b]",
         title: "Success!",
-        description: "Item is added to cart.",
+        description:`${product.name}  is added to cart.`,
         duration: 5000,
       });
     } else {
@@ -146,7 +146,7 @@ const ProductDetails = () => {
         <div className="flex flex-col lg:pl-20 pr-5 w-full max-w-2xl px-10 md:px-0">
           <h1 className="text-3xl mb-5 mt-4 font-bold">{product.name}</h1>
 
-          <p className="text-lg font-bold mb-4">PKR {product.price}</p>
+          <p className="text-lg font-bold mb-4">$ {product.price}</p>
 
           <span className="mb-4">Description:</span>
 
@@ -274,9 +274,11 @@ const ProductDetails = () => {
           </div>
         </div>
         <div className="flex justify-center items-center mt-8 sm:mt-12">
-          <Button className="bg-gray-200 rounded-none px-6 py-3 sm:py-4 hover:bg-gray-300 text-black w-fit text-sm sm:text-base">
-            View collection
-          </Button>
+          <Link href="/products">
+            <Button className="bg-gray-200 rounded-none px-6 py-3 sm:py-4 hover:bg-gray-300 text-black w-fit text-sm sm:text-base">
+              View collection
+            </Button>
+          </Link>
         </div>
       </div>
       <WhatMakesUsDiff />

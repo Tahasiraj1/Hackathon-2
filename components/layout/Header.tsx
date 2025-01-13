@@ -1,4 +1,3 @@
-"use client";
 
 import React from "react";
 import { Search, ShoppingCart, CircleUser, Menu } from "lucide-react";

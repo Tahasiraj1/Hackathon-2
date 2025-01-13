@@ -17,23 +17,21 @@ import { Plus, Minus } from "lucide-react";
 import Link from "next/link";
 
 const Cart = () => {
-  const {
-    cart,
-    clearCart,
-    incrementQuantity,
-    decrementQuantity,
-  } = useCart();
+  const { cart, clearCart, incrementQuantity, decrementQuantity } = useCart();
 
-  const totalPrice = (productId: string): number => {
-    const product = cart.find((item) => item.id === productId);
+  const totalPrice = (productId: string, productColor: string, productSize: string): number => {
+    const product = cart.find((item) => item.id === productId && item.color === productColor && item.size === productSize);
     return product ? product.price * product.quantity : 0;
   };
 
-  const subTotal = cart.reduce((sum, item) => item.price * item.quantity + sum, 0);
+  const subTotal = cart.reduce(
+    (sum, item) => item.price * item.quantity + sum,
+    0
+  );
 
-//   const handleRemoveFromCart = (item: CartItem) => {
-//     removeFromCart(item);
-//   };
+  //   const handleRemoveFromCart = (item: CartItem) => {
+  //     removeFromCart(item);
+  //   };
 
   return (
     <div className="flex flex-col text-start px-4 md:px-10 font-clashDisplay">
@@ -96,40 +94,41 @@ const Cart = () => {
                 </div>
               </TableCell>
               <TableCell className="hidden md:table-cell">
-                {totalPrice(item.id)}
+                {totalPrice(item.id, item.color, item.size)}
               </TableCell>
             </TableRow>
           ))}
-          </TableBody>
+        </TableBody>
       </Table>
       <div className="flex justify-between items-center mb-10 border border-x-0 border-b-0 px-4 py-4">
-            <div>
-              <Button
-                className="rounded-none bg-gray-200 hover:bg-gray-300 text-black active:scale-95 transition-transform transform duration-300"
-                onClick={clearCart}
-              >
-                Clear Cart
-              </Button>
-            </div>
-            <div
-              className="flex flex-col items-end justify-end space-y-4 w-full text-right"
-            >
-              <div className="w-full flex justify-end items-center gap-4 px-4">
-                <span>Subtotal:</span>
-                <strong>{subTotal}</strong>
-              </div>
-              <div className="w-full text-right px-4">
-                <span>Taxes and shipping are calculated at checkout</span>
-              </div>
-              <div className="w-full flex justify-end px-4">
-                <Link href="/checkout">
-                  <Button disabled={cart.length === 0} className="bg-[#2A254B] text-white rounded-none px-6 py-4">
-                    Go to Checkout
-                  </Button>
-                </Link>
-              </div>
-            </div>
+        <div>
+          <Button
+            className="rounded-none bg-gray-200 hover:bg-gray-300 text-black active:scale-95 transition-transform transform duration-300"
+            onClick={clearCart}
+          >
+            Clear Cart
+          </Button>
+        </div>
+        <div className="flex flex-col items-end justify-end space-y-4 w-full text-right">
+          <div className="w-full flex justify-end items-center gap-4 px-4">
+            <span>Subtotal:</span>
+            <strong>{subTotal}</strong>
           </div>
+          <div className="w-full text-right px-4">
+            <span>Taxes and shipping are calculated at checkout</span>
+          </div>
+          <div className="w-full flex justify-end px-4">
+            <Link href="/checkout">
+              <Button
+                disabled={cart.length === 0}
+                className="bg-[#2A254B] text-white rounded-none px-6 py-4"
+              >
+                Go to Checkout
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
