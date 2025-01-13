@@ -16,7 +16,7 @@ const Header = () => {
     <div className="flex flex-col items-center justify-center bg-white w-full h-[132px] px-10">
       <div className="flex w-full justify-between ">
         <Search className="hidden md:flex" />
-        <h1 className="text-2xl font-clash-display">Avion</h1>
+        <h1 className="text-2xl font-clash-display"><Link href="/">Avion</Link></h1>
         <div className="flex gap-4">
           <Link href="/cart">
             <ShoppingCart className="hidden md:flex" />
