@@ -15,22 +15,27 @@ import { useCart } from "@/lib/CartContext";
 import { toast } from "@/hooks/use-toast";
 import { Plus, Minus } from "lucide-react";
 
+interface Variation {
+  color: string; // Color of the product (e.g., "Red", "Blue")
+  size: string; // Size of the product (e.g., "S", "M", "L")
+  quantity: number; // Available quantity for the specific color and size
+}
+
 interface Product {
-  id: number;
-  name: string;
-  quantity: number;
-  price: number;
-  images: SanityImage[];
-  ratings: string;
-  sizes: string[];
-  colors: string[];
-  tags: string[];
-  description: string;
+  id: number; // Unique identifier for the product
+  name: string; // Name of the product
+  price: number; // Price of the product
+  images: SanityImage[]; // Array of images for the product
+  ratings: string; // Rating of the product (e.g., "4.5")
+  tags: string[]; // Tags associated with the product (e.g., ["Best Seller"])
+  description: string; // Detailed description of the product
+  variations: Variation[]; // Variations of the product with different colors, sizes, and quantities
 }
 
 const ProductDetails = () => {
   const { addToCart } = useCart();
   const [products, setProducts] = useState<Product[]>([]);
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([])
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
@@ -53,11 +58,16 @@ const ProductDetails = () => {
           metadata
         },
         ratings,
-        quantity,
-        sizes,
-        colors,
-        tags,
-        description
+        discountPercentage,
+        priceWithoutDiscount,
+        ratingCount,
+        description,
+        variations[] {
+          color,
+          size,
+          quantity
+        },
+        tags
       }`;
 
       try {
@@ -78,6 +88,37 @@ const ProductDetails = () => {
     fetchProducts();
   }, [productId]);
 
+    useEffect(() => {
+      const fetchFeaturedProducts = async () => {
+        const query2 = `*[_type == "product"]{
+          id,
+          name,
+          price,
+          "images": images[].asset->_id,
+          ratings,
+          discountPercentage,
+          priceWithoutDiscount,
+          ratingCount,
+          description,
+          variations[] {
+            color,
+            size,
+            quantity
+          },
+          tags
+        }`;
+  
+        try {
+          const fetchFeatured = await client.fetch(query2);
+          setFeaturedProducts(fetchFeatured);
+        } catch (error) {
+          console.error("Error fetching products:", error);
+        }
+      };
+  
+      fetchFeaturedProducts();
+    }, []);
+
   const handleAddToCart = () => {
     if (selectedColor && selectedSize && product && product.images.length > 0) {
       addToCart({
@@ -93,7 +134,7 @@ const ProductDetails = () => {
       toast({
         className: "rounded-none border border-[#27224b]",
         title: "Success!",
-        description:`${product.name}  is added to cart.`,
+        description: `${product.name}  is added to cart.`,
         duration: 5000,
       });
     } else {
@@ -108,10 +149,14 @@ const ProductDetails = () => {
   };
 
   const handleIncrement = () => {
-    if (product && quantity < product.quantity) {
-      setQuantity((prevQuantity) => {
-        return prevQuantity + 1;
-      });
+    if (selectedColor && selectedSize) {
+      const selectedVariation = product?.variations.find(
+        (variation) =>
+          variation.color === selectedColor && variation.size === selectedSize
+      );
+      if (selectedVariation && quantity < selectedVariation.quantity) {
+        setQuantity((prevQuantity) => prevQuantity + 1);
+      }
     }
   };
 
@@ -164,43 +209,53 @@ const ProductDetails = () => {
             </li>
           </ul>
 
-          <h2 className="mb-4 mt-2">Sizes</h2>
-
-          <ul className="flex gap-5">
-            {product.sizes.map((size) => (
-              <li key={size}>
-                <Button
-                  className={`rounded-none text-black ${
-                    selectedSize === size
-                      ? "bg-gray-300 hover:bg-gray-300"
-                      : "bg-gray-100 hover:bg-gray-200"
-                  }`}
-                  onClick={() => setSelectedSize(size)}
-                >
-                  {size}
-                </Button>
-              </li>
-            ))}
-          </ul>
-
           <h2 className="mb-4 mt-4">Colors</h2>
-
           <ul className="flex gap-5">
-            {product.colors.map((color) => (
-              <li key={color}>
-                <Button
-                  className={`rounded-none text-black ${
-                    selectedColor === color
-                      ? "bg-gray-300 hover:bg-gray-300"
-                      : "bg-gray-100 hover:bg-gray-200"
-                  }`}
-                  onClick={() => setSelectedColor(color)}
-                >
-                  {color}
-                </Button>
-              </li>
-            ))}
+            {product.variations
+              .map((variation) => variation.color)
+              .filter((color, index, self) => self.indexOf(color) === index) // Remove duplicate colors
+              .map((color) => (
+                <li key={color}>
+                  <Button
+                    className={`rounded-none text-black ${
+                      selectedColor === color
+                        ? "bg-gray-300 hover:bg-gray-300"
+                        : "bg-gray-100 hover:bg-gray-200"
+                    }`}
+                    onClick={() => {
+                      setSelectedColor(color);
+                      setSelectedSize(null); // Reset selected size on color change
+                    }}
+                  >
+                    {color}
+                  </Button>
+                </li>
+              ))}
           </ul>
+
+          {selectedColor && (
+            <>
+              <h2 className="mb-4 mt-4">Sizes with quantities</h2>
+              <ul className="flex gap-5">
+                {product.variations
+                  .filter((variation) => variation.color === selectedColor) // Filter by selected color
+                  .map((variation) => (
+                    <li key={variation.size}>
+                      <Button
+                        className={`rounded-none text-black ${
+                          selectedSize === variation.size
+                            ? "bg-gray-300 hover:bg-gray-300"
+                            : "bg-gray-100 hover:bg-gray-200"
+                        }`}
+                        onClick={() => setSelectedSize(variation.size)}
+                      >
+                        {variation.size} ({variation.quantity})
+                      </Button>
+                    </li>
+                  ))}
+              </ul>
+            </>
+          )}
 
           <div className="md:flex-row flex flex-col mt-10 gap-2 justify-between">
             <div className="md:flex hidden">
@@ -242,6 +297,7 @@ const ProductDetails = () => {
             <Button
               onClick={handleAddToCart}
               className="mt-4 md:mt-0 text-lg rounded-none w-full md:w-fit"
+              disabled={!product.variations.some((variation) => variation.quantity > 0)}
             >
               ADD TO CART
             </Button>
@@ -254,7 +310,7 @@ const ProductDetails = () => {
             You might also like
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-            {products.map((product, index) => (
+            {featuredProducts.slice(0, 4).map((product, index) => (
               <Link href={`/products/${product.id}`} key={product.id}>
                 <div key={index} className="flex flex-col">
                   <div className="relative aspect-[4/5] w-full mb-4">

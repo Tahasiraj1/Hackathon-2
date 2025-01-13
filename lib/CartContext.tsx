@@ -25,17 +25,22 @@ interface CartContextType {
     decrementQuantity: (item: CartItem) => void;
 }
 
+interface Variation {
+    color: string; // Color of the product (e.g., "Red", "Blue")
+    size: string; // Size of the product (e.g., "S", "M", "L")
+    quantity: number; // Available quantity for the specific color and size
+  }
+  
+
 interface Product {
     id: string;
     name: string;
-    quantity: number;
     price: number;
     images: { asset: { url: string } }[];
     ratings: string;
-    sizes: string[];
-    colors: string[];
     tags: string[];
     description: string;
+    variations: Variation[]; 
 }  
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -46,19 +51,23 @@ export default function CartProvider ({ children }: { children: ReactNode }) {
 
     useEffect(() => {
         const fetchProducts = async () => {
-            const query = `
-            *[_type == "product"] {
-            id,
-            name,
-            quantity,
-            price,
-            "images": images[].asset->url,
-            ratings,
-            sizes,
-            colors,
-            tags,
-            description
-            }`;
+            const query = `*[_type == "product"]{
+                id,
+                name,
+                price,
+                "images": images[].asset->_id,
+                ratings,
+                discountPercentage,
+                priceWithoutDiscount,
+                ratingCount,
+                description,
+                variations[] {
+                  color,
+                  size,
+                  quantity
+                },
+                tags
+              }`;
 
             const fetchedProducts = await client.fetch(query);
             setProducts(fetchedProducts);
@@ -76,18 +85,24 @@ export default function CartProvider ({ children }: { children: ReactNode }) {
     }, [cart]);
 
 
-    const getProductStock = (id: string) => {
+    const getProductStock = (id: string, color: string, size: string) => {
         const product = products.find((p: Product) => p.id === id);
-        return product ? product.quantity : 0; // Return 0 if the product is not found
+        if (!product) return 0;
+    
+        const variation = product.variations.find(
+            (v) => v.color === color && v.size === size
+        );
+    
+        return variation ? variation.quantity : 0;
     };
 
     const addToCart = (product: CartItem) => {
+        const productStock = getProductStock(product.id, product.color, product.size);
+
         setCart((prevCart) => {
             const existingProduct = prevCart.find(
                 (item) => item.id === product.id && item.color === product.color && item.size === product.size
             );
-
-            const productStock = getProductStock(product.id);
 
             if (existingProduct) {
                 return prevCart.map((item) => 
@@ -114,7 +129,7 @@ export default function CartProvider ({ children }: { children: ReactNode }) {
     };
 
     const incrementQuantity = (product: CartItem) => {
-        const productStock = getProductStock(product.id);
+        const productStock = getProductStock(product.id, product.color, product.size);
 
         setCart((prevCart) => 
             prevCart.map((item) => 

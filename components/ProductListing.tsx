@@ -50,11 +50,16 @@ const ProductListing = () => {
         price,
         "images": images[].asset->_id,
         ratings,
-        quantity,
-        sizes,
-        colors,
-        tags,
+        discountPercentage,
+        priceWithoutDiscount,
+        ratingCount,
         description,
+        variations[] {
+          color,
+          size,
+          quantity
+        },
+        tags
       }`;
 
       try {

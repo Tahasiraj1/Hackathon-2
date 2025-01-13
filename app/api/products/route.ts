@@ -3,17 +3,21 @@ import axios from "axios";
 import { NextResponse } from "next/server";
 import { nanoid } from 'nanoid';
 
+interface Variation {
+  color: string; // Color of the product (e.g., "Red", "Blue")
+  size: string; // Size of the product (e.g., "S", "M", "L")
+  quantity: number; // Available quantity for the specific color and size
+}
+
 interface Product {
   id: string;
   name: string;
-  quantity: number;
   price: number;
   image: string | string[];
   rating: string;
-  sizes: string[];
-  colors: string[];
   tags: string[];
   description: string;
+  variations: Variation[]; // Variations of the product with different colors, sizes, and quantities
 }
 
 const MOCK_API_URL = `${process.env.NEXT_MOCK_API}`;
@@ -43,6 +47,13 @@ export async function GET() {
 
       const operation = (async () => {
         const images = await uploadImagesToSanity(product.image);
+
+        const variations = product.variations.map((variation) => ({
+          color: variation.color,
+          size: variation.size,
+          quantity: variation.quantity,
+        }));
+
         const sanityProduct = {
           _type: "product",
           id: product.id,
@@ -50,11 +61,9 @@ export async function GET() {
           price: product.price,
           description: product.description,
           images,
-          quantity: product.quantity,
           ratings: product.rating,
-          sizes: product.sizes,
-          colors: product.colors,
           tags: product.tags,
+          variations,
         };
 
         return client.createOrReplace({
