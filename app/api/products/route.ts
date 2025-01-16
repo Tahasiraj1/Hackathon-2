@@ -22,7 +22,47 @@ interface Product {
 
 const MOCK_API_URL = `${process.env.NEXT_MOCK_API}`;
 
-export async function GET() {
+
+async function uploadImagesToSanity(image: string | string[]) {
+  if (!image) {
+    console.warn("No image URLs provided.");
+    return [];
+  }
+
+  const urls = Array.isArray(image) ? image : [image];
+  console.log("Processing the following URLs:", urls);
+
+  const assets = await Promise.all(
+    urls.map(async (url) => {
+      try {
+        console.log("Fetching image URL:", url);
+        const response = await axios.get(url, { responseType: "arraybuffer" });
+        console.log("Fetched image response status:", response.status);
+
+        const buffer = Buffer.from(response.data, "binary");
+        const asset = await client.assets.upload("image", buffer, {
+          filename: `product_image_${Date.now()}.jpg`,
+        });
+        console.log("Successfully uploaded asset:", asset);
+
+        return {
+          _type: "image",
+          _key: nanoid(),
+          asset: { _type: "reference", _ref: asset._id },
+        };
+      } catch (error) {
+        console.error(`Error uploading image from ${url}:`, error);
+        return null;
+      }
+    })
+  );
+
+  const filteredAssets = assets.filter(Boolean);
+  console.log("Final filtered assets:", filteredAssets);
+  return filteredAssets;
+}
+
+export async function POST() {
   try {
     const { data: products } = await axios.get<Product[]>(MOCK_API_URL);
     console.log("Fetched products:", products);
@@ -98,41 +138,20 @@ export async function GET() {
   }
 }
 
-async function uploadImagesToSanity(image: string | string[]) {
-  if (!image) {
-    console.warn("No image URLs provided.");
-    return [];
+
+export async function GET() {
+  try {
+    const query = `*[_type == "product"]`; // Fetch all products from Sanity
+    const products = await client.fetch(query);
+
+    return NextResponse.json(
+      { success: true, data: products },
+      { status: 200 }
+    );
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, message: "Error fetching products", error: error instanceof Error ? error.message : String(error) },
+      { status: 500 }
+    );
   }
-
-  const urls = Array.isArray(image) ? image : [image];
-  console.log("Processing the following URLs:", urls);
-
-  const assets = await Promise.all(
-    urls.map(async (url) => {
-      try {
-        console.log("Fetching image URL:", url);
-        const response = await axios.get(url, { responseType: "arraybuffer" });
-        console.log("Fetched image response status:", response.status);
-
-        const buffer = Buffer.from(response.data, "binary");
-        const asset = await client.assets.upload("image", buffer, {
-          filename: `product_image_${Date.now()}.jpg`,
-        });
-        console.log("Successfully uploaded asset:", asset);
-
-        return {
-          _type: "image",
-          _key: nanoid(),
-          asset: { _type: "reference", _ref: asset._id },
-        };
-      } catch (error) {
-        console.error(`Error uploading image from ${url}:`, error);
-        return null;
-      }
-    })
-  );
-
-  const filteredAssets = assets.filter(Boolean);
-  console.log("Final filtered assets:", filteredAssets);
-  return filteredAssets;
 }

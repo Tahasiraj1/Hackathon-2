@@ -89,35 +89,14 @@ const ProductDetails = () => {
   }, [productId]);
 
     useEffect(() => {
-      const fetchFeaturedProducts = async () => {
-        const query2 = `*[_type == "product"]{
-          id,
-          name,
-          price,
-          "images": images[].asset->_id,
-          ratings,
-          discountPercentage,
-          priceWithoutDiscount,
-          ratingCount,
-          description,
-          variations[] {
-            color,
-            size,
-            quantity
-          },
-          tags
-        }`;
-  
-        try {
-          const fetchFeatured = await client.fetch(query2);
-          setFeaturedProducts(fetchFeatured);
-        } catch (error) {
-          console.error("Error fetching products:", error);
-        }
-      };
-  
-      fetchFeaturedProducts();
+      fetch('/api/products')
+      .then((res) => res.json())
+      .then((data) => setFeaturedProducts(data.data))
+      .catch((error) => {
+        console.error("Error fetching featured products:", error);
+      });
     }, []);
+    
 
   const handleAddToCart = () => {
     if (selectedColor && selectedSize && product && product.images.length > 0) {
@@ -224,6 +203,7 @@ const ProductDetails = () => {
                     }`}
                     onClick={() => {
                       setSelectedColor(color);
+                      setQuantity(1)
                       setSelectedSize(null); // Reset selected size on color change
                     }}
                   >
@@ -247,7 +227,10 @@ const ProductDetails = () => {
                             ? "bg-gray-300 hover:bg-gray-300"
                             : "bg-gray-100 hover:bg-gray-200"
                         }`}
-                        onClick={() => setSelectedSize(variation.size)}
+                        onClick={() => {
+                          setSelectedSize(variation.size)
+                          setQuantity(1)
+                        }}
                       >
                         {variation.size} ({variation.quantity})
                       </Button>
