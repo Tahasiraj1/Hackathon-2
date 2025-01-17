@@ -13,6 +13,7 @@ interface Product {
   id: string;
   name: string;
   price: number;
+  discountPercentage: number;
   image: string | string[];
   rating: string;
   tags: string[];
@@ -99,6 +100,8 @@ export async function POST() {
           id: product.id,
           name: product.name,
           price: product.price,
+          priceWithoutDiscount: product.price,
+          discountPercentage: product.discountPercentage,
           description: product.description,
           images,
           ratings: product.rating,
