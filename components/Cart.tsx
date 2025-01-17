@@ -17,7 +17,7 @@ import { Plus, Minus, X } from "lucide-react";
 import Link from "next/link";
 
 const Cart = () => {
-  const { cart, clearCart, incrementQuantity, decrementQuantity, removeFromCart } = useCart();
+  const { cart, incrementQuantity, decrementQuantity, removeFromCart } = useCart();
 
   const totalPrice = (productId: string, productColor: string, productSize: string): number => {
     const product = cart.find((item) => item.id === productId && item.color === productColor && item.size === productSize);
