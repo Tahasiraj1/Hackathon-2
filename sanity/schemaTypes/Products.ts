@@ -20,7 +20,7 @@ export default defineType({
     defineField({
       name: "price",
       title: "Price",
-      type: "number",
+      type: "string",
       description: "The price of the product.",
     }),
     defineField({
@@ -50,7 +50,7 @@ export default defineType({
     }),
     defineField({
       name: "priceWithoutDiscount",
-      type: "number",
+      type: "string",
       title: "Price Without Discount",
       description: "Original price before discount",
     }),
