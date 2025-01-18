@@ -9,7 +9,6 @@ import { Button } from "./ui/button";
 import { ChevronDown } from "lucide-react";
 // import { Products } from '@/lib/products'
 import { urlFor } from "@/sanity/lib/image";
-import { client } from "@/sanity/lib/client";
 import { Image as SanityImage } from "@sanity/types";
 
 interface Product {
@@ -43,35 +42,35 @@ const ProductListing = () => {
   const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      const query = `*[_type == "product"]{
-        id,
-        name,
-        price,
-        "images": images[].asset->_id,
-        ratings,
-        discountPercentage,
-        priceWithoutDiscount,
-        ratingCount,
-        description,
-        variations[] {
-          color,
-          size,
-          quantity
-        },
-        tags
-      }`;
-
-      try {
-        const fetchedProducts = await client.fetch(query);
-        setProducts(fetchedProducts);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    };
-
-    fetchProducts();
+    fetch('/api/products')
+    .then((res) => res.json())
+    .then((data) => setProducts(data.data))
+    .catch((error) => {
+      console.error("Error fetching featured products:", error);
+    });
   }, []);
+
+  // useEffect(() => {
+  //   async function syncProducts() {
+  //     try {
+  //       const response = await fetch('/api/products', {
+  //         method: 'POST',
+  //       });
+    
+  //       const result = await response.json();
+  //       if (response.ok) {
+  //         console.log('Success:', result);
+  //       } else {
+  //         console.error('Error:', result);
+  //       }
+  //     } catch (error) {
+  //       console.error('Error making POST request:', error);
+  //     }
+  //   }
+    
+  //   // Call the function
+  //   syncProducts();
+  // })
 
   return (
     <div className="w-full flex flex-col items-center justify-center pb-10">

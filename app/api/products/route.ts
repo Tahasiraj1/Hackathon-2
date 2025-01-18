@@ -81,6 +81,9 @@ export async function POST() {
 
     const sanityOperations = [];
 
+    // First, delete all existing products
+    // await client.delete({query: '*[_type == "product"]'});
+
     for (const product of products) {
       await delay(1000); 
       console.log("Processing product:", product);
@@ -97,7 +100,7 @@ export async function POST() {
 
         const sanityProduct = {
           _type: "product",
-          id: product.id,
+          id: `${product.id}`,
           name: product.name,
           price: product.price,
           priceWithoutDiscount: product.price,
