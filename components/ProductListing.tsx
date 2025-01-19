@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import { Checkbox } from "./ui/checkbox";
 import { Label } from "./ui/label";
 import { Button } from "./ui/button";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Heart } from "lucide-react";
 import { urlFor } from "@/sanity/lib/image";
 import { Image as SanityImage } from "@sanity/types";
 import { Slider } from "./ui/slider";
@@ -16,6 +16,8 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useCart } from "@/lib/CartContext";
+import { toast } from "@/hooks/use-toast";
 
 interface Product {
   id: string;
@@ -47,6 +49,7 @@ const ProductListing = () => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [sliderValue, setSliderValue] = useState([0, 1000]);
   const productsPerPage = 6;
+  const { addToWishList } = useCart();
 
   useEffect(() => {
     fetch("/api/products")
@@ -56,6 +59,27 @@ const ProductListing = () => {
         console.error("Error fetching featured products:", error);
       });
   }, []);
+
+
+  const handleAddItemToWishList = (product: Product) => {
+    if (!product?.id) return;
+    addToWishList({
+      id: product.id.toString(),
+      image: product.images?.[0] as SanityImage,
+      name: product.name,
+      price: product.price,
+      description: product.description,
+      quantity: 1,
+      color: product.colors?.[0] || "",
+      size: product.sizes?.[0] || "",
+    });
+    toast({
+      className: "rounded-none border border-[#27224b]",
+      title: "Success!",
+      description: `${product.name}  is added to cart.`,
+      duration: 5000,
+    });
+  };
 
   const handleCategoryChange = (category: string, checked: boolean) => {
     if (checked) {
@@ -222,13 +246,20 @@ const ProductListing = () => {
               <div className="overflow-hidden">
                 {/* Check if image exists before rendering */}
                 {product.images?.[0] ? (
-                  <Image
-                    src={urlFor(product.images[0]).url()}
-                    alt={product.name}
-                    width={300}
-                    height={300}
-                    className="w-full h-auto object-cover"
-                  />
+                  <div className="relative">
+                    <Image
+                      src={urlFor(product.images[0]).url()}
+                      alt={product.name}
+                      width={300}
+                      height={300}
+                      className="w-full h-auto object-cover"
+                    />
+                    <Button 
+                    className="absolute top-0 right-0 bg-white hover:bg-white/90 active:scale-95 transition-transform transform duration-300 p-2 rounded-full w-fit h-fit" 
+                    onClick={() => handleAddItemToWishList(product)}>
+                      <Heart className="text-black" />
+                    </Button>
+                  </div>
                 ) : (
                   <div className="w-full h-24 md:h-60 bg-gray-200 flex items-center justify-center text-gray-500">
                     No Image Available
