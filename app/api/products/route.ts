@@ -146,19 +146,26 @@ export async function POST() {
 }
 
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
-    const query = `*[_type == "product"]`; // Fetch all products from Sanity
-    const products = await client.fetch(query);
+    const url = new URL(req.url)
+    const category = url.searchParams.get("category")
 
-    return NextResponse.json(
-      { success: true, data: products },
-      { status: 200 }
-    );
+    const query = category ? `*[_type == "product" && $category in categories]` : `*[_type == "product"]`
+
+    const params = category ? { category } : {}
+
+    const products = await client.fetch(query, params)
+
+    return NextResponse.json({ success: true, data: products }, { status: 200 })
   } catch (error) {
     return NextResponse.json(
-      { success: false, message: "Error fetching products", error: error instanceof Error ? error.message : String(error) },
-      { status: 500 }
-    );
+      {
+        success: false,
+        message: "Error fetching products",
+        error: error instanceof Error ? error.message : String(error),
+      },
+      { status: 500 },
+    )
   }
 }

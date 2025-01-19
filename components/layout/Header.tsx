@@ -66,9 +66,10 @@ const Header = () => {
                                 height={100}
                                 className="rounded-xl"
                               />
-                              <Button 
-                              className="absolute top-0 right-0 p-2 bg-transparent hover:bg-transparent hover:-rotate-90 text-black active:rotate-90 transition-transform transfrom duration-300" 
-                              onClick={() => removeFromWishlist(item)}>
+                              <Button
+                                className="absolute top-0 right-0 p-2 bg-transparent hover:bg-transparent hover:-rotate-90 text-black active:rotate-90 transition-transform transfrom duration-300"
+                                onClick={() => removeFromWishlist(item)}
+                              >
                                 <X />
                               </Button>
                               <div className="flex flex-col text-black">
@@ -105,13 +106,13 @@ const Header = () => {
               </SheetHeader>
               <div className="flex flex-col gap-4 mt-4">
                 <Link href="/products">All Products</Link>
-                <Link href="/products">Mens</Link>
-                <Link href="/products">Womens</Link>
-                <Link href="/products">Kids</Link>
-                <Link href="/products">Casual Wear</Link>
-                <Link href="/products">Formal Attire</Link>
-                <Link href="/products">Active Wear</Link>
-                <Link href="/products">Accessories</Link>
+                <Link href="/products/category/Mens">Mens</Link>
+                <Link href="/products/category/Womens">Womens</Link>
+                <Link href="/products/category/Kids">Kids</Link>
+                <Link href="/products/category/Casual Wear">Casual Wear</Link>
+                <Link href="/products/category/Formal Attire">Formal Attire</Link>
+                <Link href="/products/category/Active Wear">Active Wear</Link>
+                <Link href="/products/category/Accessories">Accessories</Link>
                 <h2>Profile</h2>
                 <Link href="/cart">
                   <h2>Cart</h2>
@@ -125,13 +126,13 @@ const Header = () => {
       <hr className="w-full mt-4" />
       <div className="hidden md:flex items-center justify-center gap-8 mt-4 font-satoshi">
         <Link href="/products">All Products</Link>
-        <Link href="/products">Mens</Link>
-        <Link href="/products">Womens</Link>
-        <Link href="/products">Kids</Link>
-        <Link href="/products">Casual Wear</Link>
-        <Link href="/products">Formal Attire</Link>
-        <Link href="/products">Active Wear</Link>
-        <Link href="/products">Accessories</Link>
+        <Link href="/products/category/Mens">Mens</Link>
+        <Link href="/products/category/Womens">Womens</Link>
+        <Link href="/products/category/Kids">Kids</Link>
+        <Link href="/products/category/Casual Wear">Casual Wear</Link>
+        <Link href="/products/category/Formal Attire">Formal Attire</Link>
+        <Link href="/products/category/Active Wear">Active Wear</Link>
+        <Link href="/products/category/Accessories">Accessories</Link>
       </div>
     </div>
   );
