@@ -9,6 +9,13 @@ import { Button } from "./ui/button";
 import { ChevronDown } from "lucide-react";
 import { urlFor } from "@/sanity/lib/image";
 import { Image as SanityImage } from "@sanity/types";
+import { Slider } from "./ui/slider";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface Product {
   id: string;
@@ -20,22 +27,25 @@ interface Product {
   sizes: string[];
   colors: string[];
   tags: string[];
+  categories: string[];
   description: string;
 }
 
 const productTypes = [
-  "Furniture",
-  "Homeware",
-  "Sofas",
-  "Light fittings",
+  "Mens",
+  "Womens",
+  "Kids",
+  "Casual Wear",
+  "Formal Attire",
+  "Active Wear",
   "Accessories",
 ];
-
-const price = ["0 - 100", "101 - 250", "250+"];
 
 const ProductListing = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [sliderValue, setSliderValue] = useState([0, 1000]);
   const productsPerPage = 6;
 
   useEffect(() => {
@@ -47,12 +57,37 @@ const ProductListing = () => {
       });
   }, []);
 
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+  const handleCategoryChange = (category: string, checked: boolean) => {
+    if (checked) {
+      setSelectedCategories((prev) => [...prev, category]);
+    } else {
+      setSelectedCategories((prev) => prev.filter((cat) => cat !== category));
+    }
+  };
+
+  const filteredProducts = selectedCategories.length
+    ? products.filter((product) =>
+        product.categories.some((category) =>
+          selectedCategories.includes(category)
+        )
+      )
+    : products;
+
+  const priceFilteredProducts = filteredProducts.filter(
+    (product) =>
+      product.price >= sliderValue[0] && product.price <= sliderValue[1]
+  );
 
   // Calculate indices for slicing products
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
+
+  const currentFilteredProducts = priceFilteredProducts.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   // Trigger POSTING.
   // useEffect(() => {
@@ -99,7 +134,12 @@ const ProductListing = () => {
           <div className="space-y-2">
             {productTypes.map((item) => (
               <div key={item} className="flex items-center space-x-2">
-                <Checkbox id={item} />
+                <Checkbox
+                  id={item}
+                  onCheckedChange={(checked) =>
+                    handleCategoryChange(item, checked as boolean)
+                  }
+                />
                 <Label
                   htmlFor={item}
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -111,27 +151,69 @@ const ProductListing = () => {
           </div>
           <h2 className="text-2xl font-semibold my-4">Price</h2>
           <div className="space-y-2">
-            {price.map((item) => (
-              <div key={item} className="flex items-center space-x-2">
-                <Checkbox id={item} />
-                <Label
-                  htmlFor={item}
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  {item}
-                </Label>
-              </div>
-            ))}
+            <Slider
+              value={sliderValue}
+              onValueChange={(value) => setSliderValue(value)} // Update slider value
+              min={0} // Min price
+              max={1000} // Max price
+              step={1} // Step for slider movement
+            />
+          </div>
+          <div className="flex justify-between mt-2">
+            <span>${sliderValue[0]}</span>
+            <span>${sliderValue[1]}</span>
           </div>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
-          <Button className="md:hidden bg-gray-100 hover:bg-gray-200 text-black">
-            Filters <ChevronDown />
-          </Button>
-          <Button className="md:hidden bg-gray-100 hover:bg-gray-200 text-black">
-            Sorting <ChevronDown />
-          </Button>
-          {currentProducts.map((product) => (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className="md:hidden bg-gray-100 hover:bg-gray-200 text-black"
+              >
+                Categories <ChevronDown />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              {productTypes.map((category) => (
+                <DropdownMenuCheckboxItem
+                  key={category}
+                  checked={selectedCategories.includes(category)}
+                  onCheckedChange={(checked) => {
+                    handleCategoryChange(category, checked);
+                  }}
+                >
+                  {category}
+                </DropdownMenuCheckboxItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className="md:hidden bg-gray-100 hover:bg-gray-200 text-black"
+              >
+                Filter <ChevronDown />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              <div className="space-y-2 mt-2">
+                <Slider
+                  value={sliderValue}
+                  onValueChange={(value) => setSliderValue(value)} // Update slider value
+                  min={0} // Min price
+                  max={1000} // Max price
+                  step={1} // Step for slider movement
+                />
+              </div>
+              <div className="flex justify-between mt-2">
+                <span>${sliderValue[0]}</span>
+                <span>${sliderValue[1]}</span>
+              </div>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          {currentFilteredProducts.map((product) => (
             <Link
               href={`/products/${product.id}`}
               key={product.id}
@@ -163,17 +245,22 @@ const ProductListing = () => {
       </div>
       {/* Pagination */}
       <div className="flex items-center justify-center mt-5">
-        {Array.from({ length: Math.ceil(products.length / productsPerPage) }, (_, i) => (
-          <button
-            key={i}
-            onClick={() => paginate(i + 1)}
-            className={`mx-1 px-3 py-1 border rounded-full ${
-              currentPage === i + 1 ? "bg-[#2A254B] text-white" : "bg-[#363061] text-white"
-            }`}
-          >
-            {i + 1}
-          </button>
-        ))}
+        {Array.from(
+          { length: Math.ceil(products.length / productsPerPage) },
+          (_, i) => (
+            <button
+              key={i}
+              onClick={() => paginate(i + 1)}
+              className={`mx-1 px-3 py-1 border rounded-full ${
+                currentPage === i + 1
+                  ? "bg-[#2A254B] text-white"
+                  : "bg-[#363061] text-white"
+              }`}
+            >
+              {i + 1}
+            </button>
+          )
+        )}
       </div>
     </div>
   );

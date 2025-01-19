@@ -98,5 +98,12 @@ export default defineType({
       ],
       description: "List of variations for the product, including size, color, and quantity.",
     }),
+    defineField({
+      name: "categories",
+      title: "Categories",
+      type: "array",
+      of: [{ type: "string" }],
+      description: "A list of categories this product belongs to.",
+    }),
   ],
 });
