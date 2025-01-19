@@ -7,7 +7,6 @@ import { Checkbox } from "./ui/checkbox";
 import { Label } from "./ui/label";
 import { Button } from "./ui/button";
 import { ChevronDown } from "lucide-react";
-// import { Products } from '@/lib/products'
 import { urlFor } from "@/sanity/lib/image";
 import { Image as SanityImage } from "@sanity/types";
 
@@ -24,31 +23,36 @@ interface Product {
   description: string;
 }
 
+const productTypes = [
+  "Furniture",
+  "Homeware",
+  "Sofas",
+  "Light fittings",
+  "Accessories",
+];
+
+const price = ["0 - 100", "101 - 250", "250+"];
+
 const ProductListing = () => {
-  const productTypes = [
-    "Furniture",
-    "Homeware",
-    "Sofas",
-    "Light fittings",
-    "Accessories",
-  ];
-  const price = ["0 - 100", "101 - 250", "250+"];
-  const Designer = [
-    "Robert Smith",
-    "Liam Gallagher",
-    "Biggie Smalls",
-    "Thom Yorke",
-  ];
   const [products, setProducts] = useState<Product[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const productsPerPage = 6;
 
   useEffect(() => {
-    fetch('/api/products')
-    .then((res) => res.json())
-    .then((data) => setProducts(data.data))
-    .catch((error) => {
-      console.error("Error fetching featured products:", error);
-    });
+    fetch("/api/products")
+      .then((res) => res.json())
+      .then((data) => setProducts(data.data))
+      .catch((error) => {
+        console.error("Error fetching featured products:", error);
+      });
   }, []);
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+  // Calculate indices for slicing products
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
 
   // Trigger POSTING.
   // useEffect(() => {
@@ -57,7 +61,7 @@ const ProductListing = () => {
   //       const response = await fetch('/api/products', {
   //         method: 'POST',
   //       });
-    
+
   //       const result = await response.json();
   //       if (response.ok) {
   //         console.log('Success:', result);
@@ -68,13 +72,13 @@ const ProductListing = () => {
   //       console.error('Error making POST request:', error);
   //     }
   //   }
-    
+
   //   // Call the function
   //   syncProducts();
   // })
 
   return (
-    <div className="w-full flex flex-col items-center justify-center pb-10 px-2">
+    <div className="w-full flex flex-col items-center justify-center pb-10">
       <Image
         src="/Images/Page Headers.png"
         alt="Page Header Image"
@@ -119,20 +123,6 @@ const ProductListing = () => {
               </div>
             ))}
           </div>
-          <h2 className="text-2xl font-semibold my-4">Designer</h2>
-          <div className="space-y-2">
-            {Designer.map((item) => (
-              <div key={item} className="flex items-center space-x-2">
-                <Checkbox id={item} />
-                <Label
-                  htmlFor={item}
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  {item}
-                </Label>
-              </div>
-            ))}
-          </div>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
           <Button className="md:hidden bg-gray-100 hover:bg-gray-200 text-black">
@@ -141,7 +131,7 @@ const ProductListing = () => {
           <Button className="md:hidden bg-gray-100 hover:bg-gray-200 text-black">
             Sorting <ChevronDown />
           </Button>
-          {products.map((product) => (
+          {currentProducts.map((product) => (
             <Link
               href={`/products/${product.id}`}
               key={product.id}
@@ -171,9 +161,20 @@ const ProductListing = () => {
           ))}
         </div>
       </div>
-      <Button className="bg-gray-200 rounded-none px-6 py-3 sm:py-4 hover:bg-gray-300 text-black w-full md:w-fit md:translate-x-32 mt-5 text-sm sm:text-base items-center justify-center">
-        Load more
-      </Button>
+      {/* Pagination */}
+      <div className="flex items-center justify-center mt-5">
+        {Array.from({ length: Math.ceil(products.length / productsPerPage) }, (_, i) => (
+          <button
+            key={i}
+            onClick={() => paginate(i + 1)}
+            className={`mx-1 px-3 py-1 border rounded-full ${
+              currentPage === i + 1 ? "bg-[#2A254B] text-white" : "bg-[#363061] text-white"
+            }`}
+          >
+            {i + 1}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };
