@@ -43,14 +43,13 @@ const Header = () => {
               </SheetHeader>
               <div className="flex flex-col gap-4 mt-4">
                 <Link href="/products">All Products</Link>
+                <Link href="/products">Mens</Link>
+                <Link href="/products">Womens</Link>
+                <Link href="/products">Kids</Link>
                 <Link href="/products">Casual Wear</Link>
                 <Link href="/products">Formal Attire</Link>
                 <Link href="/products">Active Wear</Link>
                 <Link href="/products">Accessories</Link>
-                <Link href="/products">All Products</Link>
-                <Link href="/products">Mens</Link>
-                <Link href="/products">Womens</Link>
-                <Link href="/products">Kids</Link>
                 <h2>Profile</h2>
                 <Link href="/cart">
                   <h2>Cart</h2>
@@ -63,13 +62,13 @@ const Header = () => {
       <hr className="w-full mt-4" />
       <div className="hidden md:flex items-center justify-center gap-8 mt-4 font-satoshi">
         <Link href="/products">All Products</Link>
+        <Link href="/products">Mens</Link>
+        <Link href="/products">Womens</Link>
+        <Link href="/products">Kids</Link>
         <Link href="/products">Casual Wear</Link>
         <Link href="/products">Formal Attire</Link>
         <Link href="/products">Active Wear</Link>
         <Link href="/products">Accessories</Link>
-        <Link href="/products">Mens</Link>
-        <Link href="/products">Womens</Link>
-        <Link href="/products">Kids</Link>
       </div>
     </div>
   );

@@ -23,12 +23,14 @@ const Footer = () => {
           <div>
             <h3 className="text-xl font-bold mb-4 mt-4 md:mt-0">Categories</h3>
             <ul className="space-y-2">
-              <li><Link href="#">Crokery</Link></li>
-              <li><Link href="#">Furniture</Link></li>
-              <li><Link href="#">Homeware</Link></li>
-              <li><Link href="#">Plant pots</Link></li>
-              <li><Link href="#">Chairs</Link></li>
-              <li><Link href="#">Crokery</Link></li>
+              <li><Link href="/products">All Products</Link></li>
+              <li><Link href="/products">Mens</Link></li>
+              <li><Link href="/products">Womens</Link></li>
+              <li><Link href="/products">Kids</Link></li>
+              <li><Link href="/products">Casual Wear</Link></li>
+              <li><Link href="/products">Formal Attire</Link></li>
+              <li><Link href="/products">Active Wear</Link></li>
+              <li><Link href="/products">Accessories</Link></li>
             </ul>
           </div>
 
