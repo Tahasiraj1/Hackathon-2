@@ -96,6 +96,7 @@ export async function POST() {
           color: variation.color,
           size: variation.size,
           quantity: variation.quantity,
+          _key: nanoid(),
         }));
 
         const sanityProduct = {

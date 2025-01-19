@@ -50,6 +50,7 @@ const ProductListing = () => {
     });
   }, []);
 
+  // Trigger POSTING.
   // useEffect(() => {
   //   async function syncProducts() {
   //     try {
@@ -73,7 +74,7 @@ const ProductListing = () => {
   // })
 
   return (
-    <div className="w-full flex flex-col items-center justify-center pb-10">
+    <div className="w-full flex flex-col items-center justify-center pb-10 px-2">
       <Image
         src="/Images/Page Headers.png"
         alt="Page Header Image"
@@ -88,7 +89,7 @@ const ProductListing = () => {
         height={100}
         className="w-full md:hidden"
       />
-      <div className="flex w-full px-4 md:px-6 lg:px-8 mt-8 gap-8">
+      <div className="flex w-full px-2 md:px-6 lg:px-8 mt-8 gap-8">
         <div className="md:flex flex-col w-1/4 hidden">
           <h2 className="text-2xl font-semibold mb-4">Product type</h2>
           <div className="space-y-2">
@@ -133,7 +134,7 @@ const ProductListing = () => {
             ))}
           </div>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full px-5">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
           <Button className="md:hidden bg-gray-100 hover:bg-gray-200 text-black">
             Filters <ChevronDown />
           </Button>
@@ -154,10 +155,10 @@ const ProductListing = () => {
                     alt={product.name}
                     width={300}
                     height={300}
-                    className="w-full h-96 object-cover"
+                    className="w-full h-auto object-cover"
                   />
                 ) : (
-                  <div className="w-full h-96 bg-gray-200 flex items-center justify-center text-gray-500">
+                  <div className="w-full h-24 md:h-60 bg-gray-200 flex items-center justify-center text-gray-500">
                     No Image Available
                   </div>
                 )}
