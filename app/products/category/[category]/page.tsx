@@ -4,13 +4,15 @@ import { useEffect, useState } from "react"
 import { useParams } from "next/navigation"
 import Image from "next/image"
 import { urlFor } from "@/sanity/lib/image"
+import { Image as SanityImage } from "@sanity/types";
+
 
 type Product = {
   id: string
   name: string
   categories: string[]
   price: number
-  images: any[]
+  images: SanityImage[];
 }
 
 const CategoryPage = () => {
@@ -46,15 +48,13 @@ const CategoryPage = () => {
         {products.length > 0 ? (
           products.map((product) => (
             <div key={product.id} className="product-card border rounded-lg overflow-hidden shadow-md">
-              {product.images && product.images[0] && (
                 <Image
-                  src={urlFor(product.images[0]).url() || "/placeholder.svg"}
+                  src={urlFor(product.images[0]).url()}
                   alt={product.name}
                   width={300}
                   height={300}
                   className="w-full h-48 object-cover"
                 />
-              )}
               <div className="p-4">
                 <h3 className="text-lg font-semibold mb-2">{product.name}</h3>
                 <p className="text-gray-600">${product.price}</p>
