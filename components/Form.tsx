@@ -22,15 +22,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { TrackShipment } from './TrackShipment';
-import { createCustomer } from '@/lib/customerId/createCustomer';
+// import { TrackShipment } from './TrackShipment';
+// import { createCustomer } from '@/lib/customerId/createCustomer';
 import { nanoid } from 'nanoid';
 
 const formSchema = z.object({
@@ -50,8 +43,8 @@ export default function CheckoutForm() {
   const { clearCart, cart } = useCart();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [labelInfo, setLabelInfo] = useState<any>(null);
-  const [trackingNumber, setTrackingNumber] = useState<string | null>(null);
+  // const [labelInfo, setLabelInfo] = useState<any>(null);
+  // const [trackingNumber, setTrackingNumber] = useState<string | null>(null);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -288,7 +281,7 @@ export default function CheckoutForm() {
           </Button>
         </form>
       </Form>
-      {labelInfo && (
+      {/* {labelInfo && (
         <div className="mt-8">
           <h2 className="text-2xl font-bold mb-4">Shipping Label Created</h2>
           <p>Tracking Number: {labelInfo.tracking_number}</p>
@@ -306,7 +299,7 @@ export default function CheckoutForm() {
           <h2 className="text-2xl font-bold mb-4">Track Your Shipment</h2>
           <TrackShipment trackingNumber={trackingNumber} />
         </div>
-      )}
+      )} */}
       {errorMessage && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-none relative" role="alert">
           <strong className="font-bold">Error:</strong>
