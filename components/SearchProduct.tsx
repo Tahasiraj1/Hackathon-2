@@ -94,14 +94,13 @@ const SearchProduct = () => {
           />
         </form>
       )}
-      <Button
+      <button
         type="button"
-        className={`rounded-full w-auto h-auto ${showSearch ? "opacity-0" : "opacity-100"}`}
+        className={`rounded-full w-auto h-auto p-0 m-0 ${showSearch ? "opacity-0" : "opacity-100"}`}
         onClick={handleSearchClick}
-        variant="ghost"
       >
-        <Search />
-      </Button>
+        <Search className="w-6 h-6 mr-1 mb-1.5" />
+      </button>
     </div>
   );
 };

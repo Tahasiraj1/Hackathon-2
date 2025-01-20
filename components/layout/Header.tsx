@@ -36,7 +36,7 @@ const Header = () => {
   const wishItem = wishList.length;
 
   return (
-    <div className="flex flex-col items-center justify-center bg-white w-full h-[132px] px-10">
+    <div className="flex flex-col items-center justify-center bg-white w-full h-[132px] px-5 md:px-10">
       <div className="flex w-full justify-between ">
         {/* Search Option below */}
         <div className="hidden md:flex">
@@ -46,11 +46,11 @@ const Header = () => {
         <h1 className="text-2xl font-clashDisplay">
           <Link href="/">Avion</Link>
         </h1>
-        <div className="flex gap-4">
+        <div className="flex gap-2.5 md:gap-4">
           {/* WishList below */}
           <div className="flex flex-col text-start">
             <Sheet>
-              <SheetTrigger asChild className="relative mr-4 lg:mr-0">
+              <SheetTrigger asChild className="relative">
                 <button>
                   <Heart className="relative w-6 h-6" />
                 </button>
