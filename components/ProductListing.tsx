@@ -48,16 +48,19 @@ const ProductListing = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [sliderValue, setSliderValue] = useState([0, 1000]);
+  const [loading, setLoading] = useState<boolean>(true);
   const productsPerPage = 6;
   const { toggleWishList, wishList } = useCart();
 
   useEffect(() => {
+    setLoading(true);
     fetch("/api/products")
       .then((res) => res.json())
       .then((data) => setProducts(data.data))
       .catch((error) => {
         console.error("Error fetching featured products:", error);
-      });
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   const handleAddItemToWishList = (
@@ -233,54 +236,65 @@ const ProductListing = () => {
               </div>
             </DropdownMenuContent>
           </DropdownMenu>
-          {currentFilteredProducts.map((product) => (
-            <Link
-              href={`/products/${product.id}`}
-              key={product.id}
-              className="block"
-            >
-              <div className="overflow-hidden">
-                {/* Check if image exists before rendering */}
-                {product.images?.[0] ? (
-                  <div className="relative group">
-                    <Image
-                      src={urlFor(product.images[0]).url()}
-                      alt={product.name}
-                      width={300}
-                      height={300}
-                      className="w-full h-auto object-cover"
-                    />
-                    <Button
-                      className="absolute top-0 right-0 translate-x-40 group-hover:translate-x-0 bg-white hover:bg-white/90 active:scale-95 transition-transform transform duration-300 ease-in-out p-2 rounded-full w-fit h-fit"
-                      onClick={(e) => handleAddItemToWishList(e, {
-                        id: product.id,
-                        name: product.name,
-                        price: product.price,
-                        image: product.images[0] as SanityImage
-                      })}
-                    >
-                      <Heart
-                        className={`${
-                          wishList.some(
-                            (item) => item.id === product.id)
-                            ? "text-red-600 fill-red-600"
-                            : "text-black fill-white"
-                        }`}
+          {loading ? (
+            <p className="text-center justify-center items-center font-clashDisplay text-2xl">
+              Loading products...
+            </p>
+          ) : currentFilteredProducts.length > 0 ? (
+            currentFilteredProducts.map((product) => (
+              <Link
+                href={`/products/${product.id}`}
+                key={product.id}
+                className="block"
+              >
+                <div className="overflow-hidden">
+                  {/* Check if image exists before rendering */}
+                  {product.images?.[0] ? (
+                    <div className="relative group">
+                      <Image
+                        src={urlFor(product.images[0]).url()}
+                        alt={product.name}
+                        width={300}
+                        height={300}
+                        className="w-full h-auto object-cover"
                       />
-                    </Button>
+                      <Button
+                        className="absolute top-0 right-0 translate-x-40 group-hover:translate-x-0 bg-white hover:bg-white/90 active:scale-95 transition-transform transform duration-300 ease-in-out p-2 rounded-full w-fit h-fit"
+                        onClick={(e) =>
+                          handleAddItemToWishList(e, {
+                            id: product.id,
+                            name: product.name,
+                            price: product.price,
+                            image: product.images[0] as SanityImage,
+                          })
+                        }
+                      >
+                        <Heart
+                          className={`${
+                            wishList.some((item) => item.id === product.id)
+                              ? "text-red-600 fill-red-600"
+                              : "text-black fill-white"
+                          }`}
+                        />
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="w-full h-24 md:h-60 bg-gray-200 flex items-center justify-center text-gray-500">
+                      No Image Available
+                    </div>
+                  )}
+                  <div className="p-4">
+                    <h3 className="text-lg font-semibold">{product.name}</h3>
+                    <p className="text-gray-600">{product.price}</p>
                   </div>
-                ) : (
-                  <div className="w-full h-24 md:h-60 bg-gray-200 flex items-center justify-center text-gray-500">
-                    No Image Available
-                  </div>
-                )}
-                <div className="p-4">
-                  <h3 className="text-lg font-semibold">{product.name}</h3>
-                  <p className="text-gray-600">{product.price}</p>
                 </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            ))
+          ) : (
+            <p className="col-span-full flex items-center justify-center font-clashDisplay text-4xl text-red-500">
+              No products found.
+            </p>
+          )}
         </div>
       </div>
       {/* Pagination */}

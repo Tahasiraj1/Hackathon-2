@@ -38,12 +38,12 @@ const CategoryPage = () => {
   }, [category]);
 
   if (loading) {
-    return <p>Loading products...</p>;
+    return <p className="flex items-center justify-center min-h-screen font-clashDisplay text-4xl">Loading products...</p>;
   }
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6 capitalize">
+      <h1 className="text-3xl font-clashDisplay mb-6 capitalize">
         {category ? `${category} Products` : "All Products"}
       </h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -68,7 +68,7 @@ const CategoryPage = () => {
             </Link>
           ))
         ) : (
-          <p className="col-span-full text-center text-gray-500">
+          <p className="col-span-full text-center font-clashDisplay text-4xl text-red-500">
             No products found for this category.
           </p>
         )}
