@@ -1,7 +1,7 @@
 'use client';
 
 // import React, { useEffect } from 'react';
-import { useCart, CartItem} from '@/lib/CartContext';
+import { useCart } from '@/lib/CartContext';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
