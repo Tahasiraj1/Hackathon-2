@@ -17,7 +17,7 @@ const Hero = () => {
             View collection
           </Button>
         </Link>
-        <h2 className="mt-20 md:mt-0">
+        <h2 className="mt-10 md:mt-0">
           A new era in eco friendly furniture with Avelon, the French luxury
           retail brand
           <br />
