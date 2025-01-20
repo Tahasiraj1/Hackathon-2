@@ -16,24 +16,22 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-// import { useToast } from "@/hooks/use-toast";
-// import dynamic from 'next/dynamic'
-// import OrderConfirmationDialog from './OrderConfirmationDialog';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-
-// const DynamicConfetti = dynamic(() => import('react-confetti'), {ssr: false})
-
-// type confettiProps = {
-//   width: number;
-//   height: number;
-// }
-
-// const confettiColors = ['#2C3E50', '#34495E', '#8E44AD', '#D35400', '#C0392B', '#7F8C8D', '#16A085'];
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { TrackShipment } from './TrackShipment';
+import { createCustomer } from '@/lib/customerId/createCustomer';
+import { nanoid } from 'nanoid';
 
 const formSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
@@ -49,24 +47,11 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 export default function CheckoutForm() {
-  // const { toast } = useToast();
-  const { clearCart } = useCart();
+  const { clearCart, cart } = useCart();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  // const [windowSize, setWindowSize] = useState<confettiProps>({width: 0, height: 0});
-  // const [orderPlaced, setOrderPlaced] = useState<boolean>(false)
-  // const [orderId, setOrderId] = useState<string | null>(null);
-  // const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //       setWindowSize({width: window.innerWidth, height: window.innerHeight})
-  //   }
-  //   handleResize()
-  //   window.addEventListener('resize', handleResize)
-  //   return () => window.removeEventListener('resize', handleResize)
-  // }, [])
-
+  const [labelInfo, setLabelInfo] = useState<any>(null);
+  const [trackingNumber, setTrackingNumber] = useState<string | null>(null);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -78,93 +63,91 @@ export default function CheckoutForm() {
       city: "",
       houseNo: "",
       postalCode: "",
-      country: "Pakistan",
+      country: "PK", // Set default country to Pakistan
     },
   });
 
-  const onSubmit = () => {
+  const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
     setErrorMessage(null);
-    alert("Order Placed successfully")
-    clearCart();
-    setIsSubmitting(false);
-  }
 
-  // const onSubmit = async (data: FormData) => {
-  //   setIsSubmitting(true);
-  //   setErrorMessage(null);
-  //   try {
-  //     const orderData = {
-  //       customerDetails: data,
-  //       items: cart.map(item => ({
-  //         productId: item.id,
-  //         name: item.name,
-  //         price: item.price,
-  //         quantity: item.quantity,
-  //         color: item.color,
-  //         size: item.size,
-  //       })),
-  //       totalAmount: cart.reduce((total, item) => total + item.price * item.quantity, 0),
-  //     };
+    try {
+      // Create shipping label
+      // const labelResponse = await fetch('/api/shipping/create-label', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({
+      //     shipment: {
+      //       name: `${data.firstName} ${data.lastName}`,
+      //       phone: data.phoneNumber,
+      //       address_line1: data.houseNo,
+      //       city_locality: data.city,
+      //       state_province: 'Sindh',
+      //       postal_code: data.postalCode,
+      //       country_code: data.country,
+      //     }
+      //   }),
+      // });
 
-  //     const response = await fetch('/api/orders', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify(orderData),
-  //     });
+      // if (!labelResponse.ok) {
+      //   const errorData = await labelResponse.json();
+      //   throw new Error(errorData.error || 'Failed to create shipping label');
+      // }
 
-  //     if (!response.ok) {
-  //       const errorData = await response.json();
-  //       throw new Error(errorData.error || 'Failed to place order');
-  //     }
+      // const labelData = await labelResponse.json();
 
-  //     const result = await response.json();
-  //     console.log('Order placed successfully:', result);
-  //     setOrderId(result.orderId);
-  //     setIsDialogOpen(true);
-  //     setOrderPlaced(true);
-  //     toast({
-  //       title: "Congratulations!",
-  //       description: "Your order has been placed successfully.",
-  //       duration: 5000,
-  //     });
-  //   } catch (error) {
-  //     console.error('Error placing order:', error);
-  //     setErrorMessage(error instanceof Error ? error.message : 'An unexpected error occurred');
-  //     toast({
-  //       title: "Error",
-  //       description: "Failed to place order. Please try again.",
-  //       variant: "destructive",
-  //       duration: 5000,
-  //     });
-  //   } finally {
-  //     setIsSubmitting(false);
-  //   }
-  // };
+      // setLabelInfo(labelData);
+      // setTrackingNumber(labelData.tracking_number);
+
+      // Create order
+      const orderResponse = await fetch("/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          order: {
+            orderId: nanoid(),
+            customerId: nanoid(),
+            name: `${data.firstName} ${data.lastName}`,
+            phone: data.phoneNumber,
+            email: data.email,
+            items: cart.map((item) => `product-${item.id}`), // Extract item IDs from cart
+            totalAmount: cart.reduce((total, item) => total + item.price * item.quantity, 0), // Calculate total
+            shippingAddress: {
+              address_line1: data.houseNo,
+              city_locality: data.city,
+              state_province: 'Sindh',
+              postal_code: data.postalCode,
+              country_code: data.country,
+            },
+            // serviceCode: "standard", // Add default or selected shipping method
+            // carrierId: "carrier_id", // Add carrierId or retrieve dynamically
+          },
+        }),
+      });
+
+      if (!orderResponse.ok) {
+        const errorData = await orderResponse.json();
+        throw new Error(errorData.error || "Failed to place order");
+      }
+
+      clearCart();
+      alert("Order placed successfully! Shipping label created.");
+    } catch (error) {
+      console.error('Error placing order:', error);
+      setErrorMessage(error instanceof Error ? error.message : 'An unexpected error occurred');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div>
-      {/* {orderPlaced && (
-        <div className="fixed inset-0 pointer-events-none z-50">
-        <DynamicConfetti
-          width={windowSize.width}
-          height={windowSize.height}
-          recycle={false}
-          numberOfPieces={800}
-          colors={confettiColors}
-        />
-      </div>
-      )} */}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-3xl mx-auto py-10">
-          {errorMessage && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-              <strong className="font-bold">Error:</strong>
-              <span className="block sm:inline"> {errorMessage}</span>
-            </div>
-          )}
           <div className="grid grid-cols-2 gap-4">
             <FormField
               control={form.control}
@@ -267,11 +250,10 @@ export default function CheckoutForm() {
               name="country"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Country</FormLabel>
+                  <FormLabel>Country / Region</FormLabel>
                   <FormControl>
-                    <Input className="rounded-none border-gray-300" placeholder="Pakistan" disabled {...field} />
+                    <Input className="rounded-none border-gray-300" placeholder="Pakistan" {...field} />
                   </FormControl>
-                  <FormDescription>We deliver goods only in Pakistan.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -280,7 +262,7 @@ export default function CheckoutForm() {
 
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="bank-transfer">
-              <AccordionTrigger className="text-lg font-semibold">Bank Transfer Details</AccordionTrigger>
+              <AccordionTrigger className="text-lg font-clashDisplay">Bank Transfer Details</AccordionTrigger>
               <AccordionContent>
                 <div className="space-y-2">
                   <p><strong>Bank Name:</strong> Example Bank</p>
@@ -306,13 +288,32 @@ export default function CheckoutForm() {
           </Button>
         </form>
       </Form>
-      {/* {orderPlaced && (
-        <OrderConfirmationDialog
-        isOpen={isDialogOpen}
-        onClose={() => setIsDialogOpen(false)}
-        orderId={`${orderId}`}
-        />
-      )} */}
+      {labelInfo && (
+        <div className="mt-8">
+          <h2 className="text-2xl font-bold mb-4">Shipping Label Created</h2>
+          <p>Tracking Number: {labelInfo.tracking_number}</p>
+          <p>Label ID: {labelInfo.label_id}</p>
+          <h3 className="text-xl font-semibold mt-4 mb-2">Label Download Links:</h3>
+          <ul className="list-disc list-inside">
+            <li><a href={labelInfo.label_download.pdf} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">PDF</a></li>
+            <li><a href={labelInfo.label_download.png} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">PNG</a></li>
+            <li><a href={labelInfo.label_download.zpl} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">ZPL</a></li>
+          </ul>
+        </div>
+      )}
+      {trackingNumber && (
+        <div className="mt-8">
+          <h2 className="text-2xl font-bold mb-4">Track Your Shipment</h2>
+          <TrackShipment trackingNumber={trackingNumber} />
+        </div>
+      )}
+      {errorMessage && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-none relative" role="alert">
+          <strong className="font-bold">Error:</strong>
+          <span className="block sm:inline"> {errorMessage}</span>
+        </div>
+      )}
     </div>
   );
 }
+
