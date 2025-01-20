@@ -90,13 +90,13 @@ const SearchProduct = () => {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search product"
-            className="px-4 py-2 rounded-none text-black -translate-x-32 md:-translate-x-0 w-36 md:w-56"
+            className="px-4 py-2 rounded-full text-black -translate-x-32 md:-translate-x-0 w-36 md:w-56"
           />
         </form>
       )}
       <Button
         type="button"
-        className={`bg-transparent hover:bg-transparent w-auto h-auto p-0 m-0 ${showSearch ? "opacity-0" : "opacity-100"}`}
+        className={`rounded-full w-auto h-auto ${showSearch ? "opacity-0" : "opacity-100"}`}
         onClick={handleSearchClick}
         variant="ghost"
       >

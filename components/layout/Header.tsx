@@ -31,12 +31,12 @@ const Header = () => {
           <SearchProduct />
         </div>
         {/* Website Name below */}
-        <h1 className="text-2xl font-clash-display">
+        <h1 className="text-2xl font-clashDisplay">
           <Link href="/">Avion</Link>
         </h1>
         <div className="flex gap-4">
           {/* WishList below */}
-          <div className="flex flex-col text-start font-clash-display">
+          <div className="flex flex-col text-start">
             <Sheet>
               <SheetTrigger asChild className="relative mr-4 lg:mr-0">
                 <button>
@@ -48,10 +48,10 @@ const Header = () => {
                 className="pt-16 border-r-0 border-t-0 border-b-0 border-l-2 border-[#2A254B] "
               >
                 <SheetHeader>
-                  <SheetTitle className="mb-10">WishList</SheetTitle>
+                  <SheetTitle className="mb-10 font-clashDisplay">WishList</SheetTitle>
                 </SheetHeader>
                 {wishItem === 0 ? (
-                  <p className="text-center text-lg">Your Wish Items Found</p>
+                  <p className="text-center text-lg font-clashDisplay">No Wish Items Found</p>
                 ) : (
                   <ScrollArea className="h-[calc(100vh-80px)] pr-4 w-full">
                     <ul className="flex flex-col">
