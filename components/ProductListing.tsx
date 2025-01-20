@@ -246,7 +246,7 @@ const ProductListing = () => {
               <div className="overflow-hidden">
                 {/* Check if image exists before rendering */}
                 {product.images?.[0] ? (
-                  <div className="relative">
+                  <div className="relative group">
                     <Image
                       src={urlFor(product.images[0]).url()}
                       alt={product.name}
@@ -255,7 +255,7 @@ const ProductListing = () => {
                       className="w-full h-auto object-cover"
                     />
                     <Button
-                      className="absolute top-0 right-0 bg-white hover:bg-white/90 active:scale-95 transition-transform transform duration-300 p-2 rounded-full w-fit h-fit"
+                      className="absolute top-0 right-0 translate-x-40 group-hover:translate-x-0 bg-white hover:bg-white/90 active:scale-95 transition-transform transform duration-300 ease-in-out p-2 rounded-full w-fit h-fit"
                       onClick={(e) => handleAddItemToWishList(e, product)}
                     >
                       <Heart
