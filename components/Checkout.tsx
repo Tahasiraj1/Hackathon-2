@@ -13,7 +13,7 @@ import { urlFor } from '@/sanity/lib/image';
 import { ScrollArea, ScrollBar } from './ui/scroll-area';
 
 const Checkout = () => {
-    const { cart, clearCart, removeFromCart } = useCart();
+    const { cart, clearCart } = useCart();
     // const { isSignedIn, isLoaded } = useAuth();
     // const router = useRouter();
 
@@ -22,10 +22,6 @@ const Checkout = () => {
     //         router.push('/sign-in');
     //     }
     // }, [isLoaded, isSignedIn, router]);
-
-    const handleRemoveFromCart = (item: CartItem) => {
-        removeFromCart(item);
-    };
 
     if (!cart || cart.length === 0) {
         return (
