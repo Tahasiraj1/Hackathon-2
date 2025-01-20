@@ -5,7 +5,7 @@ import { useCart, CartItem} from '@/lib/CartContext';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
-import { X } from 'lucide-react';
+// import { X } from 'lucide-react';
 import CheckoutForm from '@/components/Form';
 // import { useAuth } from '@clerk/nextjs';
 // import { useRouter } from 'next/navigation';

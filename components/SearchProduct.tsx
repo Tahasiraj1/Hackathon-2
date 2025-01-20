@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Image as SanityImage } from "@sanity/types";
-import { Button } from "./ui/button";
 import { Search } from "lucide-react";
 
 interface Product {
