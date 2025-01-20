@@ -17,14 +17,20 @@ import Image from "next/image";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { urlFor } from "@/sanity/lib/image";
 import { Button } from "../ui/button";
+import { WishItem } from "@/lib/CartContext";
 
 const Header = () => {
   const { wishList, removeFromWishlist } = useCart();
 
-  const handleRemoveFromWishlist = (e: React.MouseEvent, item: any) => {
+  const handleRemoveFromWishlist = (e: React.MouseEvent, item: WishItem) => {
     e.preventDefault() // Prevent navigation
     e.stopPropagation() // Stop event from bubbling up to parent elements
-    removeFromWishlist(item)
+    removeFromWishlist({
+        id: item.id,
+        name: item.name,
+        image: item.image,
+        price: item.price,
+    })
   }
 
   const wishItem = wishList.length;

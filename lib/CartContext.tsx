@@ -21,13 +21,20 @@ export interface CartItem {
   description: string;
 }
 
+export interface WishItem {
+    id: string;
+    name: string;
+    image: SanityImage;
+    price: number;
+}
+
 interface CartContextType {
   cart: CartItem[];
-  wishList: CartItem[];
+  wishList: WishItem[];
   addToCart: (item: CartItem) => void;
-  toggleWishList: (item: CartItem) => void;
+  toggleWishList: (item: WishItem) => void;
   removeFromCart: (item: CartItem) => void;
-  removeFromWishlist: (item: CartItem) => void;
+  removeFromWishlist: (item: WishItem) => void;
   clearCart: () => void;
   incrementQuantity: (item: CartItem) => void;
   decrementQuantity: (item: CartItem) => void;
@@ -55,7 +62,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export default function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
-  const [wishList, setWishList] = useState<CartItem[]>([]);
+  const [wishList, setWishList] = useState<WishItem[]>([]);
 
   useEffect(() => {
     fetch("/api/products")
@@ -125,7 +132,7 @@ export default function CartProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  const toggleWishList = (product: CartItem) => {
+  const toggleWishList = (product: WishItem) => {
     let actionMessage = ""; 
     const existingProduct = wishList.find((item) => item.id === product.id);
 
@@ -153,7 +160,7 @@ export default function CartProvider({ children }: { children: ReactNode }) {
       });
   };  
 
-  const removeFromWishlist = (product: CartItem) => {
+  const removeFromWishlist = (product: WishItem) => {
     setWishList((preWish) =>
       preWish.filter(
         (item) => item.id !== product.id)

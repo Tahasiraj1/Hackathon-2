@@ -17,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useCart } from "@/lib/CartContext";
+import { WishItem } from "@/lib/CartContext";
 
 interface Product {
   id: string;
@@ -61,7 +62,7 @@ const ProductListing = () => {
 
   const handleAddItemToWishList = (
     event: React.MouseEvent,
-    product: Product
+    product: WishItem
   ) => {
     event.preventDefault(); // Prevent navigation
     event.stopPropagation(); // Stop event from bubbling up to parent elements
@@ -69,14 +70,10 @@ const ProductListing = () => {
     if (!product?.id) return;
 
     toggleWishList({
-      id: product.id.toString(),
-      image: product.images?.[0] as SanityImage,
+      id: product.id,
       name: product.name,
       price: product.price,
-      description: product.description,
-      quantity: 1,
-      color: product.colors?.[0] || "",
-      size: product.sizes?.[0] || "",
+      image: product.image,
     });
   };
 
@@ -255,7 +252,12 @@ const ProductListing = () => {
                     />
                     <Button
                       className="absolute top-0 right-0 translate-x-40 group-hover:translate-x-0 bg-white hover:bg-white/90 active:scale-95 transition-transform transform duration-300 ease-in-out p-2 rounded-full w-fit h-fit"
-                      onClick={(e) => handleAddItemToWishList(e, product)}
+                      onClick={(e) => handleAddItemToWishList(e, {
+                        id: product.id,
+                        name: product.name,
+                        price: product.price,
+                        image: product.images[0] as SanityImage
+                      })}
                     >
                       <Heart
                         className={`${
