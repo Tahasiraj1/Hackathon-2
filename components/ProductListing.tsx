@@ -237,7 +237,7 @@ const ProductListing = () => {
             </DropdownMenuContent>
           </DropdownMenu>
           {loading ? (
-            <p className="text-center justify-center items-center font-clashDisplay text-2xl">
+            <p className="text-center justify-center items-center min-h-screen font-clashDisplay text-2xl">
               Loading products...
             </p>
           ) : currentFilteredProducts.length > 0 ? (
@@ -291,7 +291,7 @@ const ProductListing = () => {
               </Link>
             ))
           ) : (
-            <p className="col-span-full flex items-center justify-center font-clashDisplay text-4xl text-red-500">
+            <p className="col-span-full flex items-center justify-center min-h-screen font-clashDisplay text-4xl text-red-500">
               No products found.
             </p>
           )}
