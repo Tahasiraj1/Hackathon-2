@@ -8,6 +8,7 @@ import {
   ReactNode,
 } from "react";
 import { Image as SanityImage } from "@sanity/types";
+import { toast } from "@/hooks/use-toast";
 
 export interface CartItem {
   image: SanityImage;
@@ -24,7 +25,7 @@ interface CartContextType {
   cart: CartItem[];
   wishList: CartItem[];
   addToCart: (item: CartItem) => void;
-  addToWishList: (item: CartItem) => void;
+  toggleWishList: (item: CartItem) => void;
   removeFromCart: (item: CartItem) => void;
   removeFromWishlist: (item: CartItem) => void;
   clearCart: () => void;
@@ -124,46 +125,38 @@ export default function CartProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  const addToWishList = (product: CartItem) => {
-    const productStock = getProductStock(
-      product.id,
-      product.color,
-      product.size
-    );
+  const toggleWishList = (product: CartItem) => {
+    let actionMessage = ""; 
+    const existingProduct = wishList.find((item) => item.id === product.id);
 
     setWishList((prevWish) => {
-      const existingProduct = prevWish.find(
-        (item) =>
-          item.id === product.id &&
-          item.color === product.color &&
-          item.size === product.size
-      );
-
       if (existingProduct) {
-        return prevWish.map((item) =>
-          item.id === product.id &&
-          item.color === product.color &&
-          item.size === product.size &&
-          item.quantity < productStock
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
+        // remove from wishlist
+        actionMessage = `${product.name} is removed from wishlist.`;
+        return prevWish.filter((item) => item.id !== product.id );
+
       } else {
+        // Add to wishlist
+        actionMessage = `${product.name} is added to wishlist.`;
         return [...prevWish, { ...product }];
       }
     });
-  };
+
+    toast({
+        className: existingProduct
+          ? "rounded-none"
+          : "rounded-none border border-[#27224b]",
+        title: "Success!",
+        description: actionMessage,
+        duration: 5000,
+        variant: existingProduct ? "destructive" : "default",
+      });
+  };  
 
   const removeFromWishlist = (product: CartItem) => {
     setWishList((preWish) =>
       preWish.filter(
-        (item) =>
-          !(
-            item.id === product.id &&
-            item.color === product.color &&
-            item.size === product.size
-          )
-      )
+        (item) => item.id !== product.id)
     );
   };
 
@@ -227,7 +220,7 @@ export default function CartProvider({ children }: { children: ReactNode }) {
         clearCart,
         incrementQuantity,
         decrementQuantity,
-        addToWishList,
+        toggleWishList,
       }}
     >
       {children}

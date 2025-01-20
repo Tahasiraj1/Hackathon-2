@@ -21,6 +21,12 @@ import { Button } from "../ui/button";
 const Header = () => {
   const { wishList, removeFromWishlist } = useCart();
 
+  const handleRemoveFromWishlist = (e: React.MouseEvent, item: any) => {
+    e.preventDefault() // Prevent navigation
+    e.stopPropagation() // Stop event from bubbling up to parent elements
+    removeFromWishlist(item)
+  }
+
   const wishItem = wishList.length;
 
   return (
@@ -48,7 +54,7 @@ const Header = () => {
                 className="pt-16 border-r-0 border-t-0 border-b-0 border-l-2 border-[#2A254B] "
               >
                 <SheetHeader>
-                  <SheetTitle className="mb-10 font-clashDisplay">WishList</SheetTitle>
+                  <SheetTitle className="font-clashDisplay">WishList</SheetTitle>
                 </SheetHeader>
                 {wishItem === 0 ? (
                   <p className="text-center text-lg font-clashDisplay">No Wish Items Found</p>
@@ -68,7 +74,7 @@ const Header = () => {
                               />
                               <Button
                                 className="absolute top-0 right-0 p-2 bg-transparent hover:bg-transparent hover:-rotate-90 text-black active:rotate-90 transition-transform transfrom duration-300"
-                                onClick={() => removeFromWishlist(item)}
+                                onClick={(e) => handleRemoveFromWishlist(e, item)}
                               >
                                 <X />
                               </Button>

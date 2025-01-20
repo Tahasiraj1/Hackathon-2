@@ -49,7 +49,7 @@ const ProductListing = () => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [sliderValue, setSliderValue] = useState([0, 1000]);
   const productsPerPage = 6;
-  const { addToWishList } = useCart();
+  const { toggleWishList, wishList } = useCart();
 
   useEffect(() => {
     fetch("/api/products")
@@ -60,10 +60,16 @@ const ProductListing = () => {
       });
   }, []);
 
+  const handleAddItemToWishList = (
+    event: React.MouseEvent,
+    product: Product
+  ) => {
+    event.preventDefault(); // Prevent navigation
+    event.stopPropagation(); // Stop event from bubbling up to parent elements
 
-  const handleAddItemToWishList = (product: Product) => {
     if (!product?.id) return;
-    addToWishList({
+
+    toggleWishList({
       id: product.id.toString(),
       image: product.images?.[0] as SanityImage,
       name: product.name,
@@ -72,12 +78,6 @@ const ProductListing = () => {
       quantity: 1,
       color: product.colors?.[0] || "",
       size: product.sizes?.[0] || "",
-    });
-    toast({
-      className: "rounded-none border border-[#27224b]",
-      title: "Success!",
-      description: `${product.name}  is added to cart.`,
-      duration: 5000,
     });
   };
 
@@ -254,10 +254,18 @@ const ProductListing = () => {
                       height={300}
                       className="w-full h-auto object-cover"
                     />
-                    <Button 
-                    className="absolute top-0 right-0 bg-white hover:bg-white/90 active:scale-95 transition-transform transform duration-300 p-2 rounded-full w-fit h-fit" 
-                    onClick={() => handleAddItemToWishList(product)}>
-                      <Heart className="text-black" />
+                    <Button
+                      className="absolute top-0 right-0 bg-white hover:bg-white/90 active:scale-95 transition-transform transform duration-300 p-2 rounded-full w-fit h-fit"
+                      onClick={(e) => handleAddItemToWishList(e, product)}
+                    >
+                      <Heart
+                        className={`${
+                          wishList.some(
+                            (item) => item.id === product.id)
+                            ? "text-red-600 fill-red-600"
+                            : "text-black fill-white"
+                        }`}
+                      />
                     </Button>
                   </div>
                 ) : (
