@@ -17,7 +17,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useCart } from "@/lib/CartContext";
-import { toast } from "@/hooks/use-toast";
 
 interface Product {
   id: string;
