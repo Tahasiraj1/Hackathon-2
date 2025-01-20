@@ -5,6 +5,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Toaster } from "@/components/ui/toaster";
 import CartProvider from "@/lib/CartContext";
+import NetworkStatus from "@/components/layout/NetworkListener";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -35,6 +36,7 @@ export default function RootLayout({
         <CartProvider>
           <Header />
           {children}
+          <NetworkStatus />
           <Toaster />
           <Footer />
         </CartProvider>
