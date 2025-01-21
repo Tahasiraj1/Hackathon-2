@@ -35,7 +35,7 @@ interface Product {
 const ProductDetails = () => {
   const { addToCart } = useCart();
   const [products, setProducts] = useState<Product[]>([]);
-  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([])
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
@@ -88,15 +88,14 @@ const ProductDetails = () => {
     fetchProducts();
   }, [productId]);
 
-    useEffect(() => {
-      fetch('/api/products')
+  useEffect(() => {
+    fetch("/api/products")
       .then((res) => res.json())
       .then((data) => setFeaturedProducts(data.data))
       .catch((error) => {
         console.error("Error fetching featured products:", error);
       });
-    }, []);
-    
+  }, []);
 
   const handleAddToCart = () => {
     if (selectedColor && selectedSize && product && product.images.length > 0) {
@@ -203,7 +202,7 @@ const ProductDetails = () => {
                     }`}
                     onClick={() => {
                       setSelectedColor(color);
-                      setQuantity(1)
+                      setQuantity(1);
                       setSelectedSize(null); // Reset selected size on color change
                     }}
                   >
@@ -216,27 +215,39 @@ const ProductDetails = () => {
           {selectedColor && (
             <>
               <h2 className="mb-4 mt-4">Sizes with quantities</h2>
-              <ul className="flex gap-5">
-                {product.variations
-                  .filter((variation) => variation.color === selectedColor) // Filter by selected color
-                  .map((variation) => (
-                    <li key={variation.size}>
-                      <Button
-                        className={`rounded-none text-black ${
-                          selectedSize === variation.size
-                            ? "bg-gray-300 hover:bg-gray-300"
-                            : "bg-gray-100 hover:bg-gray-200"
-                        }`}
-                        onClick={() => {
-                          setSelectedSize(variation.size)
-                          setQuantity(1)
-                        }}
-                      >
-                        {variation.size} ({variation.quantity})
-                      </Button>
-                    </li>
-                  ))}
-              </ul>
+              {product.variations.some(
+                (variation) =>
+                  variation.color === selectedColor && variation.quantity > 0
+              ) ? (
+                <ul className="flex gap-5">
+                  {product.variations
+                    .filter((variation) => variation.color === selectedColor) // Don't filter by quantity here
+                    .map((variation) => (
+                      <li key={variation.size}>
+                        <Button
+                          className={`rounded-none text-black ${
+                            selectedSize === variation.size
+                              ? "bg-gray-300 hover:bg-gray-300"
+                              : "bg-gray-100 hover:bg-gray-200"
+                          }`}
+                          onClick={() => {
+                            if (variation.quantity > 0) {
+                              setSelectedSize(variation.size);
+                              setQuantity(1);
+                            }
+                          }}
+                          disabled={variation.quantity === 0} // Disable button for unavailable sizes
+                        >
+                          {variation.size} ({variation.quantity})
+                        </Button>
+                      </li>
+                    ))}
+                </ul>
+              ) : (
+                <p className="text-red-500">
+                  Out of stock
+                </p>
+              )}
             </>
           )}
 
@@ -280,7 +291,9 @@ const ProductDetails = () => {
             <Button
               onClick={handleAddToCart}
               className="mt-4 md:mt-0 text-lg rounded-none w-full md:w-fit"
-              disabled={!product.variations.some((variation) => variation.quantity > 0)}
+              disabled={
+                !product.variations.some((variation) => variation.quantity > 0)
+              }
             >
               ADD TO CART
             </Button>

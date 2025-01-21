@@ -22,9 +22,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-// import { TrackShipment } from './TrackShipment';
-// import { createCustomer } from '@/lib/customerId/createCustomer';
-import { nanoid } from 'nanoid';
+
 
 const formSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
@@ -56,70 +54,33 @@ export default function CheckoutForm() {
       city: "",
       houseNo: "",
       postalCode: "",
-      country: "PK", // Set default country to Pakistan
+      country: "Pakistan", // Set default country to Pakistan
     },
   });
 
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
     setErrorMessage(null);
-
+    // Create order
     try {
-      // Create shipping label
-      // const labelResponse = await fetch('/api/shipping/create-label', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     shipment: {
-      //       name: `${data.firstName} ${data.lastName}`,
-      //       phone: data.phoneNumber,
-      //       address_line1: data.houseNo,
-      //       city_locality: data.city,
-      //       state_province: 'Sindh',
-      //       postal_code: data.postalCode,
-      //       country_code: data.country,
-      //     }
-      //   }),
-      // });
-
-      // if (!labelResponse.ok) {
-      //   const errorData = await labelResponse.json();
-      //   throw new Error(errorData.error || 'Failed to create shipping label');
-      // }
-
-      // const labelData = await labelResponse.json();
-
-      // setLabelInfo(labelData);
-      // setTrackingNumber(labelData.tracking_number);
-
-      // Create order
+      const orderData = {
+        customerDetails: data,
+        items: cart.map(item => ({
+          productId: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          color: item.color,
+          size: item.size,
+        })),
+        totalAmount: cart.reduce((total, item) => total + item.price * item.quantity, 0),
+      };
       const orderResponse = await fetch("/api/orders", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          order: {
-            orderId: nanoid(),
-            customerId: nanoid(),
-            name: `${data.firstName} ${data.lastName}`,
-            phone: data.phoneNumber,
-            email: data.email,
-            items: cart.map((item) => `product-${item.id}`), // Extract item IDs from cart
-            totalAmount: cart.reduce((total, item) => total + item.price * item.quantity, 0), // Calculate total
-            shippingAddress: {
-              address_line1: data.houseNo,
-              city_locality: data.city,
-              state_province: 'Sindh',
-              postal_code: data.postalCode,
-              country_code: data.country,
-            },
-            // serviceCode: "standard", // Add default or selected shipping method
-            // carrierId: "carrier_id", // Add carrierId or retrieve dynamically
-          },
-        }),
+        body: JSON.stringify(orderData),
       });
 
       if (!orderResponse.ok) {
@@ -128,7 +89,7 @@ export default function CheckoutForm() {
       }
 
       clearCart();
-      alert("Order placed successfully! Shipping label created.");
+      alert("Order placed successfully!");
     } catch (error) {
       console.error('Error placing order:', error);
       setErrorMessage(error instanceof Error ? error.message : 'An unexpected error occurred');
@@ -281,6 +242,18 @@ export default function CheckoutForm() {
           </Button>
         </form>
       </Form>
+      {errorMessage && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-none relative" role="alert">
+          <strong className="font-bold">Error:</strong>
+          <span className="block sm:inline"> {errorMessage}</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+
       {/* {labelInfo && (
         <div className="mt-8">
           <h2 className="text-2xl font-bold mb-4">Shipping Label Created</h2>
@@ -300,13 +273,34 @@ export default function CheckoutForm() {
           <TrackShipment trackingNumber={trackingNumber} />
         </div>
       )} */}
-      {errorMessage && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-none relative" role="alert">
-          <strong className="font-bold">Error:</strong>
-          <span className="block sm:inline"> {errorMessage}</span>
-        </div>
-      )}
-    </div>
-  );
-}
+
+
+      // Create shipping label
+      // const labelResponse = await fetch('/api/shipping/create-label', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({
+      //     shipment: {
+      //       name: `${data.firstName} ${data.lastName}`,
+      //       phone: data.phoneNumber,
+      //       address_line1: data.houseNo,
+      //       city_locality: data.city,
+      //       state_province: 'Sindh',
+      //       postal_code: data.postalCode,
+      //       country_code: data.country,
+      //     }
+      //   }),
+      // });
+
+      // if (!labelResponse.ok) {
+      //   const errorData = await labelResponse.json();
+      //   throw new Error(errorData.error || 'Failed to create shipping label');
+      // }
+
+      // const labelData = await labelResponse.json();
+
+      // setLabelInfo(labelData);
+      // setTrackingNumber(labelData.tracking_number);
 
