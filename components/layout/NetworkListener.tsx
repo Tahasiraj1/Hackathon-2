@@ -21,7 +21,7 @@ export default function NetworkStatus() {
   if (typeof window === "undefined") return null;
 
   return isOffline ? (
-    <div className="fixed top-0 w-full bg-red-500 text-white text-center p-2">
+    <div className="fixed top-0 w-full bg-red-500 text-white text-center p-1">
       You are offline. Please check your connection.
     </div>
   ) : null;

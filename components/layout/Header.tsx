@@ -36,7 +36,7 @@ const Header = () => {
   const wishItem = wishList.length;
 
   return (
-    <div className="flex flex-col items-center justify-center bg-white w-full h-[132px] px-5 md:px-10">
+    <div className="flex flex-col items-center justify-center bg-white w-full h-[132px] pt-2 px-5 md:px-10">
       <div className="flex w-full justify-between ">
         {/* Search Option below */}
         <div className="hidden md:flex">
