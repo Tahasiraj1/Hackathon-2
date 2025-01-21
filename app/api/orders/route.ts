@@ -11,6 +11,12 @@ interface OrderItem {
   size?: string | null;
 }
 
+interface Variation {
+  color: string;
+  size: string;
+  quantity: number;
+}
+
 async function decrementProductQuantity(
   productId: string,
   color: string,
@@ -30,7 +36,7 @@ async function decrementProductQuantity(
     }
 
     const variationIndex = product.variations.findIndex(
-      (v: any) => v.color === color && v.size === size
+      (v: Variation) => v.color === color && v.size === size
     );
 
     if (variationIndex === -1) {
@@ -109,7 +115,7 @@ export async function POST(request: Request) {
         );
       }
       const variation = product.variations.find(
-        (v: any) => v.color === item.color && v.size === item.size
+        (v: Variation) => v.color === item.color && v.size === item.size
       );
       if (!variation || variation.quantity < item.quantity) {
         return NextResponse.json(
