@@ -10,12 +10,12 @@ export default defineType({
       title: 'Order ID',
       type: 'string',
     }),
-    defineField({
-      name: 'customer',
-      title: 'Customer',
-      type: 'reference',
-      to: [{ type: 'customer' }],
-    }),
+    // defineField({
+    //   name: 'customer',
+    //   title: 'Customer',
+    //   type: 'reference',
+    //   to: [{ type: 'customer' }],
+    // }),
     defineField({
       name: 'items',
       title: 'Items',
@@ -52,12 +52,12 @@ export default defineType({
         { name: 'country', type: 'string', title: 'Country' },
       ],
     }),
-    defineField({
-      name: "shipment",
-      title: "Shipment",
-      type: "reference",
-      to: [{ type: "shipment" }], // Reference to shipment schema
-    }),
+    // defineField({
+    //   name: "shipment",
+    //   title: "Shipment",
+    //   type: "reference",
+    //   to: [{ type: "shipment" }], // Reference to shipment schema
+    // }),
   ],
 })
 
