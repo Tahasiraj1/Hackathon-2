@@ -259,7 +259,8 @@ const ProductListing = () => {
                         className="w-full h-auto object-cover"
                       />
                       <Button
-                        className="absolute top-0 right-0 translate-x-40 group-hover:translate-x-0 bg-white hover:bg-white/90 active:scale-95 transition-transform transform duration-300 ease-in-out p-2 rounded-full w-fit h-fit"
+                        variant='ghost'
+                        className="absolute top-0 right-0 md:translate-x-40 md:group-hover:translate-x-0 md:bg-white md:hover:bg-white/90 bg-transparent hover:bg-transparent active:scale-95 transition-transform transform duration-300 ease-in-out p-2 rounded-full w-fit h-fit"
                         onClick={(e) =>
                           handleAddItemToWishList(e, {
                             id: product.id,
@@ -273,7 +274,7 @@ const ProductListing = () => {
                           className={`${
                             wishList.some((item) => item.id === product.id)
                               ? "text-red-600 fill-red-600"
-                              : "text-black fill-white"
+                              : "text-white md:text-black fill-white"
                           }`}
                         />
                       </Button>
@@ -291,7 +292,7 @@ const ProductListing = () => {
               </Link>
             ))
           ) : (
-            <p className="col-span-full flex items-center justify-center min-h-screen font-clashDisplay text-4xl text-red-500">
+            <p className="col-span-full flex items-center justify-center min-h-[300px] font-clashDisplay text-4xl text-red-500">
               No products found.
             </p>
           )}
