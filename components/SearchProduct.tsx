@@ -5,6 +5,7 @@ import { Search } from "lucide-react";
 import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
+import Link from "next/link";
 
 interface Product {
   id: string;
@@ -124,12 +125,13 @@ const SearchProduct = () => {
       {query && filteredProducts.length > 0 && (
         <ul className="absolute z-10  w-44 md:w-64 mt-[240px] max-h-[calc(4*3rem)] -translate-x-44 md:-translate-x-0 animate-in slide-in-from-top-10 duration-300 bg-white rounded-md shadow-lg overflow-hidden">
           <ScrollArea className="h-full" key={filteredProducts.length}>
-              {filteredProducts.map((product) => (
-                <li
-                  key={product.id}
-                  onClick={() => getProductsName(product.id)}
-                  className="px-4 py-2 cursor-pointer hover:bg-[#d3cff3]"
-                >
+            {filteredProducts.map((product) => (
+              <li
+                key={product.id}
+                onClick={() => getProductsName(product.id)}
+                className="px-4 py-2 cursor-pointer hover:bg-[#d3cff3]"
+              >
+                <Link href={`/products/${product.id}`}>
                   <div className="flex items-center justify-center gap-2">
                     <Image
                       src={
@@ -141,8 +143,9 @@ const SearchProduct = () => {
                     />
                     {product.name}
                   </div>
-                </li>
-              ))}
+                </Link>
+              </li>
+            ))}
             <ScrollBar orientation="vertical" />
           </ScrollArea>
         </ul>
