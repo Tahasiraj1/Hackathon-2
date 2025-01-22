@@ -150,10 +150,22 @@ export async function GET(req: Request) {
   try {
     const url = new URL(req.url)
     const category = url.searchParams.get("category")
+    const tag = url.searchParams.get("tags")
 
-    const query = category ? `*[_type == "product" && $category in categories]` : `*[_type == "product"]`
+    let query = '*[_type == "product"'
+    const params: Record<string, string> = {}
 
-    const params = category ? { category } : {}
+    if (category) {
+      query += ' && $category in categories'
+      params.category = category
+    }
+
+    if (tag) {
+      query += ' && $tag in tags'
+      params.tag = tag
+    }
+
+    query += ']'
 
     const products = await client.fetch(query, params)
 
