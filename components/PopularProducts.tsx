@@ -53,79 +53,25 @@ const PopularProducts = () => {
   }
 
   return (
-    <div className="flex flex-col w-full py-10 items-center justify-center bg-white text-black px-0 lg:px-10 pl-4 font-clashDisplay">
+    <div className="flex flex-col w-full py-10 items-center justify-center bg-white text-black px-4 sm:px-6 lg:px-10 font-clashDisplay">
       <div className="w-full">
         <h2 className="text-2xl text-start mb-10">Our popular products</h2>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           {products.slice(0, 4).map((p) => (
-            <div key={p.id}>
-              <Image
-                src={urlFor(p.images[0] as SanityImage).url()}
-                alt={p.name}
-                width={1000}
-                height={1000}
-                className="mb-4 w-[630px] h-[375px] "
-              />
-              <h3>The Popular suede sofa</h3>
-              <span>£980</span>
-            </div>
+            <Link href={`/products/${p.id}`} key={p.id}>
+              <div key={p.id} className="relative aspect-[4/5] w-full mb-4">
+                <Image
+                  src={urlFor(p.images[0] as SanityImage).url()}
+                  alt={p.name}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  className="object-cover"
+                />
+              </div>
+              <h3 className="text-lg font-medium">{p.name}</h3>
+              <span className="text-sm text-gray-600">{p.price}</span>
+            </Link>
           ))}
-          {/* <div className="w-[630px] h-[462px] flex-col md:flex hidden ">
-            <Image
-              src="/Images/Large.jpg"
-              alt="The dandy chair"
-              width={1000}
-              height={1000}
-              className="mb-4 w-[630px] h-[375px] "
-            />
-            <h3>The Popular suede sofa</h3>
-            <span>£980</span>
-          </div>
-          <div className="w-[305px] h-[462px] flex-col md:flex hidden ">
-            <Image
-              src="/Images/Photo.png"
-              alt="Rustic Vase Set"
-              width={1000}
-              height={1000}
-              className="mb-4 w-[305px] h-[375px] "
-            />
-            <h3>The Dandy chair</h3>
-            <span>£250</span>
-          </div>
-          <div className="w-[305px] h-[462px] flex-col md:flex hidden ">
-            <Image
-              src="/Images/Photo (4).png"
-              alt="The Silky Vase"
-              width={1000}
-              height={1000}
-              className="mb-4 w-[305px] h-[375px] "
-            />
-            <h3>The Dandy chair</h3>
-            <span>£250</span>
-          </div>
-          {/* Small screen products */}
-          {/* <div className="w-[305px] h-[462px] flex-col md:hidden ">
-            <Image
-              src="/Images/Photo (3).png"
-              alt="The Silky Vase"
-              width={1000}
-              height={1000}
-              className="mb-4 w-[305px] h-[375px] "
-            />
-            <h3>The Dandy chair</h3>
-            <span>£250</span>
-          </div>
-          <div className="w-[305px] h-[462px] flex-col md:hidden overflow-x-hidden ">
-            <Image
-              src="/Images/Photo (1).png"
-              alt="The Silky Vase"
-              width={1000}
-              height={1000}
-              className="mb-4 w-[305px] h-[375px] "
-            />
-            <h3>The Dandy chair</h3>
-            <span>£250</span>
-          </div>  */}
         </div>
       </div>
       <div className="flex justify-center items-center mt-8">
