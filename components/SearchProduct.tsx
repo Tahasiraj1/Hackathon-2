@@ -122,7 +122,7 @@ const SearchProduct = () => {
         </form>
       )}
       {query && filteredProducts.length > 0 && (
-        <ul className="absolute z-10 w-64 mt-[240px] max-h-[calc(4*3rem)] animate-in slide-in-from-top-10 duration-300 bg-white border rounded-md shadow-lg overflow-hidden">
+        <ul className="absolute z-10  w-44 md:w-64 mt-[240px] max-h-[calc(4*3rem)] -translate-x-44 md:-translate-x-0 animate-in slide-in-from-top-10 duration-300 bg-white rounded-md shadow-lg overflow-hidden">
           <ScrollArea className="h-full" key={filteredProducts.length}>
               {filteredProducts.map((product) => (
                 <li
