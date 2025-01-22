@@ -13,7 +13,7 @@ import { urlFor } from '@/sanity/lib/image';
 import { ScrollArea, ScrollBar } from './ui/scroll-area';
 
 const Checkout = () => {
-    const { cart, clearCart } = useCart();
+    const { cart } = useCart();
     // const { isSignedIn, isLoaded } = useAuth();
     // const router = useRouter();
 
@@ -41,7 +41,7 @@ const Checkout = () => {
                 <CheckoutForm />
             </div>
                 <div className='w-full md:w-[40%] h-fit flex flex-col border sticky top-36 py-4 px-2 rounded-none gap-2'>
-                    <h1 className='text-2xl pb-4 font-clashDisplay'>In your Cart</h1>
+                    <h1 className='text-2xl pb-4 font-clashDisplay'>Order Summary</h1>
                     <ScrollArea className='h-auto max-h-[260px]'>
                         {cart.map((item) => (
                                 <div key={`${item.id}-${item.color}-${item.size}`} className='flex items-center gap-4 rounded-none'>
@@ -65,10 +65,6 @@ const Checkout = () => {
                     </ScrollArea>
                     <div className='mt-8 flex justify-between'>
                         <h2 className='text-xl font-clashDisplay'>Total: PKR {cart.reduce((total, item) => total + item.price * item.quantity, 0)}</h2>
-                        <Button 
-                        onClick={clearCart} variant="destructive" className='rounded-none bg-gray-200 hover:bg-gray-300 text-black'>
-                            Clear Cart
-                        </Button>
                     </div>
                 </div>
         </div>

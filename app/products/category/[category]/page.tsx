@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
 import { Image as SanityImage } from "@sanity/types";
 import Link from "next/link";
+import { BounceLoader } from "react-spinners";
 
 type Product = {
   id: string;
@@ -38,7 +39,13 @@ const CategoryPage = () => {
   }, [category]);
 
   if (loading) {
-    return <p className="flex items-center justify-center min-h-screen font-clashDisplay text-4xl">Loading products...</p>;
+    return (
+      <Suspense>
+        <p className="flex items-center justify-center min-h-screen font-clashDisplay text-4xl">
+          <BounceLoader color="#2A254B" />
+        </p>
+      </Suspense>
+    );
   }
 
   return (
@@ -50,9 +57,7 @@ const CategoryPage = () => {
         {products.length > 0 ? (
           products.map((product) => (
             <Link key={product.id} href={`/products/${product.id}`}>
-              <div
-                className="product-card border rounded-lg overflow-hidden shadow-md"
-              >
+              <div className="product-card border rounded-lg overflow-hidden shadow-md">
                 <Image
                   src={urlFor(product.images[0]).url()}
                   alt={product.name}
