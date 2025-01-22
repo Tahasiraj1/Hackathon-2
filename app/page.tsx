@@ -1,9 +1,10 @@
-import BriefAbout from "@/components/BriefAbout";
+import React from "react";
 import Hero from "@/components/Hero";
-import JoinClub from "@/components/JoinClub";
 import NewCeramics from "@/components/NewCeramics";
 import PopularProducts from "@/components/PopularProducts";
-import WhatMakesUsDiff from "@/components/WhatMakesUsDiff";
+const WhatMakesUsDiff = React.lazy(() => import("@/components/WhatMakesUsDiff"));
+const JoinClub = React.lazy(() => import("@/components/JoinClub"));
+const BriefAbout = React.lazy(() => import ("@/components/BriefAbout"));
 
 export default function Home() {
   return (

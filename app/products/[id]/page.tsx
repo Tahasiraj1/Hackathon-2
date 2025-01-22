@@ -1,11 +1,12 @@
 "use client";
 
+import React, { Suspense } from 'react';
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Dot } from "lucide-react";
-import WhatMakesUsDiff from "@/components/WhatMakesUsDiff";
-import JoinClub from "@/components/JoinClub";
+const WhatMakesUsDiff = React.lazy(() => import("@/components/WhatMakesUsDiff"));
+const JoinClub = React.lazy(() => import("@/components/JoinClub"));
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { urlFor } from "@/sanity/lib/image";
@@ -14,28 +15,30 @@ import { client } from "@/sanity/lib/client";
 import { useCart } from "@/lib/CartContext";
 import { toast } from "@/hooks/use-toast";
 import { Plus, Minus } from "lucide-react";
+import { BounceLoader } from 'react-spinners'
 
 interface Variation {
-  color: string; // Color of the product (e.g., "Red", "Blue")
-  size: string; // Size of the product (e.g., "S", "M", "L")
-  quantity: number; // Available quantity for the specific color and size
+  color: string; 
+  size: string; 
+  quantity: number; 
 }
 
 interface Product {
-  id: number; // Unique identifier for the product
-  name: string; // Name of the product
-  price: number; // Price of the product
-  images: SanityImage[]; // Array of images for the product
-  ratings: string; // Rating of the product (e.g., "4.5")
-  tags: string[]; // Tags associated with the product (e.g., ["Best Seller"])
-  description: string; // Detailed description of the product
-  variations: Variation[]; // Variations of the product with different colors, sizes, and quantities
+  id: number; 
+  name: string; 
+  price: number; 
+  categories: string[];
+  images: SanityImage[];
+  ratings: string; 
+  tags: string[]; 
+  description: string; 
+  variations: Variation[]; 
 }
 
 const ProductDetails = () => {
   const { addToCart } = useCart();
   const [products, setProducts] = useState<Product[]>([]);
-  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
@@ -50,13 +53,7 @@ const ProductDetails = () => {
         id,
         name,
         price,
-          "images": images[].asset->{
-          _id,
-          _key,
-          _ref,
-          url,
-          metadata
-        },
+          "images": images[].asset->url,
         ratings,
         discountPercentage,
         priceWithoutDiscount,
@@ -67,7 +64,8 @@ const ProductDetails = () => {
           size,
           quantity
         },
-        tags
+        tags,
+        categories,
       }`;
 
       try {
@@ -89,13 +87,32 @@ const ProductDetails = () => {
   }, [productId]);
 
   useEffect(() => {
-    fetch("/api/products")
-      .then((res) => res.json())
-      .then((data) => setFeaturedProducts(data.data))
-      .catch((error) => {
-        console.error("Error fetching featured products:", error);
-      });
-  }, []);
+    const fetchRelatedProducts = async () => {
+      if (product && product.categories && product.categories.length > 0) {
+        const query = `*[_type == "product" && id != $productId && count((categories[])[@ in $categories]) > 0] {
+          id,
+          name,
+          price,
+          "images": images[].asset->url,
+          categories
+        }[0...4]`
+
+        try {
+          const fetchedRelatedProducts = await client.fetch(query, {
+            productId: product.id,
+            categories: product.categories,
+          })
+
+          setRelatedProducts(fetchedRelatedProducts)
+        } catch (error) {
+          console.error("Error fetching related products:", error)
+        }
+      }
+    }
+
+    fetchRelatedProducts()
+  }, [product])
+  
 
   const handleAddToCart = () => {
     if (selectedColor && selectedSize && product && product.images.length > 0) {
@@ -290,7 +307,7 @@ const ProductDetails = () => {
             </div>
             <Button
               onClick={handleAddToCart}
-              className="mt-4 md:mt-0 text-lg rounded-none w-full md:w-fit"
+              className="mt-4 md:mt-0 text-lg bg-[#2A254B] hover:bg-[#332d5c] rounded-none w-full md:w-fit"
               disabled={
                 !product.variations.some((variation) => variation.quantity > 0)
               }
@@ -306,7 +323,7 @@ const ProductDetails = () => {
             You might also like
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-            {featuredProducts.slice(0, 4).map((product, index) => (
+            {relatedProducts.slice(0, 4).map((product, index) => (
               <Link href={`/products/${product.id}`} key={product.id}>
                 <div key={index} className="flex flex-col">
                   <div className="relative aspect-[4/5] w-full mb-4">
@@ -326,15 +343,20 @@ const ProductDetails = () => {
           </div>
         </div>
         <div className="flex justify-center items-center mt-8 sm:mt-12">
-          <Link href="/products">
+          <Link href={`/products/category/${product.categories}`}>
             <Button className="bg-gray-200 rounded-none px-6 py-3 sm:py-4 hover:bg-gray-300 text-black w-fit text-sm sm:text-base">
               View collection
             </Button>
           </Link>
         </div>
       </div>
-      <WhatMakesUsDiff />
-      <JoinClub />
+      <Suspense fallback={<div className='flex items-center justify-center'><BounceLoader color='#2A254B' /></div>}>
+        <WhatMakesUsDiff />
+      </Suspense>
+
+      <Suspense fallback={<div className='mb-10'></div>}>
+        <JoinClub />
+      </Suspense>
     </>
   );
 };
