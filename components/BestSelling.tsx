@@ -55,7 +55,7 @@ const BestSelling = () => {
   return (
     <div className="flex flex-col w-full py-10 items-center justify-center bg-white text-black px-4 sm:px-6 lg:px-10 font-clashDisplay">
       <div className="w-full max-w-7xl">
-        <h2 className="text-2xl text-start mb-6 sm:mb-10">New ceramics</h2>
+        <h2 className="text-2xl text-start mb-6 sm:mb-10">Our Best Sellers</h2>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           {products.slice(0, 4).map((product, index) => (
             <Link href={`/products/${product.id}`} key={product.id}>
