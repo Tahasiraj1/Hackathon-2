@@ -34,9 +34,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <CartProvider>
+        <div className="mb-2">
+          <NetworkStatus />
+          </div>
           <Header />
           {children}
-          <NetworkStatus />
           <Toaster />
           <Footer />
         </CartProvider>
