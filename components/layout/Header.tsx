@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+// import React, { useEffect, useState } from "react";
 import { ShoppingCart, CircleUser } from "lucide-react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -10,37 +10,37 @@ const MobileMenuSheet = dynamic(() => import("./MobileMenuSheet"));
 const WishList = dynamic(() => import("./WishList"));
 
 const Header = () => {
-  const [isScrollingDown, setIsScrollingDown] = useState(false);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  // const [isScrollingDown, setIsScrollingDown] = useState(false);
+  // const [lastScrollY, setLastScrollY] = useState(0);
 
-  useEffect(() => {
-    let ticking = false;
+  // useEffect(() => {
+  //   let ticking = false;
   
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
+  //   const handleScroll = () => {
+  //     const currentScrollY = window.scrollY;
   
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          if (currentScrollY > lastScrollY && currentScrollY > 100) {
-            setIsScrollingDown(true);
-          } else {
-            setIsScrollingDown(false);
-          }
+  //     if (!ticking) {
+  //       window.requestAnimationFrame(() => {
+  //         if (currentScrollY > lastScrollY && currentScrollY > 100) {
+  //           setIsScrollingDown(true);
+  //         } else {
+  //           setIsScrollingDown(false);
+  //         }
   
-          setLastScrollY(currentScrollY);
-          ticking = false;
-        });
+  //         setLastScrollY(currentScrollY);
+  //         ticking = false;
+  //       });
   
-        ticking = true;
-      }
-    };
+  //       ticking = true;
+  //     }
+  //   };
   
-    window.addEventListener("scroll", handleScroll, { passive: true });
+  //   window.addEventListener("scroll", handleScroll, { passive: true });
   
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [lastScrollY]);
+  //   return () => {
+  //     window.removeEventListener("scroll", handleScroll);
+  //   };
+  // }, [lastScrollY]);
   
 
   return (
@@ -77,10 +77,8 @@ const Header = () => {
 
         {/* Categories Section */}
         <div
-          className={`w-full overflow-hidden transition-all duration-300 ease-in-out ${
-            isScrollingDown ? "max-h-0 mt-0 opacity-0" : "max-h-16 mt-1 opacity-100"
-          }`}
-        >
+          className={`w-full overflow-hidden transition-all duration-300 ease-in-out`}
+>
           <div className="hidden md:flex items-center justify-center gap-8 font-satoshi py-2">
             <Link href="/products">All Products</Link>
             <Link href="/products/category/Mens">Mens</Link>
