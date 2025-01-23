@@ -77,8 +77,8 @@ const Header = () => {
 
         {/* Categories Section */}
         <div
-          className={`w-full overflow-hidden transition-all duration-300 ease-in-out ${
-            isScrollingDown ? "-translate-y-full max-h-0" : "translate-y-0 max-h-16"
+          className={`w-full overflow-hidden transition-all mt-1 duration-300 ease-in-out ${
+            isScrollingDown ? "-translate-y-full max-h-0 mt-0" : "translate-y-0 max-h-16"
           }`}
         >
           <div className="hidden md:flex items-center justify-center gap-8 font-satoshi py-2">
