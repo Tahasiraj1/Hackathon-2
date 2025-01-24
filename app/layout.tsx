@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
 import { Toaster } from "@/components/ui/toaster";
 import CartProvider from "@/lib/CartContext";
 import NetworkStatus from "@/components/layout/NetworkListener";
@@ -34,13 +32,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <CartProvider>
-        <div className="mb-2">
-          <NetworkStatus />
+          <div className="mb-2">
+            <NetworkStatus />
           </div>
-          <Header />
           {children}
           <Toaster />
-          <Footer />
         </CartProvider>
       </body>
     </html>
