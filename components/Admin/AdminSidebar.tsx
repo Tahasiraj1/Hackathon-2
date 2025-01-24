@@ -13,11 +13,11 @@ import {
   SidebarMenuItem,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
+import Link from "next/link"
 
 const sidebarItems = [
   { icon: Home, label: "Home", href: "/" },
   { icon: Home, label: "Dashboard", href: "/admin" },
-  { icon: ShoppingCart, label: "Orders", href: "/admin/pending-orders" },
   { icon: Package, label: "Products", href: "/admin/products" },
   { icon: Users, label: "Customers", href: "/admin/customers" },
   { icon: BarChart, label: "Analytics", href: "/admin/analytics" },
@@ -43,6 +43,28 @@ export default function AdminSidebar() {
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
+            <SidebarGroup>
+              <SidebarGroupLabel><ShoppingCart className="mr-3 h-4 w-4" />Orders</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild>
+                      <Link href="/admin/pending-orders">Pending Orders</Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild>
+                      <Link href="/admin/dispatched-orders">Dispatched Orders</Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild>
+                      <Link href="/admin/dispatched-orders">Completed Orders</Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>

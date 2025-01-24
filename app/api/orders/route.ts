@@ -66,9 +66,15 @@ async function decrementProductQuantity(
 }
 
 export async function POST(request: Request) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const body = await request.json();
-    // console.log("Received order data:", JSON.stringify(body, null, 2));
+    console.log("Received order data:", JSON.stringify(body, null, 2));
 
     if (!body || typeof body !== "object") {
       return NextResponse.json(
@@ -115,15 +121,18 @@ export async function POST(request: Request) {
       const product = await client.fetch(
         `*[_type == "product" && id == "${item.productId}"][0]`
       );
+      
       if (!product) {
         return NextResponse.json(
           { success: false, error: `Product not found: ${item.name}` },
           { status: 400 }
         );
       }
+
       const variation = product.variations.find(
         (v: Variation) => v.color === item.color && v.size === item.size
       );
+
       if (!variation || variation.quantity < item.quantity) {
         return NextResponse.json(
           {
@@ -141,6 +150,7 @@ export async function POST(request: Request) {
         // Create the order
         const newOrder = await prismaClient.order.create({
           data: {
+            clerkId: userId,
             customerDetails: {
               create: customerDetails,
             },
@@ -184,7 +194,7 @@ export async function POST(request: Request) {
     );
     if (failedUpdates.length > 0) {
       console.error("Some product quantities failed to update:", failedUpdates);
-      // Here you might want to implement a rollback mechanism or alert an admin
+      // Here I've to implement a rollback mechanism to undo the order creation
     }
 
     console.log("Order created successfully:", JSON.stringify(order, null, 2));

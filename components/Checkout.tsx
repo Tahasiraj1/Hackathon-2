@@ -1,27 +1,26 @@
 'use client';
 
-// import React, { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useCart } from '@/lib/CartContext';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
-// import { X } from 'lucide-react';
 import CheckoutForm from '@/components/Form';
-// import { useAuth } from '@clerk/nextjs';
-// import { useRouter } from 'next/navigation';
+import { useAuth } from '@clerk/nextjs';
+import { useRouter } from 'next/navigation';
 import { urlFor } from '@/sanity/lib/image';
 import { ScrollArea, ScrollBar } from './ui/scroll-area';
 
 const Checkout = () => {
     const { cart } = useCart();
-    // const { isSignedIn, isLoaded } = useAuth();
-    // const router = useRouter();
+    const { isSignedIn, isLoaded } = useAuth();
+    const router = useRouter();
 
-    // useEffect(() => {
-    //     if (isLoaded && !isSignedIn) {
-    //         router.push('/sign-in');
-    //     }
-    // }, [isLoaded, isSignedIn, router]);
+    useEffect(() => {
+        if (isLoaded && !isSignedIn) {
+            router.push('/sign-up');
+        }
+    }, [isLoaded, isSignedIn, router]);
 
     if (!cart || cart.length === 0) {
         return (
