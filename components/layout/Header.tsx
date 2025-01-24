@@ -15,9 +15,9 @@ import {
   SignInButton,
   SignedOut,
   UserButton,
-  useUser,
+  // useUser,
 } from "@clerk/nextjs";
-import { Button } from "../ui/button";
+// import { Button } from "../ui/button";
 
 const SearchProduct = dynamic(() => import("../SearchProduct"));
 const MobileMenuSheet = dynamic(() => import("./MobileMenuSheet"));
