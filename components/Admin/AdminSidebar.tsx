@@ -17,7 +17,7 @@ import {
 const sidebarItems = [
   { icon: Home, label: "Home", href: "/" },
   { icon: Home, label: "Dashboard", href: "/admin" },
-  { icon: ShoppingCart, label: "Orders", href: "/admin/orders" },
+  { icon: ShoppingCart, label: "Orders", href: "/admin/pending-orders" },
   { icon: Package, label: "Products", href: "/admin/products" },
   { icon: Users, label: "Customers", href: "/admin/customers" },
   { icon: BarChart, label: "Analytics", href: "/admin/analytics" },

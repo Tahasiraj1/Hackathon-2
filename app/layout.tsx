@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import CartProvider from "@/lib/CartContext";
 import NetworkStatus from "@/components/layout/NetworkListener";
+import { ClerkProvider } from "@clerk/nextjs";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -27,18 +28,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <CartProvider>
-          <div className="mb-2">
-            <NetworkStatus />
-          </div>
-          {children}
-          <Toaster />
-        </CartProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          <CartProvider>
+              <div className="mb-2">
+                <NetworkStatus />
+              </div>
+            {children}
+            <Toaster />
+          </CartProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

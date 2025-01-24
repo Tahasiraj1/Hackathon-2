@@ -10,6 +10,14 @@ import dynamic from "next/dynamic";
 //   useMotionValueEvent,
 // } from "framer-motion";
 import { CircleUser, ShoppingCart } from "lucide-react";
+import {
+  SignedIn,
+  SignInButton,
+  SignedOut,
+  UserButton,
+  useUser,
+} from "@clerk/nextjs";
+import { Button } from "../ui/button";
 
 const SearchProduct = dynamic(() => import("../SearchProduct"));
 const MobileMenuSheet = dynamic(() => import("./MobileMenuSheet"));
@@ -58,7 +66,18 @@ const Header = () => {
             <Link href="/cart">
               <ShoppingCart className="hidden md:flex" />
             </Link>
-            <CircleUser className="hidden md:flex" />
+            <div>
+              <SignedOut>
+                <SignInButton mode="modal">
+                  <button>
+                    <CircleUser />
+                  </button>
+                </SignInButton>
+              </SignedOut>
+              <SignedIn>
+                <UserButton />
+              </SignedIn>
+            </div>
             <div className="md:hidden flex">
               <SearchProduct />
             </div>
@@ -82,31 +101,29 @@ const Header = () => {
           // transition={{ duration: 0.3, ease: "easeInOut" }}
         >
           {/* <AnimatePresence mode="wait"> */}
-            {/* {visible && ( // Conditionally render based on visibility */}
-              <div
-                // initial={{ opacity: 0, y: -100 }}
-                // animate={{
-                //   opacity: 1,
-                //   y: 0,
-                // }}
-                // exit={{ opacity: 0, y: -100 }}
-                // transition={{ duration: 0.3, ease: "easeInOut" }}
-                className="w-full overflow-hidden"
-              >
-                <div className="hidden md:flex items-center justify-center gap-8 font-satoshi py-2">
-                  <Link href="/products">All Products</Link>
-                  <Link href="/products/category/Mens">Mens</Link>
-                  <Link href="/products/category/Womens">Womens</Link>
-                  <Link href="/products/category/Kids">Kids</Link>
-                  <Link href="/products/category/Casual Wear">Casual Wear</Link>
-                  <Link href="/products/category/Formal Attire">
-                    Formal Attire
-                  </Link>
-                  <Link href="/products/category/Active Wear">Active Wear</Link>
-                  <Link href="/products/category/Accessories">Accessories</Link>
-                </div>
-              </div>
-            {/* )} */}
+          {/* {visible && ( // Conditionally render based on visibility */}
+          <div
+            // initial={{ opacity: 0, y: -100 }}
+            // animate={{
+            //   opacity: 1,
+            //   y: 0,
+            // }}
+            // exit={{ opacity: 0, y: -100 }}
+            // transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="w-full overflow-hidden"
+          >
+            <div className="hidden md:flex items-center justify-center gap-8 font-satoshi py-2">
+              <Link href="/products">All Products</Link>
+              <Link href="/products/category/Mens">Mens</Link>
+              <Link href="/products/category/Womens">Womens</Link>
+              <Link href="/products/category/Kids">Kids</Link>
+              <Link href="/products/category/Casual Wear">Casual Wear</Link>
+              <Link href="/products/category/Formal Attire">Formal Attire</Link>
+              <Link href="/products/category/Active Wear">Active Wear</Link>
+              <Link href="/products/category/Accessories">Accessories</Link>
+            </div>
+          </div>
+          {/* )} */}
           {/* </AnimatePresence> */}
         </div>
       </div>

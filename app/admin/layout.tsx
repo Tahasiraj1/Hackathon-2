@@ -2,7 +2,7 @@
 
 import type React from "react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import AdminSidebar from "@/components/AdminSidebar";
+import AdminSidebar from "@/components/Admin/AdminSidebar";
 
 export default function AdminLayout({
   children,
@@ -12,7 +12,7 @@ export default function AdminLayout({
   return (
     <div>
       <SidebarProvider>
-        <div className="flex min-h-screen">
+        <div className="flex w-full">
           <AdminSidebar />
           <SidebarTrigger />
           <main className="flex-1 p-4">{children}</main>

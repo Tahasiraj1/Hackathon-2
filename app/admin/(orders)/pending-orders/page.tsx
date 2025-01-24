@@ -1,0 +1,53 @@
+import { Suspense } from 'react'
+import PendingOrders from '@/components/Admin/PendingOrders';
+import { auth } from '@clerk/nextjs/server';
+
+export const dynamic = 'force-dynamic'
+
+async function getOrders() {
+  try {
+    const { userId, getToken } = await auth();
+    const token = await getToken();
+
+    if (!userId) {
+      throw new Error('Unauthorized');
+    }
+
+    // process.env.NEXT_PUBLIC_PENDING_ORDERS || http://localhost:3000/api/orders?status=pending
+    const apiUrl = `${process.env.NEXT_PUBLIC_PENDING_ORDERS}`
+    console.log('Fetching orders from:', apiUrl)
+    
+    const res = await fetch(apiUrl, { 
+      cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    })
+    
+    if (!res.ok) {
+      throw new Error(`Failed to fetch orders: ${res.status} ${res.statusText}`)
+    }
+    
+    const data = await res.json()
+    // console.log('Fetched orders:', JSON.stringify(data, null, 2))
+    return data.data
+  } catch (error) {
+    console.error('Error fetching orders:', error)
+    return []
+  }
+}
+
+export default async function DashboardPage() {
+  const orders = await getOrders()
+  console.log('Pending Orders in DashboardPage:', JSON.stringify(orders, null, 2))
+  
+  return (
+    <div className="w-full px-4 py-8">
+          <h1 className="text-2xl font-bold">Pending Orders</h1>
+      <Suspense fallback={<div>Loading orders...</div>}>
+        <PendingOrders orders={orders} />
+      </Suspense>
+    </div>
+  )
+}
