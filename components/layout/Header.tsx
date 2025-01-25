@@ -10,12 +10,8 @@ import {
   useMotionValueEvent,
 } from "framer-motion";
 import { CircleUser, ShoppingCart } from "lucide-react";
-import {
-  SignedIn,
-  SignInButton,
-  SignedOut,
-  UserButton,
-} from "@clerk/nextjs";
+import { SignedIn, SignInButton, SignedOut, UserButton } from "@clerk/nextjs";
+import { Button } from "../ui/button";
 
 const SearchProduct = dynamic(() => import("../SearchProduct"));
 const MobileMenuSheet = dynamic(() => import("./MobileMenuSheet"));
@@ -44,7 +40,7 @@ const Header = () => {
   }, [scrollYPosition]);
 
   return (
-    <header className="sticky top-0 z-10 w-full bg-white bg-opacity-70 backdrop-blur-md">
+    <header className="sticky top-0 z-10 w-full flex items-center justify-center bg-white bg-opacity-70 backdrop-blur-md">
       <div className="flex flex-col items-center justify-center w-full px-5 md:px-10">
         {/* Top Header Section */}
         <div className="flex w-full justify-between pt-4">
@@ -58,13 +54,25 @@ const Header = () => {
             <Link href="/">Avion</Link>
           </h1>
 
-          <div className="flex gap-2.5 md:gap-4">
+          <div className="flex items-center justify-center gap-3 md:gap-4">
+
+            {/* My-Orders */}
+            <Link href={"/my-orders"}>
+              <Button className="hidden md:flex bg-opacity-50 bg-slate-400 hover:bg-slate-400 rounded-none text-black w-fit px-2 py-2">
+                My Orders
+              </Button>
+            </Link>
+
             {/* Wishlist */}
             <WishList />
+
+            {/* Cart */}
             <Link href="/cart">
               <ShoppingCart className="hidden md:flex" />
             </Link>
-            <div>
+            
+            {/* User Authentication */}
+            <div className="mt-0.5">
               <SignedOut>
                 <SignInButton mode="modal">
                   <button>
@@ -76,9 +84,12 @@ const Header = () => {
                 <UserButton />
               </SignedIn>
             </div>
+
+            {/* Mobile Search */}
             <div className="md:hidden flex">
               <SearchProduct />
             </div>
+
             {/* Mobile Menu */}
             <MobileMenuSheet />
           </div>
@@ -114,18 +125,12 @@ const Header = () => {
                   <Link href="/products/category/Mens">Mens</Link>
                   <Link href="/products/category/Womens">Womens</Link>
                   <Link href="/products/category/Kids">Kids</Link>
-                  <Link href="/products/category/Casual Wear">
-                    Casual Wear
-                  </Link>
+                  <Link href="/products/category/Casual Wear">Casual Wear</Link>
                   <Link href="/products/category/Formal Attire">
                     Formal Attire
                   </Link>
-                  <Link href="/products/category/Active Wear">
-                    Active Wear
-                  </Link>
-                  <Link href="/products/category/Accessories">
-                    Accessories
-                  </Link>
+                  <Link href="/products/category/Active Wear">Active Wear</Link>
+                  <Link href="/products/category/Accessories">Accessories</Link>
                 </div>
               </motion.div>
             )}

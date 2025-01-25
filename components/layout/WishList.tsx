@@ -34,7 +34,7 @@ const WishList = () => {
     const wishItem = wishList.length;
 
   return (
-    <div className="flex flex-col text-start">
+    <div className="flex items-center justify-center text-start">
       <Sheet>
         <SheetTrigger asChild className="relative">
           <button>

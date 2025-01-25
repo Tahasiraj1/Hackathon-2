@@ -33,6 +33,9 @@ const MobileMenuSheet = () => {
             <Link href="/products/category/Active Wear">Active Wear</Link>
             <Link href="/products/category/Accessories">Accessories</Link>
             <h2>Profile</h2>
+            <Link href="/my-orders">
+              <h2>My Orders</h2>
+            </Link>
             <Link href="/cart">
               <h2>Cart</h2>
             </Link>
