@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { client } from "@/sanity/lib/client";
-import { auth, clerkClient } from '@clerk/nextjs/server';
+import { auth, clerkClient } from "@clerk/nextjs/server";
+import nodemailer from "nodemailer";
 
 interface OrderItem {
   productId: string;
@@ -21,7 +22,51 @@ interface Variation {
 async function isAdmin(userId: string) {
   const client = await clerkClient();
   const user = await client.users.getUser(userId);
-  return user.publicMetadata.role === 'admin';
+  return user.publicMetadata.role === "admin";
+}
+
+// Email configuration
+const transporter = nodemailer.createTransport({
+  service: "gmail", 
+  auth: {
+    user: process.env.EMAIL_USER, 
+    pass: process.env.EMAIL_PASS, 
+  },
+});
+
+async function sendOrderConfirmationEmail(customerDetails: any, order: any) {
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: customerDetails.email, // Customer's email
+    subject: "Order Confirmation",
+    html: `
+      <h1>Order Confirmation</h1>
+      <p>Hi ${customerDetails.firstName},</p>
+      <p>Thank you for your order! Here are the details:</p>
+      <ul>
+        ${order.items.map((item: any) => `
+          <li>
+            ${item.name} - ${item.quantity} x ${item.price} (${item.color}, ${item.size})
+          </li>
+        `
+          )
+          .join("")}
+      </ul>
+      <p><strong>Total Amount:</strong> ${order.totalAmount}</p>
+      <p>We will notify you once your order is shipped!</p>
+      <p>Thank you for shopping with us!</p>
+    `,
+  };
+
+  // Send email
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log("Email sent successfully");
+  } catch (error) {
+    if (error instanceof Error) {
+    console.error("Error sending email:", error);
+    }
+  }
 }
 
 async function decrementProductQuantity(
@@ -121,7 +166,7 @@ export async function POST(request: Request) {
       const product = await client.fetch(
         `*[_type == "product" && id == "${item.productId}"][0]`
       );
-      
+
       if (!product) {
         return NextResponse.json(
           { success: false, error: `Product not found: ${item.name}` },
@@ -199,6 +244,9 @@ export async function POST(request: Request) {
 
     console.log("Order created successfully:", JSON.stringify(order, null, 2));
 
+    // Send confirmation email
+    await sendOrderConfirmationEmail(order.customerDetails, order);
+
     return NextResponse.json(
       { success: true, data: order, orderId: order.id },
       { status: 201 }
@@ -222,8 +270,6 @@ export async function POST(request: Request) {
   }
 }
 
-
-
 export async function GET(request: Request) {
   const { userId } = await auth();
 
@@ -234,16 +280,15 @@ export async function GET(request: Request) {
 
   const Admin = await isAdmin(userId);
 
-  console.log('GET request received for orders');
+  console.log("GET request received for orders");
 
   if (Admin && userId) {
-
     try {
       const { searchParams } = new URL(request.url);
-      const status = searchParams.get('status');
-      const orderId = searchParams.get('id');
+      const status = searchParams.get("status");
+      const orderId = searchParams.get("id");
 
-      const where: { id?: string; status?: string; } = {}
+      const where: { id?: string; status?: string } = {};
       if (status) where.status = status;
       if (orderId) where.id = orderId;
 
@@ -257,23 +302,25 @@ export async function GET(request: Request) {
 
       if (!order) {
         console.log(`No order found with ID: ${orderId}`);
-        return NextResponse.json({ success: false, message: 'No order found' }, { status: 404 });
+        return NextResponse.json(
+          { success: false, message: "No order found" },
+          { status: 404 }
+        );
       }
 
       console.log("Returning single order:", JSON.stringify(order, null, 2));
       return NextResponse.json({ success: true, data: order });
-    } catch (error) {
-      
-    }
-
+    } catch (error) {}
   } else if (userId && !(await isAdmin(userId))) {
-
     try {
       const { searchParams } = new URL(request.url);
-      const clerkId = searchParams.get('clerkId');
+      const clerkId = searchParams.get("clerkId");
 
       if (!clerkId) {
-        return NextResponse.json({ success: false, error: 'Missing clerkId' }, { status: 400 });
+        return NextResponse.json(
+          { success: false, error: "Missing clerkId" },
+          { status: 400 }
+        );
       }
 
       const orders = await prisma.order.findMany({
@@ -285,83 +332,103 @@ export async function GET(request: Request) {
           items: true,
         },
         orderBy: {
-          createdAt: 'desc',
+          createdAt: "desc",
         },
       });
 
-      console.log(`Found ${orders.length} orders:`, JSON.stringify(orders, null, 2));
+      console.log(
+        `Found ${orders.length} orders:`,
+        JSON.stringify(orders, null, 2)
+      );
 
       if (!orders || orders.length === 0) {
-        console.log('No orders found');
-        return NextResponse.json({ success: false, message: 'No orders found' }, { status: 404 });
+        console.log("No orders found");
+        return NextResponse.json(
+          { success: false, message: "No orders found" },
+          { status: 404 }
+        );
       }
 
-      console.log('Returning orders');
+      console.log("Returning orders");
       return NextResponse.json({ success: true, data: orders });
     } catch (error) {
-      console.error('Error fetching orders:', error);
+      console.error("Error fetching orders:", error);
       return NextResponse.json(
-        { success: false, error: 'Failed to fetch orders', details: error instanceof Error ? error.message : 'Unknown error' },
+        {
+          success: false,
+          error: "Failed to fetch orders",
+          details: error instanceof Error ? error.message : "Unknown error",
+        },
         { status: 500 }
       );
     }
   }
 }
 
-export async function PUT(request: Request) { 
+export async function PUT(request: Request) {
   const { userId } = await auth();
 
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  if (!await isAdmin(userId)) {
+  if (!(await isAdmin(userId))) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
-  
-  try {
-    const body = await request.json()
-    console.log('Received update data:', JSON.stringify(body, null, 2))
 
-    if (!body || typeof body !== 'object') {
+  try {
+    const body = await request.json();
+    console.log("Received update data:", JSON.stringify(body, null, 2));
+
+    if (!body || typeof body !== "object") {
       return NextResponse.json(
-        { success: false, error: 'Invalid request body' },
+        { success: false, error: "Invalid request body" },
         { status: 400 }
-      )
+      );
     }
 
-    const { ids, status } = body
+    const { ids, status } = body;
 
-    if (!Array.isArray(ids) || ids.length === 0 || typeof status !== 'string') {
+    if (!Array.isArray(ids) || ids.length === 0 || typeof status !== "string") {
       return NextResponse.json(
-        { success: false, error: 'Invalid update data' },
+        { success: false, error: "Invalid update data" },
         { status: 400 }
-      )
+      );
     }
 
     const updatedOrders = await prisma.order.updateMany({
       where: {
-        id: { in: ids }
+        id: { in: ids },
       },
       data: {
-        status
-      }
-    })
+        status,
+      },
+    });
 
-    console.log('Orders updated successfully:', JSON.stringify(updatedOrders, null, 2))
+    console.log(
+      "Orders updated successfully:",
+      JSON.stringify(updatedOrders, null, 2)
+    );
 
-    return NextResponse.json({ success: true, updatedCount: updatedOrders.count }, { status: 200 })
+    return NextResponse.json(
+      { success: true, updatedCount: updatedOrders.count },
+      { status: 200 }
+    );
   } catch (error) {
-    console.error('Error updating orders:', error)
-    
-    let errorMessage = 'An unexpected error occurred'
+    console.error("Error updating orders:", error);
+
+    let errorMessage = "An unexpected error occurred";
     if (error instanceof Error) {
-      errorMessage = error.message
+      errorMessage = error.message;
     }
 
     return NextResponse.json(
-      { success: false, error: 'Failed to update orders', details: errorMessage },
+      {
+        success: false,
+        error: "Failed to update orders",
+        details: errorMessage,
+      },
       { status: 500 }
-    )
+    );
   }
 }
