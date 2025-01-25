@@ -19,6 +19,18 @@ interface Variation {
   quantity: number;
 }
 
+interface CustomerDetails {
+  id: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  email: string;
+  city: string;
+  houseNo: string;
+  postalCode: string;
+  country: string;
+}
+
 async function isAdmin(userId: string) {
   const client = await clerkClient();
   const user = await client.users.getUser(userId);
@@ -34,7 +46,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-async function sendOrderConfirmationEmail(customerDetails: any, order: any) {
+async function sendOrderConfirmationEmail(customerDetails: CustomerDetails, order: { items: OrderItem[], totalAmount: number }) {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: customerDetails.email, // Customer's email
@@ -44,7 +56,7 @@ async function sendOrderConfirmationEmail(customerDetails: any, order: any) {
       <p>Hi ${customerDetails.firstName},</p>
       <p>Thank you for your order! Here are the details:</p>
       <ul>
-        ${order.items.map((item: any) => `
+        ${order.items.map((item: OrderItem) => `
           <li>
             ${item.name} - ${item.quantity} x ${item.price} (${item.color}, ${item.size})
           </li>
@@ -310,7 +322,17 @@ export async function GET(request: Request) {
 
       console.log("Returning single order:", JSON.stringify(order, null, 2));
       return NextResponse.json({ success: true, data: order });
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Failed to fetch orders",
+          details: error instanceof Error ? error.message : "Unknown error",
+        },
+        { status: 500 }
+      );
+    }
   } else if (userId && !(await isAdmin(userId))) {
     try {
       const { searchParams } = new URL(request.url);
