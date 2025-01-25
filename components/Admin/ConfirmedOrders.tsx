@@ -19,6 +19,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { useUser } from "@clerk/nextjs"
+import { PackageSearch } from "lucide-react"
+import { BounceLoader } from "react-spinners"
 
 
 interface OrderItem {
@@ -76,7 +78,7 @@ export default function ConfirmedOrdersClient({ orders }: { orders: Order[] }) {
   if (!isLoaded) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-700"></div>
+        <BounceLoader color="#2A254B" />
       </div>
     )
   }
@@ -114,13 +116,14 @@ export default function ConfirmedOrdersClient({ orders }: { orders: Order[] }) {
     }
   }
 
-  if (!Array.isArray(orders) || orders.length === 0) {
+  if (orders.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] p-4">
+        <PackageSearch className="w-16 h-16 text-gray-400 mb-4" />
         <h2 className="text-xl font-semibold text-gray-600">No Confirmed Orders Found</h2>
-        <p className="text-gray-500 mt-2">Confirmed orders will appear here.</p>
+        <p className="text-gray-500 mt-2">Pending Orders will appear here.</p>
       </div>
-    );
+    )
   }
 
   return (
