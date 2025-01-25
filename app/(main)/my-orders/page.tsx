@@ -24,16 +24,6 @@ const OrdersPage = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  console.log(userId)
-
-  useEffect(() => {
-    if (isLoaded && !isSignedIn) {
-      router.push("/sign-in")
-    } else if (isSignedIn) {
-      fetchOrders()
-    }
-  }, [isSignedIn, isLoaded, router])
-
   const fetchOrders = async () => {
     try {
       setIsLoading(true)
@@ -52,6 +42,14 @@ const OrdersPage = () => {
     }
   }
 
+  useEffect(() => {
+    if (isLoaded && !isSignedIn) {
+      router.push("/sign-in")
+    } else if (isSignedIn) {
+      fetchOrders()
+    }
+  }, [isSignedIn, isLoaded, router, fetchOrders])
+
   if (error) {
     return <div className="min-h-screen flex items-center justify-center text-red-600">{error}</div>
   }
@@ -65,12 +63,12 @@ const OrdersPage = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Your Orders</h1>
       {orders && orders.length > 0 ? (
         <div className="space-y-6">
           {orders.map((order) => (
-            <div key={order.id} className="bg-white shadow-md rounded-lg p-6">
+            <div key={order.id} className="bg-gray-100 shadow-md rounded-lg p-6">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-semibold">Order #{order.id}</h2>
                 <span className="text-sm text-gray-500">{new Date(order.createdAt).toLocaleDateString()}</span>

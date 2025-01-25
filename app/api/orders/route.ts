@@ -264,7 +264,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ success: true, data: order });
     } else {
       // Build query filter based on status and clerkId
-      const where: any = {};
+      const where: { status?: string; clerkId?: string } = {};
       if (status) where.status = status;
       if (clerkId) where.clerkId = clerkId; // Add filtering by clerkId
 

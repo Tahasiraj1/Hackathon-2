@@ -22,7 +22,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import { useAuth } from "@clerk/nextjs";
 
 
 const formSchema = z.object({
@@ -44,8 +43,6 @@ export default function CheckoutForm() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   // const [labelInfo, setLabelInfo] = useState<any>(null);
   // const [trackingNumber, setTrackingNumber] = useState<string | null>(null);
-  const { getToken } = useAuth();
-  const token = getToken();
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
