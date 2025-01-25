@@ -232,23 +232,23 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // Check if the user is an admin
-  if (!await isAdmin(userId)) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  }
+  const Admin = await isAdmin(userId);
 
   console.log('GET request received for orders');
 
-  try {
-    const { searchParams } = new URL(request.url);
-    const status = searchParams.get('status');
-    const orderId = searchParams.get('id');
-    const clerkId = searchParams.get('clerkId'); // Retrieve clerkId from query params
+  if (Admin && userId) {
 
-    if (orderId) {
-      // Fetch orders by ID
-      const order = await prisma.order.findUnique({
-        where: { id: orderId },
+    try {
+      const { searchParams } = new URL(request.url);
+      const status = searchParams.get('status');
+      const orderId = searchParams.get('id');
+
+      const where: { id?: string; status?: string; } = {}
+      if (status) where.status = status;
+      if (orderId) where.id = orderId;
+
+      const order = await prisma.order.findMany({
+        where,
         include: {
           customerDetails: true,
           items: true,
@@ -262,15 +262,24 @@ export async function GET(request: Request) {
 
       console.log("Returning single order:", JSON.stringify(order, null, 2));
       return NextResponse.json({ success: true, data: order });
-    } else {
-      // Build query filter based on status and clerkId
-      const where: { status?: string; clerkId?: string } = {};
-      if (status) where.status = status;
-      if (clerkId) where.clerkId = clerkId; // Add filtering by clerkId
+    } catch (error) {
+      
+    }
 
-      // Fetch orders based on filters
+  } else if (userId && !(await isAdmin(userId))) {
+
+    try {
+      const { searchParams } = new URL(request.url);
+      const clerkId = searchParams.get('clerkId');
+
+      if (!clerkId) {
+        return NextResponse.json({ success: false, error: 'Missing clerkId' }, { status: 400 });
+      }
+
       const orders = await prisma.order.findMany({
-        where,
+        where: {
+          clerkId,
+        },
         include: {
           customerDetails: true,
           items: true,
@@ -289,13 +298,13 @@ export async function GET(request: Request) {
 
       console.log('Returning orders');
       return NextResponse.json({ success: true, data: orders });
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+      return NextResponse.json(
+        { success: false, error: 'Failed to fetch orders', details: error instanceof Error ? error.message : 'Unknown error' },
+        { status: 500 }
+      );
     }
-  } catch (error) {
-    console.error('Error fetching orders:', error);
-    return NextResponse.json(
-      { success: false, error: 'Failed to fetch orders', details: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
-    );
   }
 }
 

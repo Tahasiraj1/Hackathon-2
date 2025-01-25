@@ -30,9 +30,9 @@ import { CgLogOut } from "react-icons/cg";
 const sidebarItems = [
   { icon: Home, label: "Home", href: "/" },
   { icon: Home, label: "Dashboard", href: "/admin" },
-  { icon: Package, label: "Products", href: "/admin/products" },
+  { icon: Package, label: "Products", href: "/studio" },
   { icon: Users, label: "Customers", href: "/admin/customers" },
-  { icon: BarChart, label: "Analytics", href: "/admin/analytics" },
+  { icon: BarChart, label: "Analytics", href: "/admin" },
   { icon: Settings, label: "Settings", href: "/admin/settings" },
 ];
 
