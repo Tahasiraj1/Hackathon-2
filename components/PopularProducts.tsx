@@ -6,7 +6,7 @@ import { Button } from "./ui/button";
 import Link from "next/link";
 import { Image as SanityImage } from "@sanity/types";
 import { urlFor } from "@/sanity/lib/image";
-import { BounceLoader } from "react-spinners";
+import { BarLoader } from "react-spinners";
 
 interface Product {
   id: string;
@@ -46,7 +46,7 @@ const PopularProducts = () => {
     return (
       <Suspense>
         <div className="flex justify-center items-center min-h-[400px] w-full">
-          <BounceLoader color="#2A254B" />
+          <BarLoader color="#2A254B" />
         </div>
       </Suspense>
     );

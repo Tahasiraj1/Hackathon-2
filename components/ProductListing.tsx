@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useCart } from "@/lib/CartContext";
 import { WishItem } from "@/lib/CartContext";
-import { BounceLoader } from "react-spinners";
+import { BarLoader } from "react-spinners";
 
 interface Product {
   id: string;
@@ -155,7 +155,7 @@ const ProductListing = () => {
       {loading ? (
         <Suspense>
           <div className="flex justify-center items-center min-h-[400px] w-full">
-            <BounceLoader color="#2A254B" />
+            <BarLoader color="#2A254B" /> 
           </div>
         </Suspense>
       ) : (

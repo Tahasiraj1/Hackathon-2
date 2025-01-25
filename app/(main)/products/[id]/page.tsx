@@ -15,7 +15,7 @@ import { client } from "@/sanity/lib/client";
 import { useCart } from "@/lib/CartContext";
 import { toast } from "@/hooks/use-toast";
 import { Plus, Minus } from "lucide-react";
-import { BounceLoader } from 'react-spinners'
+import { BarLoader } from 'react-spinners'
 
 interface Variation {
   color: string; 
@@ -350,7 +350,7 @@ const ProductDetails = () => {
           </Link>
         </div>
       </div>
-      <Suspense fallback={<div className='flex items-center justify-center'><BounceLoader color='#2A254B' /></div>}>
+      <Suspense fallback={<div className='flex items-center justify-center'><BarLoader color="#2A254B" /></div>}>
         <WhatMakesUsDiff />
       </Suspense>
 

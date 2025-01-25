@@ -227,66 +227,75 @@ export async function POST(request: Request) {
 export async function GET(request: Request) {
   const { userId } = await auth();
 
+  // Check for authentication
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  // Check if the user is an admin
   if (!await isAdmin(userId)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  console.log('GET request received for orders')
+  console.log('GET request received for orders');
+
   try {
-    const { searchParams } = new URL(request.url)
-    const status = searchParams.get('status')
-    const orderId = searchParams.get('id')
+    const { searchParams } = new URL(request.url);
+    const status = searchParams.get('status');
+    const orderId = searchParams.get('id');
+    const clerkId = searchParams.get('clerkId'); // Retrieve clerkId from query params
 
     if (orderId) {
+      // Fetch orders by ID
       const order = await prisma.order.findUnique({
         where: { id: orderId },
         include: {
           customerDetails: true,
-          items: true
-        }
-      })
+          items: true,
+        },
+      });
 
       if (!order) {
-        console.log(`No order found with ID: ${orderId}`)
-        return NextResponse.json({ success: false, message: 'No order found' }, { status: 404 })
+        console.log(`No order found with ID: ${orderId}`);
+        return NextResponse.json({ success: false, message: 'No order found' }, { status: 404 });
       }
 
       console.log("Returning single order:", JSON.stringify(order, null, 2));
-      return NextResponse.json({ success: true, data: order })
+      return NextResponse.json({ success: true, data: order });
     } else {
-      const where = status ? { status } : {}
+      // Build query filter based on status and clerkId
+      const where: any = {};
+      if (status) where.status = status;
+      if (clerkId) where.clerkId = clerkId; // Add filtering by clerkId
 
+      // Fetch orders based on filters
       const orders = await prisma.order.findMany({
         where,
         include: {
           customerDetails: true,
-          items: true
+          items: true,
         },
         orderBy: {
-          createdAt: 'desc'
-        }
-      })
-  
-      console.log(`Found ${orders.length} orders:`, JSON.stringify(orders, null, 2))
-  
+          createdAt: 'desc',
+        },
+      });
+
+      console.log(`Found ${orders.length} orders:`, JSON.stringify(orders, null, 2));
+
       if (!orders || orders.length === 0) {
-        console.log('No orders found')
-        return NextResponse.json({ success: false, message: 'No orders found' }, { status: 404 })
+        console.log('No orders found');
+        return NextResponse.json({ success: false, message: 'No orders found' }, { status: 404 });
       }
-  
-      console.log('Returning orders')
-      return NextResponse.json({ success: true, data: orders })
+
+      console.log('Returning orders');
+      return NextResponse.json({ success: true, data: orders });
     }
   } catch (error) {
-    console.error('Error fetching orders:', error)
+    console.error('Error fetching orders:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to fetch orders', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
-    )
+    );
   }
 }
 

@@ -23,7 +23,7 @@ import { useUser } from '@clerk/nextjs';
 import { Input } from "../ui/input"
 import { searchOrder } from '@/components/Admin/searchOrder'
 import { Search } from "lucide-react";
-import { BounceLoader } from "react-spinners"
+import { BarLoader } from "react-spinners"
 
 interface OrderItem {
   id: string;
@@ -70,7 +70,7 @@ export default function PendingOrders({ orders }: { orders: Order[] }) {
   if (!isLoaded) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <BounceLoader color="#2A254B" />
+        <BarLoader color="#2A254B" />
       </div>
     )
   }

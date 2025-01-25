@@ -6,7 +6,7 @@ import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
 import { Image as SanityImage } from "@sanity/types";
 import Link from "next/link";
-import { BounceLoader } from "react-spinners";
+import { BarLoader } from "react-spinners";
 import { useCart } from "@/lib/CartContext";
 import { WishItem } from "@/lib/CartContext";
 import { Heart } from "lucide-react";
@@ -76,7 +76,7 @@ const CategoryPage = () => {
     return (
       <Suspense>
         <p className="flex items-center justify-center min-h-screen font-clashDisplay text-4xl">
-          <BounceLoader color="#2A254B" />
+          <BarLoader color="#2A254B" />
         </p>
       </Suspense>
     );
