@@ -8,7 +8,6 @@ import {
   Users,
   BarChart,
   Settings,
-  LogOutIcon,
 } from "lucide-react";
 import {
   Sidebar,
@@ -36,6 +35,12 @@ const sidebarItems = [
   { icon: BarChart, label: "Analytics", href: "/admin/analytics" },
   { icon: Settings, label: "Settings", href: "/admin/settings" },
 ];
+
+const sidebarOrderItems = [
+  { label: "Pending Orders", href: "/admin/pending-orders" },
+  { label: "Confirmed Orders", href: "/admin/confirmed-orders" },
+  { label: "Dispatched Orders", href: "/admin/dispatched-orders" },
+]
 
 export default function AdminSidebar() {
   const { user } = useUser();
@@ -75,27 +80,15 @@ export default function AdminSidebar() {
                 Orders
               </SidebarGroupLabel>
               <SidebarGroupContent>
-                <SidebarMenu>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton asChild>
-                      <Link href="/admin/pending-orders">Pending Orders</Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton asChild>
-                      <Link href="/admin/confirmed-orders">
-                        Confirmed Orders
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton asChild>
-                      <Link href="/admin/dispatched-orders">
-                        Dispatched Orders
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
+              {sidebarOrderItems.map((item) => (
+                <SidebarMenu key={item.label}>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link href={item.href}>{item.label}</Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
                 </SidebarMenu>
+              ))}
               </SidebarGroupContent>
             </SidebarGroup>
           </SidebarGroupContent>
