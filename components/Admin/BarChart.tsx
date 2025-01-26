@@ -73,7 +73,7 @@ export default function AdminBarChart() {
   if (error) return <div className="flex items-center justify-center">Error: {error}</div>;
 
   return (
-    <Card>
+    <Card className="font-satoshi">
       <CardHeader>
         <CardTitle>Analytics Overview</CardTitle>
         <CardDescription>Last 30 days</CardDescription>
@@ -87,7 +87,7 @@ export default function AdminBarChart() {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
               dataKey="date"
-              tickFormatter={(value) => new Date(value).toLocaleDateString()}
+              tickFormatter={() => new Date().toLocaleDateString()}
             />
             <YAxis
               yAxisId="left"
