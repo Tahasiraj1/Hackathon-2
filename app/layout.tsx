@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import CartProvider from "@/lib/CartContext";
 import NetworkStatus from "@/components/layout/NetworkListener";
 import { ClerkProvider } from "@clerk/nextjs";
+// import { Head } from "next/document";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -30,6 +31,21 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
+      <head>
+          {/* <Head> */}
+            <script async src="https://www.googletagmanager.com/gtag/js?id=G-2FD2N2NPM3"></script>
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){window.dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', 'G-2FD2N2NPM3');
+                `,
+              }}
+            />
+          {/* </Head> */}
+        </head>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
