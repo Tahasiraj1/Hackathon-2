@@ -12,6 +12,7 @@ const credentials = JSON.parse(credentialsJson)
 const SCOPES = ["https://www.googleapis.com/auth/analytics.readonly"]
 const analyticsPropertyId = process.env.GOOGLE_ANALYTICS_PROPERTY_ID
 
+
 if (!analyticsPropertyId) {
   throw new Error("GOOGLE_ANALYTICS_PROPERTY_ID is not set")
 }
