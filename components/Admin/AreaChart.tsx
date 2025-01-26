@@ -5,7 +5,6 @@ import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
-import { BarLoader } from "react-spinners"
 
 interface ChartData {
   date: string
@@ -30,7 +29,6 @@ const chartConfig = {
 export default function AdminFullBarChart() {
   const [chartData, setChartData] = React.useState<ChartData[]>([])
   const [activeChart, setActiveChart] = React.useState<keyof typeof chartConfig>("desktop")
-  const [loading, setLoading] = React.useState(true)
   const [error, setError] = React.useState<string | null>(null)
 
   React.useEffect(() => {
@@ -42,12 +40,10 @@ export default function AdminFullBarChart() {
         }
         const data = await response.json()
         setChartData(data.threeMonthsData)
-        setLoading(false)
       } catch (err) {
         if (err instanceof Error) {
           setError(err.message)
         }
-        setLoading(false)
       }
     }
 
@@ -62,12 +58,6 @@ export default function AdminFullBarChart() {
     [chartData],
   )
 
-  // if (loading)
-  //   return (
-  //     <div className="flex items-center justify-center mt-44">
-  //       <BarLoader color="#2A254B" />
-  //     </div>
-  //   )
   if (error) return <div className="flex items-center justify-center">Error: {error}</div>
 
   return (

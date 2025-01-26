@@ -27,7 +27,6 @@ const chartConfig = {
 
 export default function AdminBarChart() {
   const [chartData, setChartData] = useState<AnalyticsData[]>([])
-  const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -40,24 +39,16 @@ export default function AdminBarChart() {
 
         const data = await response.json()
         setChartData(data.dailyData)
-        setLoading(false)
       } catch (err) {
         if (err instanceof Error) {
           setError(err.message)
         }
-        setLoading(false)
       }
     }
 
     fetchData()
   }, [])
 
-  // if (loading)
-  //   return (
-  //     <div className="flex items-center justify-center">
-  //       <BarLoader color="#2A254B" />
-  //     </div>
-  //   )
   if (error) return <div className="flex items-center justify-center">Error: {error}</div>
 
   return (

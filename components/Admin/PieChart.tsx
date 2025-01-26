@@ -43,7 +43,6 @@ const chartConfig = {
 
 export default function AdminPieChart() {
   const [chartData, setChartData] = React.useState<ChartData[]>([])
-  const [loading, setLoading] = React.useState(true)
   const [error, setError] = React.useState<string | null>(null)
 
   React.useEffect(() => {
@@ -59,12 +58,10 @@ export default function AdminPieChart() {
           fill: chartConfig[item.browser as keyof typeof chartConfig]?.color || chartConfig.other.color,
         }))
         setChartData(formattedData)
-        setLoading(false)
       } catch (err) {
         if (err instanceof Error) {
           setError(err.message)
         }
-        setLoading(false)
       }
     }
 
@@ -75,12 +72,6 @@ export default function AdminPieChart() {
     return chartData.reduce((acc, curr) => acc + curr.visitors, 0)
   }, [chartData])
 
-  // if (loading)
-  //   return (
-  //     <div className="flex items-center justify-center">
-  //       <BarLoader color="#2A254B" />
-  //     </div>
-  //   )
   if (error) return <div className="flex items-center justify-center">Error: {error}</div>
 
   return (
