@@ -45,7 +45,7 @@ export async function GET() {
       })) || []
 
     // Group "other" browsers
-    const mainBrowsers = ["chrome", "safari", "firefox", "edge"]
+    const mainBrowsers = ["chrome", "safari", "firefox", "edge", "opera"]
     const groupedBrowserData = browserData.reduce(
       (acc, curr) => {
         if (mainBrowsers.includes(curr.browser)) {

@@ -75,12 +75,12 @@ export default function AdminPieChart() {
     return chartData.reduce((acc, curr) => acc + curr.visitors, 0)
   }, [chartData])
 
-  if (loading)
-    return (
-      <div className="flex items-center justify-center">
-        <BarLoader color="#2A254B" />
-      </div>
-    )
+  // if (loading)
+  //   return (
+  //     <div className="flex items-center justify-center">
+  //       <BarLoader color="#2A254B" />
+  //     </div>
+  //   )
   if (error) return <div className="flex items-center justify-center">Error: {error}</div>
 
   return (

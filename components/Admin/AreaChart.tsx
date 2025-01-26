@@ -62,12 +62,12 @@ export default function AdminFullBarChart() {
     [chartData],
   )
 
-  if (loading)
-    return (
-      <div className="flex items-center justify-center mt-44">
-        <BarLoader color="#2A254B" />
-      </div>
-    )
+  // if (loading)
+  //   return (
+  //     <div className="flex items-center justify-center mt-44">
+  //       <BarLoader color="#2A254B" />
+  //     </div>
+  //   )
   if (error) return <div className="flex items-center justify-center">Error: {error}</div>
 
   return (
