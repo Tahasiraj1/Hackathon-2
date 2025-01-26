@@ -1,7 +1,8 @@
-"use client"
+"use client";
 
-import { TrendingUp } from "lucide-react"
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
+import { useEffect, useState } from "react";
+import { TrendingUp } from "lucide-react";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 import {
   Card,
@@ -10,68 +11,118 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
-  ChartConfig,
+  type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
-const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-]
+} from "@/components/ui/chart";
+import { BarLoader } from "react-spinners";
+
+interface AnalyticsData {
+  date: string;
+  activeUsers: number;
+  pageViews: number;
+}
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  activeUsers: {
+    label: "Active Users",
     color: "hsl(var(--chart-1))",
   },
-  mobile: {
-    label: "Mobile",
+  pageViews: {
+    label: "Page Views",
     color: "hsl(var(--chart-2))",
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
 export default function AdminBarChart() {
+  const [chartData, setChartData] = useState<AnalyticsData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch("/api/analytics");
+        if (!response.ok) {
+          throw new Error("Failed to fetch analytics data");
+        }
+
+        const data: AnalyticsData[] = await response.json();
+        setChartData(data);
+        setLoading(false);
+      } catch (err) {
+        if (err instanceof Error) {
+          setError(err.message);
+        }
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, []);
+
+  if (loading)
+    return (
+      <div className="flex items-center justify-center">
+        <BarLoader color="#2A254B" />
+      </div>
+    );
+  if (error) return <div className="flex items-center justify-center">Error: {error}</div>;
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Bar Chart - Multiple</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Analytics Overview</CardTitle>
+        <CardDescription>Last 30 days</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={chartData}>
-            <CartesianGrid vertical={false} />
+          <BarChart
+            data={chartData}
+            margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
             <XAxis
-              dataKey="month"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
+              dataKey="date"
+              tickFormatter={(value) => new Date(value).toLocaleDateString()}
+            />
+            <YAxis
+              yAxisId="left"
+              orientation="left"
+              stroke="var(--color-activeUsers)"
+            />
+            <YAxis
+              yAxisId="right"
+              orientation="right"
+              stroke="var(--color-pageViews)"
             />
             <ChartTooltip
-              cursor={false}
               content={<ChartTooltipContent indicator="dashed" />}
             />
-            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-            <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+            <Bar
+              dataKey="activeUsers"
+              fill="var(--color-activeUsers)"
+              yAxisId="left"
+            />
+            <Bar
+              dataKey="pageViews"
+              fill="var(--color-pageViews)"
+              yAxisId="right"
+            />
           </BarChart>
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          Trending data for the last 30 days <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
+          Showing active users and page views
         </div>
       </CardFooter>
     </Card>
-  )
+  );
 }
