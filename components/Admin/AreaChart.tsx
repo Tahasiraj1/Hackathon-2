@@ -5,6 +5,7 @@ import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import { BarLoader } from "react-spinners"
 
 interface ChartData {
   date: string
@@ -61,8 +62,13 @@ export default function AdminFullBarChart() {
     [chartData],
   )
 
-  if (loading) return <div>Loading...</div>
-  if (error) return <div>Error: {error}</div>
+  if (loading)
+    return (
+      <div className="flex items-center justify-center mt-44">
+        <BarLoader color="#2A254B" />
+      </div>
+    )
+  if (error) return <div className="flex items-center justify-center">Error: {error}</div>
 
   return (
     <Card className="font-satoshi">
