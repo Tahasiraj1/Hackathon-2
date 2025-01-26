@@ -113,8 +113,8 @@ export default function AdminFullBarChart() {
               axisLine={false}
               tickMargin={8}
               minTickGap={32}
-              tickFormatter={(value) => {
-                const date = new Date(value)
+              tickFormatter={() => {
+                const date = new Date()
                 return date.toLocaleDateString("en-US", {
                   month: "short",
                   day: "numeric",
