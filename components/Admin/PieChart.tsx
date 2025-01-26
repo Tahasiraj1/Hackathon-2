@@ -6,7 +6,6 @@ import { Label, Pie, PieChart, ResponsiveContainer } from "recharts"
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { type ChartConfig, ChartContainer } from "@/components/ui/chart"
-import { BarLoader } from "react-spinners"
 
 interface ChartData {
   browser: string
