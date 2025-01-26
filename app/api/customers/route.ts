@@ -36,7 +36,7 @@ export async function GET() {
       });
   
       // Create a map to aggregate customers by customerDetailsId (to avoid duplicates)
-      const customerMap: Map<string, { customer: {}; totalPurchases: number }> =
+      const customerMap: Map<string, { customer: object; totalPurchases: number }> =
         new Map();
   
       customers.forEach((customer) => {
