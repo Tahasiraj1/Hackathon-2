@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { BarLoader } from "react-spinners";
 
 interface CustomerDetails {
   id: string;
@@ -12,6 +13,7 @@ interface CustomerDetails {
   houseNo: string;
   postalCode: string;
   country: string;
+  totalPurchases: number;
 }
 
 const CustomersPage = () => {
@@ -40,8 +42,18 @@ const CustomersPage = () => {
     fetchCustomers();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (loading)
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <BarLoader color="#2A254B" />
+      </div>
+    );
+  if (error)
+    return (
+      <div className="flex min-h-screen items-center justify-center text-red-500 text-2xl">
+        Error: {error}
+      </div>
+    );
 
   return (
     <div className="p-4">
@@ -55,6 +67,7 @@ const CustomersPage = () => {
             <th className="border border-gray-300 px-4 py-2">Phone Number</th>
             <th className="border border-gray-300 px-4 py-2">City</th>
             <th className="border border-gray-300 px-4 py-2">Country</th>
+            <th className="border border-gray-300 px-4 py-2">Purchases</th>
           </tr>
         </thead>
         <tbody>
@@ -77,6 +90,9 @@ const CustomersPage = () => {
               </td>
               <td className="border border-gray-300 px-4 py-2">
                 {customer.country}
+              </td>
+              <td className="border border-gray-300 px-4 py-2">
+                {customer.totalPurchases}
               </td>
             </tr>
           ))}
