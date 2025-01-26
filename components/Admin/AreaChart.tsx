@@ -126,8 +126,8 @@ export default function AdminFullBarChart() {
                 <ChartTooltipContent
                   className="w-[150px]"
                   nameKey="views"
-                  labelFormatter={(value) => {
-                    return new Date(value).toLocaleDateString("en-US", {
+                  labelFormatter={() => {
+                    return new Date().toLocaleDateString("en-US", {
                       month: "short",
                       day: "numeric",
                       year: "numeric",
