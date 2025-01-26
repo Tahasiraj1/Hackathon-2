@@ -80,9 +80,45 @@ export async function GET() {
         pageViews: Number.parseInt(row.metricValues?.[1].value || "0", 10),
       })) || []
 
+
+    // Fetch 3 months active users and page views
+    const threeMonthsResponse = await analyticsDataClient.properties.runReport({
+        property: `properties/${analyticsPropertyId}`,
+        requestBody: {
+          dateRanges: [{ startDate: "90daysAgo", endDate: "today" }],
+          dimensions: [{ name: "date" }, { name: "deviceCategory" }],
+          metrics: [{ name: "activeUsers" }, { name: "screenPageViews" }],
+        },
+      })
+  
+      const threeMonthsData = threeMonthsResponse.data.rows?.reduce(
+        (acc, row) => {
+          const date = row.dimensionValues?.[0].value || ""
+          const deviceCategory = row.dimensionValues?.[1].value?.toLowerCase() || ""
+          const activeUsers = Number.parseInt(row.metricValues?.[0].value || "0", 10)
+        //   const pageViews = Number.parseInt(row.metricValues?.[1].value || "0", 10)
+  
+          if (!acc[date]) {
+            acc[date] = { date, desktop: 0, mobile: 0 }
+          }
+  
+          if (deviceCategory === "desktop") {
+            acc[date].desktop += activeUsers
+          } else if (deviceCategory === "mobile") {
+            acc[date].mobile += activeUsers
+          }
+  
+          return acc
+        },
+        {} as Record<string, { date: string; desktop: number; mobile: number }>,
+      )
+  
+      const formattedThreeMonthsData = Object.values(threeMonthsData || {}).sort((a, b) => a.date.localeCompare(b.date))
+
     return NextResponse.json({
       browserData: groupedBrowserData,
       dailyData: dailyData,
+      threeMonthsData: formattedThreeMonthsData,
     })
   } catch (error) {
     if (error instanceof Error) {
