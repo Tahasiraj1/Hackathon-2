@@ -28,7 +28,43 @@ export async function GET() {
       auth,
     })
 
-    const response = await analyticsDataClient.properties.runReport({
+    // Fetch browser data
+    const browserResponse = await analyticsDataClient.properties.runReport({
+      property: `properties/${analyticsPropertyId}`,
+      requestBody: {
+        dateRanges: [{ startDate: "30daysAgo", endDate: "today" }],
+        dimensions: [{ name: "browser" }],
+        metrics: [{ name: "activeUsers" }],
+      },
+    })
+
+    const browserData =
+      browserResponse.data.rows?.map((row) => ({
+        browser: row.dimensionValues?.[0].value?.toLowerCase() || "other",
+        visitors: Number.parseInt(row.metricValues?.[0].value || "0", 10),
+      })) || []
+
+    // Group "other" browsers
+    const mainBrowsers = ["chrome", "safari", "firefox", "edge"]
+    const groupedBrowserData = browserData.reduce(
+      (acc, curr) => {
+        if (mainBrowsers.includes(curr.browser)) {
+          acc.push(curr)
+        } else {
+          const otherIndex = acc.findIndex((item) => item.browser === "other")
+          if (otherIndex > -1) {
+            acc[otherIndex].visitors += curr.visitors
+          } else {
+            acc.push({ browser: "other", visitors: curr.visitors })
+          }
+        }
+        return acc
+      },
+      [] as { browser: string; visitors: number }[],
+    )
+
+    // Fetch daily active users and page views
+    const dailyResponse = await analyticsDataClient.properties.runReport({
       property: `properties/${analyticsPropertyId}`,
       requestBody: {
         dateRanges: [{ startDate: "30daysAgo", endDate: "today" }],
@@ -37,14 +73,17 @@ export async function GET() {
       },
     })
 
-    const formattedData =
-      response.data.rows?.map((row) => ({
-        date: row.dimensionValues?.[0].value,
+    const dailyData =
+      dailyResponse.data.rows?.map((row) => ({
+        date: row.dimensionValues?.[0].value || "",
         activeUsers: Number.parseInt(row.metricValues?.[0].value || "0", 10),
         pageViews: Number.parseInt(row.metricValues?.[1].value || "0", 10),
       })) || []
 
-    return NextResponse.json(formattedData)
+    return NextResponse.json({
+      browserData: groupedBrowserData,
+      dailyData: dailyData,
+    })
   } catch (error) {
     if (error instanceof Error) {
       console.error("Error fetching Google Analytics data:", error)
