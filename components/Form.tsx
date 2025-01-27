@@ -22,27 +22,29 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import { toast } from "@/hooks/use-toast";
+import { useRouter } from 'next/navigation';
+// import { TrackShipment } from '@/components/TrackShipment';
 
 
 const formSchema = z.object({
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
+  firstName: z.string().min(3, "First name is required"),
+  lastName: z.string().min(3, "Last name is required"),
   phoneNumber: z.string().min(11, "Phone number is required"),
   email: z.string().email("Invalid email address"),
   city: z.string().min(1, "City is required"),
-  houseNo: z.string().min(1, "House number is required"),
-  postalCode: z.string().min(1, "Postal code is required"),
-  country: z.string().min(1, "Country is required"),
+  houseNo: z.string().min(3, "House number is required"),
+  postalCode: z.string().min(2, "Postal code is required"),
+  country: z.string().min(2, "Country is required"),
 });
 
-type FormData = z.infer<typeof formSchema>;
+type FormData = z.infer<typeof formSchema>
 
 export default function CheckoutForm() {
   const { clearCart, cart } = useCart();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  // const [labelInfo, setLabelInfo] = useState<any>(null);
-  // const [trackingNumber, setTrackingNumber] = useState<string | null>(null);
+  const router = useRouter();
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -54,14 +56,12 @@ export default function CheckoutForm() {
       city: "",
       houseNo: "",
       postalCode: "",
-      country: "Pakistan", // Set default country to Pakistan
+      country: "PK", // Set default country to Pakistan
     },
   });
 
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
-    setErrorMessage(null);
-    // Create order
     try {
       const orderData = {
         customerDetails: data,
@@ -75,29 +75,33 @@ export default function CheckoutForm() {
         })),
         totalAmount: cart.reduce((total, item) => total + item.price * item.quantity, 0),
       };
-      const orderResponse = await fetch("/api/orders", {
+      const response = await fetch("/api/orders", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // 'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(orderData),
-      });
+      })
 
-      if (!orderResponse.ok) {
-        const errorData = await orderResponse.json();
-        throw new Error(errorData.error || "Failed to place order");
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || errorData.details || "Failed to place order")
       }
 
-      clearCart();
-      alert("Order placed successfully!");
+      if (response.ok) {
+        toast({
+          title: "✔️ Order placed successfully!",
+        })
+        router.push('/my-orders');
+        clearCart();
+      }
     } catch (error) {
       console.error('Error placing order:', error);
       setErrorMessage(error instanceof Error ? error.message : 'An unexpected error occurred');
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
-  };
+  }
 
   return (
     <div>
@@ -252,56 +256,3 @@ export default function CheckoutForm() {
     </div>
   );
 }
-
-
-
-      {/* {labelInfo && (
-        <div className="mt-8">
-          <h2 className="text-2xl font-bold mb-4">Shipping Label Created</h2>
-          <p>Tracking Number: {labelInfo.tracking_number}</p>
-          <p>Label ID: {labelInfo.label_id}</p>
-          <h3 className="text-xl font-semibold mt-4 mb-2">Label Download Links:</h3>
-          <ul className="list-disc list-inside">
-            <li><a href={labelInfo.label_download.pdf} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">PDF</a></li>
-            <li><a href={labelInfo.label_download.png} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">PNG</a></li>
-            <li><a href={labelInfo.label_download.zpl} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">ZPL</a></li>
-          </ul>
-        </div>
-      )}
-      {trackingNumber && (
-        <div className="mt-8">
-          <h2 className="text-2xl font-bold mb-4">Track Your Shipment</h2>
-          <TrackShipment trackingNumber={trackingNumber} />
-        </div>
-      )} */}
-
-
-      // Create shipping label
-      // const labelResponse = await fetch('/api/shipping/create-label', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     shipment: {
-      //       name: `${data.firstName} ${data.lastName}`,
-      //       phone: data.phoneNumber,
-      //       address_line1: data.houseNo,
-      //       city_locality: data.city,
-      //       state_province: 'Sindh',
-      //       postal_code: data.postalCode,
-      //       country_code: data.country,
-      //     }
-      //   }),
-      // });
-
-      // if (!labelResponse.ok) {
-      //   const errorData = await labelResponse.json();
-      //   throw new Error(errorData.error || 'Failed to create shipping label');
-      // }
-
-      // const labelData = await labelResponse.json();
-
-      // setLabelInfo(labelData);
-      // setTrackingNumber(labelData.tracking_number);
-

@@ -16,14 +16,14 @@ const MobileMenuSheet = () => {
       {/* Movile Menu */}
       <Sheet>
         <SheetTrigger asChild>
-          <Menu className="md:hidden cursor-pointer" />
+          <Menu className="lg:hidden cursor-pointer" />
         </SheetTrigger>
-        <SheetContent>
+        <SheetContent className="bg-white font-satoshi bg-opacity-30 backdrop-blur-md">
           <SheetHeader>
-            <SheetTitle>Menu</SheetTitle>
-            <SheetDescription>Browse our categories</SheetDescription>
+            <SheetTitle className="text-white">Menu</SheetTitle>
+            <SheetDescription className="text-white">Browse our categories</SheetDescription>
           </SheetHeader>
-          <div className="flex flex-col gap-4 mt-4">
+          <div className="flex flex-col gap-4 mt-4 text-white">
             <Link href="/products">All Products</Link>
             <Link href="/products/category/Mens">Mens</Link>
             <Link href="/products/category/Womens">Womens</Link>

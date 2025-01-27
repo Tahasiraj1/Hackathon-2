@@ -180,10 +180,10 @@ const ProductDetails = () => {
             alt={`Image of ${product.name}`}
             width={1000}
             height={1000}
-            className="md:w-[600px] md:h-[600px]"
+            className="w-full h-full lg:w-[600px] lg:h-[600px]"
           />
         </div>
-        <div className="flex flex-col lg:pl-20 pr-5 w-full max-w-2xl px-10 md:px-0">
+        <div className="flex flex-col lg:pl-20 pr-5 w-full max-w-2xl px-10">
           <h1 className="text-3xl mb-5 mt-4 font-bold">{product.name}</h1>
 
           <p className="text-lg font-bold mb-4">$ {product.price}</p>

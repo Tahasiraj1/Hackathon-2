@@ -110,7 +110,7 @@ const Header = () => {
 
         {/* Categories Section */}
         <motion.div
-          className="hidden md:flex relative w-full overflow-hidden"
+          className="hidden lg:flex relative w-full overflow-hidden"
           initial={{ opacity: 0, height: "0px" }}
           animate={{
             opacity: visible ? 1 : 0,
@@ -130,7 +130,7 @@ const Header = () => {
                 transition={{ duration: 0.4, ease: "easeInOut" }}
                 className="w-full overflow-hidden"
               >
-                <div className="hidden md:flex items-center justify-center gap-8 font-satoshi py-2">
+                <div className="hidden lg:flex items-center justify-center gap-8 font-satoshi py-2">
                   <Link href="/products">All Products</Link>
                   <Link href="/products/category/Mens">Mens</Link>
                   <Link href="/products/category/Womens">Womens</Link>

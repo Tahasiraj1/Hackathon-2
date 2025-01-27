@@ -3,6 +3,19 @@ import prisma from "@/lib/prisma";
 import { client } from "@/sanity/lib/client";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import nodemailer from "nodemailer";
+import { redirect } from "next/navigation";
+// import { Shippo, AddressCreateRequest, ParcelCreateRequest, DistanceUnitEnum, WeightUnitEnum } from "shippo";
+
+// const DEFAULT_SHIP_FROM = {
+//   name: 'Your Clothing Brand Ltd.',
+//   phone: '+92 3311245238',
+//   email: 'tahasiraj242@gmail.com',
+//   address_line1: '123 Warehouse St',
+//   city_locality: 'Karachi',
+//   state_province: 'Sindh',
+//   postal_code: '75950',
+//   country_code: 'PK',
+// };
 
 interface OrderItem {
   productId: string;
@@ -201,6 +214,102 @@ export async function POST(request: Request) {
       }
     }
 
+    // create the shipping label
+    // const shippo = new Shippo({ apiKeyHeader: process.env.SHIPPO_TEST_API_KEY })
+
+    // const addressFrom =  await shippo.addresses.create({
+    //   name: DEFAULT_SHIP_FROM.name,
+    //   email: DEFAULT_SHIP_FROM.email,
+    //   street1: DEFAULT_SHIP_FROM.address_line1,
+    //   city: DEFAULT_SHIP_FROM.city_locality,
+    //   state: DEFAULT_SHIP_FROM.state_province,
+    //   zip: DEFAULT_SHIP_FROM.postal_code,
+    //   country: DEFAULT_SHIP_FROM.country_code,
+    //   phone: DEFAULT_SHIP_FROM.phone,
+    // })
+
+    // // Create Shippo address
+    // console.log("Creating Shippo address...")
+    // const addressTo = await shippo.addresses.create({
+    //   name: `${customerDetails.firstName} ${customerDetails.lastName}`,
+    //   email: customerDetails.email,
+    //   street1: customerDetails.houseNo,
+    //   city: customerDetails.city,
+    //   state: "SD",
+    //   zip: customerDetails.postalCode,
+    //   country: customerDetails.country.toUpperCase(),
+    //   phone: customerDetails.phoneNumber,
+    // })
+
+    // console.log("Created Address:", addressTo);
+
+    // if (!addressTo.objectId) {
+    //   throw new Error("Invalid address object ID.")
+    // }
+
+    // // Validate Shippo address
+    // console.log("Validating Shippo address...")
+    // const validatedAddress = await shippo.addresses.validate(addressTo.objectId)
+    // console.log("Validated Address:", validatedAddress)
+
+    // if (!validatedAddress.validationResults || !validatedAddress.validationResults.isValid) {
+    //   const errors = validatedAddress.validationResults?.messages || []
+    //   const errorMessages = errors.map((error: any) => error.text).join(", ")
+    //   throw new Error(`Invalid destination address: ${errorMessages}`)
+    // }
+
+
+    // // Create Shippo parcel
+    // console.log("Creating Shippo parcel...")
+    // const parcel = await shippo.parcels.create({
+    //   length: "10", // realistic length in inches
+    //   width: "10",  // realistic width in inches
+    //   height: "10", // realistic height in inches
+    //   distanceUnit: "in",
+    //   weight: "2",  // realistic weight in pounds
+    //   massUnit: "lb",
+    // });
+
+    // console.log("Created Parcel:", parcel)
+
+    // const shipmentData = await shippo.shipments.create({
+    //   addressFrom,
+    //   addressTo,
+    //   parcels: [parcel],
+    //   async: false,
+    // })
+
+    // if (shipmentData.status !== "SUCCESS") {
+    //   throw new Error(`Failed to create shipment: ${shipmentData.status}`)
+    // }
+
+    // if (!shipmentData.rates || shipmentData.rates.length === 0) {
+    //   console.error("Shipment data:", JSON.stringify(shipmentData, null, 2));
+    //   throw new Error("No shipping rates available for this shipment");
+    // }    
+
+    // const rate = shipmentData.rates[0]
+
+    // const transaction = await shippo.transactions.create({
+    //   rate: rate.objectId,
+    //   labelFileType: "PDF",
+    //   async: false,
+    // })
+
+    // if (transaction.status !== "SUCCESS") {
+    //   throw new Error(`Failed to create label: ${transaction.status}`)
+    // }
+
+    // const label = {
+    //   tracking_number: transaction.trackingNumber,
+    //   label_id: transaction.objectId,
+    //   label_download: {
+    //     pdf: transaction.labelUrl,
+    //     png: transaction.labelUrl,
+    //     zpl: transaction.labelUrl,
+    //   },
+    // }
+
     // Start a transaction
     const [order, updateResults] = await prisma.$transaction(
       async (prismaClient) => {
@@ -261,21 +370,24 @@ export async function POST(request: Request) {
 
     return NextResponse.json(
       { success: true, data: order, orderId: order.id },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
-    console.error("Error creating order:", error);
-
-    let errorMessage = "An unexpected error occurred";
+    let errorMessage = "An unexpected error occurred"
+    let errorDetails = {}
     if (error instanceof Error) {
-      errorMessage = error.message;
+      errorMessage = error.message
+      if (error.message.startsWith("Invalid destination address:")) {
+        errorDetails = { addressValidationError: error.message }
+      }
     }
 
     return NextResponse.json(
       {
         success: false,
         error: "Failed to create order",
-        details: errorMessage,
+        message: errorMessage,
+        details: errorDetails,
       },
       { status: 500 }
     );
