@@ -2,11 +2,37 @@
 
 import Image from "next/image";
 import React, { useEffect, useState, Suspense } from "react";
-import { Button } from "./ui/button";
 import Link from "next/link";
 import { Image as SanityImage } from "@sanity/types";
 import { urlFor } from "@/sanity/lib/image";
 import { BarLoader } from "react-spinners";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
+} from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
+import { motion } from "framer-motion";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+  },
+};
 
 interface Product {
   id: string;
@@ -25,6 +51,10 @@ interface Product {
 const PopularProducts = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+
+  const plugin = React.useRef(
+    Autoplay({ delay: 3000, stopOnInteraction: true })
+  );
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -53,33 +83,65 @@ const PopularProducts = () => {
   }
 
   return (
-    <div className="flex flex-col w-full py-10 items-center justify-center bg-white text-black px-4 sm:px-6 lg:px-10 font-clashDisplay">
+    <div className="flex flex-col w-full items-center justify-center bg-white text-black py-10 px-4 sm:px-6 lg:px-10 font-clashDisplay">
       <div className="w-full">
-        <h2 className="text-2xl text-start mb-10">Our popular products</h2>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-          {products.slice(0, 4).map((p) => (
-            <Link href={`/products/${p.id}`} key={p.id}>
-              <div key={p.id} className="relative aspect-[4/5] w-full mb-4">
-                <Image
-                  src={urlFor(p.images[0] as SanityImage).url()}
-                  alt={p.name}
-                  fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                  className="object-cover"
-                />
-              </div>
-              <h3 className="text-lg font-medium">{p.name}</h3>
-              <span className="text-sm text-gray-600">{p.price}</span>
-            </Link>
-          ))}
-        </div>
-      </div>
-      <div className="flex justify-center items-center mt-8">
-        <Link href="/products">
-          <Button className="bg-gray-200 rounded-none px-6 py-6 hover:bg-gray-300 text-black w-fit">
-            View collection
-          </Button>
-        </Link>
+        <h2 className="text-2xl text-start">Our Popular Products</h2>
+
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
+          <Carousel
+            className="w-full py-10 px-10"
+            opts={{
+              align: "start",
+              loop: true,
+            }}
+            plugins={[plugin.current]}
+            onMouseEnter={plugin.current.stop}
+            onMouseLeave={plugin.current.reset}
+          >
+            <CarouselContent className="-ml-2 md:-ml-4 mb-10">
+              {products.map((p) => (
+                <CarouselItem
+                  key={p.id}
+                  className="pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
+                >
+                  <Link href={`/products/${p.id}`}>
+                    <motion.div
+                      className="relative aspect-[4/5] w-full mb-4"
+                      variants={itemVariants}
+                    >
+                      <Image
+                        src={
+                          urlFor(p.images[0] as SanityImage).url() ||
+                          "/placeholder.svg"
+                        }
+                        alt={p.name}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        className="object-cover"
+                      />
+                    </motion.div>
+                    <motion.div
+                    variants={itemVariants}
+                    >
+                      <h3 className="text-lg font-medium">{p.name}</h3>
+                      <span className="text-sm text-gray-600">{p.price}</span>
+                    </motion.div>
+                  </Link>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+
+            <div className="w-[100px] h-32 absolute -bottom-8 left-0 right-0 m-auto flex items-center justify-between">
+              <CarouselPrevious className="bg-gray-300 rounded-none px-6 py-6 hover:bg-gray-400 text-black active:scale-95 transition-transform transform duration-300" />
+              <CarouselNext className="bg-gray-300 rounded-none px-6 py-6 hover:bg-gray-400 text-black active:scale-95 transition-transform transform duration-300" />
+            </div>
+          </Carousel>
+        </motion.div>
       </div>
     </div>
   );
