@@ -4,7 +4,6 @@ import {
   clerkClient,
   createRouteMatcher,
 } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
 
 const isProtectedRoute = createRouteMatcher(["/api(.*)", "/admin(.*)"]);
 
