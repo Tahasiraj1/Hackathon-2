@@ -73,13 +73,21 @@ const Header = () => {
               </Link>
             )}
 
-            {/* Wishlist */}
-            <WishList />
-
             {/* Cart */}
             <Link href="/cart">
               <ShoppingCart className="hidden md:flex" />
             </Link>
+
+            {/* Mobile Search */}
+            <div className="md:hidden flex">
+              <SearchProduct />
+            </div>
+
+            {/* Wishlist */}
+            <WishList />
+
+            {/* Mobile Menu */}
+            <MobileMenuSheet />
 
             {/* User Authentication */}
             <div className="mt-0.5">
@@ -94,14 +102,6 @@ const Header = () => {
                 <UserButton />
               </SignedIn>
             </div>
-
-            {/* Mobile Search */}
-            <div className="md:hidden flex">
-              <SearchProduct />
-            </div>
-
-            {/* Mobile Menu */}
-            <MobileMenuSheet />
           </div>
         </div>
 

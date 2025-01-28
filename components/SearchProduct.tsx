@@ -1,10 +1,12 @@
+"use client";
+
 import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Image as SanityImage } from "@sanity/types";
+import type { Image as SanityImage } from "@sanity/types";
 import { Search } from "lucide-react";
 import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
-import { ScrollArea, ScrollBar } from "./ui/scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
 
 interface Product {
@@ -30,7 +32,6 @@ const SearchProduct = () => {
   const router = useRouter();
 
   useEffect(() => {
-    // Fetch all products once on component mount
     fetch("/api/products")
       .then((res) => res.json())
       .then((data) => setProducts(data.data))
@@ -41,7 +42,6 @@ const SearchProduct = () => {
 
   useEffect(() => {
     if (query) {
-      // Filter products based on the query
       const results = products.filter((product) => {
         const nameMatch = product.name
           .toLowerCase()
@@ -72,7 +72,6 @@ const SearchProduct = () => {
 
   const handleSearchClick = () => {
     if (showSearch && query) {
-      // If a query is entered, redirect to the product page
       getProductsName(query);
     } else {
       setShowSearch((prev) => !prev);
@@ -92,7 +91,7 @@ const SearchProduct = () => {
         !searchInputRef.current.contains(event.target as Node)
       ) {
         setShowSearch(false);
-        // setFilteredProducts([]);
+        setFilteredProducts([]);
       }
     };
 
@@ -103,7 +102,7 @@ const SearchProduct = () => {
   }, []);
 
   return (
-    <div className="relative flex items-center">
+    <div className="relative flex items-center mt-1">
       {showSearch && (
         <form
           onSubmit={(e) => {
@@ -118,36 +117,39 @@ const SearchProduct = () => {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search product"
-            className="relative px-4 py-2 rounded-md text-black -translate-x-32 md:-translate-x-0 w-36 md:w-60"
+            className="relative px-4 py-2 rounded-full text-black -translate-x-32 md:-translate-x-0 w-36 md:w-60"
           />
         </form>
       )}
       {query && filteredProducts.length > 0 && (
-        <ul className="absolute z-10  w-44 md:w-64 mt-[240px] max-h-[calc(4*3rem)] -translate-x-44 md:-translate-x-0 animate-in slide-in-from-top-10 duration-300 bg-white rounded-md shadow-lg overflow-hidden">
-          <ScrollArea className="h-full" key={filteredProducts.length}>
-            {filteredProducts.map((product) => (
-              <Link key={product.id} href={`/products/${product.id}`}>
-                <li
-                  onClick={() => getProductsName(product.id)}
-                  className="px-4 py-2 cursor-pointer hover:bg-gray-200"
-                >
-                  <div className="flex items-center justify-center gap-2">
+        <div
+          ref={searchInputRef}
+          className="absolute z-10 w-44 md:w-64 mt-[240px] -translate-x-36 md:-translate-x-0 animate-in slide-in-from-top-10 duration-300 bg-white rounded-xl shadow-lg"
+        >
+          <ScrollArea className="h-[12rem]">
+            <ul>
+              {filteredProducts.map((product) => (
+                <li key={product.id} className="px-4 py-2 hover:bg-gray-100">
+                  <Link
+                    href={`/products/${product.id}`}
+                    className="flex items-center gap-2"
+                  >
                     <Image
                       src={
                         urlFor(product.images[0]).url() || "/placeholder.svg"
                       }
                       alt={product.name}
-                      width={80}
-                      height={80}
+                      width={40}
+                      height={40}
+                      className="object-cover rounded"
                     />
-                    {product.name}
-                  </div>
+                    <span className="text-sm">{product.name}</span>
+                  </Link>
                 </li>
-              </Link>
-            ))}
-            <ScrollBar orientation="vertical" />
+              ))}
+            </ul>
           </ScrollArea>
-        </ul>
+        </div>
       )}
       <button
         type="button"
