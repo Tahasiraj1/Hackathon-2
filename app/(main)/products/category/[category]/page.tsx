@@ -11,6 +11,25 @@ import { useCart } from "@/lib/CartContext";
 import { WishItem } from "@/lib/CartContext";
 import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+  },
+};
 
 type Product = {
   id: string;
@@ -87,7 +106,13 @@ const CategoryPage = () => {
       <h1 className="text-3xl font-clashDisplay mb-6 capitalize">
         {category ? `${category} Products` : "All Products"}
       </h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <motion.div 
+      variants={containerVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+      >
         {currentFilteredProducts.length > 0 ? (
           products.map((product) => (
             <Link
@@ -95,7 +120,10 @@ const CategoryPage = () => {
               key={product.id}
               className="block"
             >
-              <div className="overflow-hidden">
+              <motion.div 
+              className="overflow-hidden"
+              variants={itemVariants}
+              >
                 {/* Check if image exists before rendering */}
                 {product.images?.[0] ? (
                   <div className="relative group">
@@ -132,11 +160,14 @@ const CategoryPage = () => {
                     No Image Available
                   </div>
                 )}
-                <div className="p-4">
+                <motion.div 
+                variants={itemVariants}
+                className="p-4"
+                >
                   <h3 className="text-lg font-semibold">{product.name}</h3>
                   <p className="text-gray-600">{product.price}</p>
-                </div>
-              </div>
+                </motion.div>
+              </motion.div>
             </Link>
           ))
         ) : (
@@ -144,7 +175,7 @@ const CategoryPage = () => {
             No products found.
           </p>
         )}
-      </div>
+      </motion.div>
       <div className="flex items-center justify-center mt-5">
             {Array.from(
               { length: Math.ceil(products.length / productsPerPage) },
