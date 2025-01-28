@@ -54,7 +54,7 @@ const Header = () => {
           </div>
 
           {/* Website Name */}
-          <h1 className="text-2xl font-clashDisplay">
+          <h1 className="text-2xl font-clashDisplay mt-1">
             <Link href="/">Avion</Link>
           </h1>
 
