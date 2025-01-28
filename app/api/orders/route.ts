@@ -3,7 +3,6 @@ import prisma from "@/lib/prisma";
 import { client } from "@/sanity/lib/client";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import nodemailer from "nodemailer";
-import { redirect } from "next/navigation";
 // import { Shippo, AddressCreateRequest, ParcelCreateRequest, DistanceUnitEnum, WeightUnitEnum } from "shippo";
 
 // const DEFAULT_SHIP_FROM = {
