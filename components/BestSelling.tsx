@@ -15,6 +15,10 @@ import {
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import { motion } from "framer-motion";
+import { useCart } from "@/lib/CartContext";
+import { WishItem } from "@/lib/CartContext";
+import { Button } from "./ui/button";
+import { Heart } from "lucide-react";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -51,6 +55,7 @@ interface Product {
 const BestSelling = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const { toggleWishList, wishList } = useCart();
 
   const plugin = React.useRef(
     Autoplay({ delay: 3000, stopOnInteraction: true })
@@ -71,6 +76,23 @@ const BestSelling = () => {
 
     fetchProducts();
   }, []);
+
+  const handleAddItemToWishList = (
+    event: React.MouseEvent,
+    product: WishItem
+  ) => {
+    event.preventDefault(); // Prevent navigation
+    event.stopPropagation(); // Stop event from bubbling up to parent elements
+
+    if (!product?.id) return;
+
+    toggleWishList({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+    });
+  };
 
   if (loading) {
     return (
@@ -111,7 +133,7 @@ const BestSelling = () => {
                 >
                   <Link href={`/products/${p.id}`}>
                     <motion.div
-                      className="relative aspect-[4/5] w-full mb-4"
+                      className="relative group aspect-[4/5] w-full mb-4"
                       variants={itemVariants}
                     >
                       <Image
@@ -124,10 +146,28 @@ const BestSelling = () => {
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                         className="object-cover"
                       />
+                      <Button
+                        variant="ghost"
+                        className="absolute top-0 right-0 md:translate-x-40 md:group-hover:translate-x-0 md:bg-white md:hover:bg-white/90 bg-transparent hover:bg-transparent active:scale-95 transition-transform transform duration-300 ease-in-out p-2 rounded-full w-fit h-fit"
+                        onClick={(e) =>
+                          handleAddItemToWishList(e, {
+                            id: p.id,
+                            name: p.name,
+                            price: p.price,
+                            image: p.images[0] as SanityImage,
+                          })
+                        }
+                      >
+                        <Heart
+                          className={`${
+                            wishList.some((item) => item.id === p.id)
+                              ? "text-red-600 fill-red-600"
+                              : "text-white md:text-black fill-white"
+                          }`}
+                        />
+                      </Button>
                     </motion.div>
-                    <motion.div
-                    variants={itemVariants}
-                    >
+                    <motion.div variants={itemVariants}>
                       <h3 className="text-lg font-medium">{p.name}</h3>
                       <span className="text-sm text-gray-600">{p.price}</span>
                     </motion.div>
