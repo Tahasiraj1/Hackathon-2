@@ -5,7 +5,7 @@ import { TrendingUp } from "lucide-react"
 import { Label, Pie, PieChart, ResponsiveContainer } from "recharts"
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { type ChartConfig, ChartContainer } from "@/components/ui/chart"
+import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 
 interface ChartData {
   browser: string
@@ -83,6 +83,10 @@ export default function AdminPieChart() {
         <ChartContainer config={chartConfig} className="mx-auto w-full aspect-square max-h-[250px]">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent hideLabel />}
+            />
               <Pie
                 data={chartData}
                 dataKey="visitors"

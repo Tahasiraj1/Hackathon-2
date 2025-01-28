@@ -37,6 +37,7 @@ export default function AdminBarChart() {
         }
 
         const data = await response.json()
+        console.log("Fetched Data:", data.dailyData);
         setChartData(data.dailyData)
       } catch (err) {
         if (err instanceof Error) {
@@ -61,7 +62,15 @@ export default function AdminBarChart() {
           <ResponsiveContainer width="100%" height={400}>
             <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" tickFormatter={() => new Date().toLocaleDateString()} />
+              <XAxis
+                dataKey="date"
+                tickFormatter={(value) => {
+                  const year = value.substring(0, 4);
+                  const month = value.substring(4, 6) - 1; // Month is zero-indexed
+                  const day = value.substring(6, 8);
+                  return new Date(year, month, day).toLocaleDateString();
+                }}
+              />
               <YAxis yAxisId="left" orientation="left" stroke="var(--color-activeUsers)" />
               <YAxis yAxisId="right" orientation="right" stroke="var(--color-pageViews)" />
               <ChartTooltip content={<ChartTooltipContent indicator="dashed" />} />
