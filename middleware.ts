@@ -4,6 +4,7 @@ import {
   clerkClient,
   createRouteMatcher,
 } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
 const isProtectedRoute = createRouteMatcher(["/api(.*)", "/admin(.*)"]);
 
@@ -29,6 +30,16 @@ export default clerkMiddleware(async (auth, req) => {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     return NextResponse.next(); // Allow the request
+  }
+
+  if (req.method === 'GET' && req.nextUrl.pathname === '/my-orders') {
+    if (await isAdmin(userId)) {
+      const url = req.nextUrl.clone();
+      url.pathname = '/admin/pending-orders';
+      return NextResponse.redirect(url); // Use an absolute URL
+    } else {
+      return NextResponse.next();
+    }
   }
   
   // Allow GET requests to /api/products without authentication

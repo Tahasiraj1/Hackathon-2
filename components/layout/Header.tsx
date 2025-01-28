@@ -61,13 +61,13 @@ const Header = () => {
           <div className="flex items-center justify-center gap-3 md:gap-4">
             {role === "admin" ? (
               <Link href={"/admin"}>
-                <Button className="hidden md:flex bg-opacity-50 bg-slate-400 hover:bg-slate-400 rounded-none text-black w-fit px-4 py-2">
+                <Button className="hidden md:flex bg-opacity-50 bg-slate-400 hover:bg-slate-400 rounded-full text-black w-fit px-4 py-2">
                   Admin
                 </Button>
               </Link>
             ) : (
               <Link href={"/my-orders"}>
-                <Button className="hidden md:flex bg-opacity-50 bg-slate-400 hover:bg-slate-400 rounded-none text-black w-fit px-2 py-2">
+                <Button className="hidden md:flex bg-opacity-50 bg-slate-400 hover:bg-slate-400 rounded-full text-black w-fit px-2 py-2">
                   My Orders
                 </Button>
               </Link>
