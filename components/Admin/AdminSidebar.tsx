@@ -8,6 +8,8 @@ import {
   Users,
   BarChart,
   Settings,
+  ShoppingBag,
+  Truck,
 } from "lucide-react";
 import {
   Sidebar,
@@ -29,18 +31,14 @@ import { CgLogOut } from "react-icons/cg";
 
 const sidebarItems = [
   { icon: Home, label: "Home", href: "/" },
-  { icon: Home, label: "Dashboard", href: "/admin" },
   { icon: Package, label: "Products", href: "/studio" },
   { icon: Users, label: "Customers", href: "/admin/customers" },
   { icon: BarChart, label: "Analytics", href: "/admin" },
   { icon: Settings, label: "Settings", href: "/admin/settings" },
+  { icon: ShoppingCart, label: "Pending Orders", href: "/admin/pending-orders" },
+  { icon: ShoppingBag, label: "Confirmed Orders", href: "/admin/confirmed-orders" },
+  { icon: Truck, label: "Dispatched Orders", href: "/admin/dispatched-orders" },
 ];
-
-const sidebarOrderItems = [
-  { label: "Pending Orders", href: "/admin/pending-orders" },
-  { label: "Confirmed Orders", href: "/admin/confirmed-orders" },
-  { label: "Dispatched Orders", href: "/admin/dispatched-orders" },
-]
 
 export default function AdminSidebar() {
   const { user } = useUser();
@@ -74,23 +72,6 @@ export default function AdminSidebar() {
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
-            <SidebarGroup>
-              <SidebarGroupLabel>
-                <ShoppingCart className="mr-3 h-4 w-4" />
-                Orders
-              </SidebarGroupLabel>
-              <SidebarGroupContent>
-              {sidebarOrderItems.map((item) => (
-                <SidebarMenu key={item.label}>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton asChild>
-                        <Link href={item.href}>{item.label}</Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                </SidebarMenu>
-              ))}
-              </SidebarGroupContent>
-            </SidebarGroup>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
