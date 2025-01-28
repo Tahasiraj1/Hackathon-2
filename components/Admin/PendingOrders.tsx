@@ -220,7 +220,7 @@ export default function PendingOrders({ orders }: { orders: Order[] }) {
       <div className="w-full overflow-x-auto">
         <Table className="w-full border-collapse border border-[#2A254B]">
           <TableHeader>
-            <TableRow className="border border-[#2A254B]">
+            <TableRow className="border border-[#2A254B] font-clashDisplay text-lg">
               {!searchResult && (
                 <TableHead className="w-16 p-2 text-center">Select</TableHead>
               )}
@@ -273,7 +273,7 @@ export default function PendingOrders({ orders }: { orders: Order[] }) {
                 </TableCell>
                 <TableCell className="p-2">PKR {order.totalAmount.toFixed(2)}</TableCell>
                 <TableCell className="p-2">{new Date(order.createdAt).toLocaleDateString()}</TableCell>
-                <TableCell className="p-2">
+                <TableCell className="p-2 font-clashDisplay">
                   <span className={`px-2 py-1 hidden lg:table-cell rounded-full text-xs font-semibold ${
                     order.status === 'pending' ? 'bg-yellow-200 text-yellow-800' :
                     order.status === 'confirmed' ? 'bg-green-200 text-green-800' :

@@ -43,7 +43,7 @@ export default async function DashboardPage() {
   
   return (
     <div className="w-full px-4 py-8">
-          <h1 className="text-2xl font-bold">Dispatched Orders</h1>
+          <h1 className="text-4xl font-clashDisplay mb-5">Dispatched Orders</h1>
       <Suspense fallback={<div>Loading orders...</div>}>
         <DispatchedOrdersClient orders={orders} />
       </Suspense>
