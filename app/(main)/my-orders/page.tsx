@@ -73,7 +73,7 @@ const OrdersPage = () => {
   if (!isLoaded || !isSignedIn || isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <BarLoader color="#4F46E5" height={4} width={100} />
+        <BarLoader color="#2A254B" />
       </div>
     )
   }
