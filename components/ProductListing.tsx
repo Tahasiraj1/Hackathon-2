@@ -21,24 +21,8 @@ import { WishItem } from "@/lib/CartContext";
 import { BarLoader } from "react-spinners";
 // import { Badge } from "./ui/badge";
 import { motion } from "framer-motion";
+import { containerVariants, itemVariants } from "@/lib/motion";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-  },
-};
 
 interface Product {
   id: string;

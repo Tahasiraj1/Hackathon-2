@@ -14,27 +14,11 @@ import { BarLoader } from "react-spinners"
 import { motion } from "framer-motion"
 import RelatedProducts from "@/components/RelatedProducts"
 import type { Product } from "@/lib/product"
+import { containerVariants, itemVariants } from "@/lib/motion";
 
 const WhatMakesUsDiff = React.lazy(() => import("@/components/WhatMakesUsDiff"))
 const JoinClub = React.lazy(() => import("@/components/JoinClub"))
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-    },
-  },
-}
-
-const itemVariants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-  },
-}
 
 const ProductDetails = () => {
   const { addToCart } = useCart()

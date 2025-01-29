@@ -14,24 +14,8 @@ import {
 } from "@/components/ui/carousel";
 import { motion } from "framer-motion";
 import type { Product } from "@/lib/product";
+import { containerVariants, itemVariants } from "@/lib/motion";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-  },
-};
 
 interface RelatedProductsProps {
   productId: string;

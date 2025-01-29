@@ -20,23 +20,8 @@ import { WishItem } from "@/lib/CartContext";
 import { Button } from "./ui/button";
 import { Heart } from "lucide-react";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-    },
-  },
-};
+import { containerVariants, itemVariants } from "@/lib/motion";
 
-const itemVariants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-  },
-};
 
 interface Product {
   id: string;
