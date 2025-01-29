@@ -18,6 +18,17 @@ const SearchProduct = dynamic(() => import("../SearchProduct"));
 const MobileMenuSheet = dynamic(() => import("./MobileMenuSheet"));
 const WishList = dynamic(() => import("./WishList"));
 
+const categories = [
+  { title: "All Products", href: "/products" },
+  { title: "Mens", href: "/products/category/Mens" },
+  { title: "Womens", href: "/products/category/Womens" },
+  { title: "Kids", href: "/products/category/Kids" },
+  { title: "Casual Wear", href: "/products/category/Casual Wear" },
+  { title: "Formal Attire", href: "/products/category/Formal Attire" },
+  { title: "Active Wear", href: "/products/category/Active Wear" },
+  { title: "Accessories", href: "/products/category/Accessories" },
+]
+
 const Header = () => {
   const { scrollY } = useScroll();
   const [visible, setVisible] = useState(true);
@@ -130,17 +141,12 @@ const Header = () => {
                 transition={{ duration: 0.4, ease: "easeInOut" }}
                 className="w-full overflow-hidden"
               >
-                <div className="hidden lg:flex items-center justify-center gap-8 font-satoshi py-2">
-                  <Link href="/products">All Products</Link>
-                  <Link href="/products/category/Mens">Mens</Link>
-                  <Link href="/products/category/Womens">Womens</Link>
-                  <Link href="/products/category/Kids">Kids</Link>
-                  <Link href="/products/category/Casual Wear">Casual Wear</Link>
-                  <Link href="/products/category/Formal Attire">
-                    Formal Attire
-                  </Link>
-                  <Link href="/products/category/Active Wear">Active Wear</Link>
-                  <Link href="/products/category/Accessories">Accessories</Link>
+                <div className="hidden lg:flex items-center justify-center gap-8 font-satoshi mt-1.5">
+                  {categories.map((category) => (
+                    <Link key={category.href} href={category.href}>
+                        {category.title}
+                    </Link>
+                  ))}
                 </div>
               </motion.div>
             )}

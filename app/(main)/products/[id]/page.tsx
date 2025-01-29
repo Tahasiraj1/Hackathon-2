@@ -180,7 +180,6 @@ const ProductDetails = () => {
             {product.description}
           </motion.p>
 
-          {/* ... Rest of the component (color selection, size selection, quantity, add to cart button) ... */}
           <ul className="flex flex-col mb-4">
               <motion.li variants={itemVariants} className="flex mr-2">
                 <Dot /> Premium material
