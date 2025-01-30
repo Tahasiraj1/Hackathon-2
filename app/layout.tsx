@@ -6,6 +6,8 @@ import CartProvider from "@/lib/CartContext";
 import NetworkStatus from "@/components/layout/NetworkListener";
 import { ClerkProvider } from "@clerk/nextjs";
 import { GoogleAnalytics } from '@next/third-parties/google'
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -38,8 +40,10 @@ export default function RootLayout({
             <div className="mb-2">
               <NetworkStatus />
             </div>
+            <Header />
             {children}
             <Toaster />
+            <Footer />
           </CartProvider>
           <GoogleAnalytics gaId="G-2FD2N2NPM3" />
         </body>
