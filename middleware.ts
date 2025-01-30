@@ -1,24 +1,12 @@
 import { NextResponse } from "next/server";
 import {
   clerkMiddleware,
-  clerkClient,
   createRouteMatcher,
 } from "@clerk/nextjs/server";
+import { isAdmin } from "@/lib/isAdmin";
 
-const isProtectedRoute = createRouteMatcher(["/api(.*)", "/admin(.*)"]);
 
-async function isAdmin(userId: string | null) {
-  if (!userId) return false;
-
-  try {
-    const client = await clerkClient();
-    const user = await client.users.getUser(userId);
-    return user.publicMetadata.role === "admin";
-  } catch (error) {
-    console.error("Error checking admin status:", error);
-    return false;
-  }
-}
+const isProtectedRoute = createRouteMatcher(["/api(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {
   const { userId } = await auth(); // Get the user ID from the request
@@ -32,14 +20,14 @@ export default clerkMiddleware(async (auth, req) => {
   }
 
   if (req.method === 'GET' && req.nextUrl.pathname === '/my-orders') {
-    if (await isAdmin(userId)) {
-      const url = req.nextUrl.clone();
-      url.pathname = '/admin/pending-orders';
-      return NextResponse.redirect(url); // Use an absolute URL
-    } else {
+    if (userId) {
       return NextResponse.next();
+    } else {
+      const url = req.nextUrl.clone();
+      url.pathname = '/sign-in';
+      return NextResponse.redirect(url); // Use an absolute URL
     }
-  }
+  }  
   
   // Allow GET requests to /api/products without authentication
   if (req.method === "GET" && req.nextUrl.pathname === "/api/products") {
@@ -66,4 +54,5 @@ export const config = {
     // Always run for API routes
     "/(api|trpc)(.*)",
   ],
+  publicRoutes: ["/sign-in(.*)", "/sign-up(.*)"],
 };

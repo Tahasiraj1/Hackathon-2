@@ -131,8 +131,16 @@ const ProductDetails = () => {
 
   if (error || !product) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-xl font-bold text-red-500">
-        {error || "Product not found"}
+      <div className="min-h-screen flex items-center justify-center text-red-600">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="bg-red-100 p-6 rounded-lg shadow-lg"
+        >
+          <h2 className="text-2xl font-bold mb-2">Error</h2>
+          <p>{error || "Product not found"}</p>
+        </motion.div>
       </div>
     )
   }

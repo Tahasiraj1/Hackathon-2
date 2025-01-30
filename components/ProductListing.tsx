@@ -22,6 +22,7 @@ import { BarLoader } from "react-spinners";
 // import { Badge } from "./ui/badge";
 import { motion } from "framer-motion";
 import { containerVariants, itemVariants } from "@/lib/motion";
+import CategoryFilter from "./CategoryFilter";
 
 
 interface Product {
@@ -85,13 +86,6 @@ const ProductListing = () => {
     });
   };
 
-  const handleCategoryChange = (category: string, checked: boolean) => {
-    if (checked) {
-      setSelectedCategories((prev) => [...prev, category]);
-    } else {
-      setSelectedCategories((prev) => prev.filter((cat) => cat !== category));
-    }
-  };
 
   const filteredProducts = selectedCategories.length
     ? products.filter((product) =>
@@ -166,26 +160,9 @@ const ProductListing = () => {
         <>
           <div className="flex w-full px-2 md:px-6 lg:px-8 mt-8 gap-8">
             <div className="md:flex flex-col w-1/4 hidden">
-              <h2 className="text-2xl font-semibold mb-4">Product type</h2>
-              <div className="space-y-2">
-                {productTypes.map((item) => (
-                  <div key={item} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={item}
-                      onCheckedChange={(checked) =>
-                        handleCategoryChange(item, checked as boolean)
-                      }
-                    />
-                    <Label
-                      htmlFor={item}
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      {item}
-                    </Label>
-                  </div>
-                ))}
-              </div>
-              <h2 className="text-2xl font-semibold my-4">Price</h2>
+              <h2 className="text-3xl font-clashDisplay mb-4">Product type</h2>
+              <CategoryFilter />
+              <h2 className="text-2xl font-clashDisplay my-4">Price</h2>
               <div className="space-y-2">
                 <Slider
                   value={sliderValue}
@@ -210,18 +187,8 @@ const ProductListing = () => {
                     Categories <ChevronDown />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56">
-                  {productTypes.map((category) => (
-                    <DropdownMenuCheckboxItem
-                      key={category}
-                      checked={selectedCategories.includes(category)}
-                      onCheckedChange={(checked) => {
-                        handleCategoryChange(category, checked);
-                      }}
-                    >
-                      {category}
-                    </DropdownMenuCheckboxItem>
-                  ))}
+                <DropdownMenuContent className="w-72">
+                  <CategoryFilter />
                 </DropdownMenuContent>
               </DropdownMenu>
               <DropdownMenu>
@@ -311,7 +278,7 @@ const ProductListing = () => {
                       variants={itemVariants}
                       className="p-4"
                       >
-                        <h3 className="text-lg font-semibold">
+                        <h3 className="text-lg">
                           {product.name}
                         </h3>
                         <p className="text-gray-600">{product.price}</p>

@@ -1,24 +1,20 @@
-"use client";
+"use client"
 
-import React, { useState, useEffect } from "react";
-import Link from "next/link";
-import dynamic from "next/dynamic";
-import {
-  motion,
-  AnimatePresence,
-  useScroll,
-  useMotionValueEvent,
-} from "framer-motion";
-import { CircleUser, ShoppingCart } from "lucide-react";
-import { SignedIn, SignInButton, SignedOut, UserButton } from "@clerk/nextjs";
-import { Button } from "../ui/button";
-import { useUser } from "@clerk/nextjs";
+import { useState, useEffect, useRef } from "react"
+import Link from "next/link"
+import dynamic from "next/dynamic"
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion"
+import { CircleUser, ShoppingCart } from "lucide-react"
+import { SignedIn, SignInButton, SignedOut, UserButton } from "@clerk/nextjs"
+import { Button } from "../ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 
-const SearchProduct = dynamic(() => import("../SearchProduct"));
-const MobileMenuSheet = dynamic(() => import("./MobileMenuSheet"));
-const WishList = dynamic(() => import("./WishList"));
+const SearchProduct = dynamic(() => import("../SearchProduct"))
+const MobileMenuSheet = dynamic(() => import("./MobileMenuSheet"))
+const WishList = dynamic(() => import("./WishList"))
 
 const categories = [
+  { title: "Home", href: "/" },
   { title: "All Products", href: "/products" },
   { title: "Mens", href: "/products/category/Mens" },
   { title: "Womens", href: "/products/category/Womens" },
@@ -33,7 +29,48 @@ const Header = () => {
   const { scrollY } = useScroll();
   const [visible, setVisible] = useState(true);
   const [scrollYPosition, setScrollYPosition] = useState(0);
-  const { user } = useUser();
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [hoverStyle, setHoverStyle] = useState({})
+  const [activeStyle, setActiveStyle] = useState({ left: "0px", width: "0px" })
+  const tabRefs = useRef<(HTMLDivElement | null)[]>([])
+
+  useEffect(() => {
+    if (hoveredIndex !== null) {
+      const hoveredElement = tabRefs.current[hoveredIndex]
+      if (hoveredElement) {
+        const { offsetLeft, offsetWidth } = hoveredElement
+        setHoverStyle({
+          left: `${offsetLeft}px`,
+          width: `${offsetWidth}px`,
+        })
+      }
+    }
+  }, [hoveredIndex])
+
+  useEffect(() => {
+    const activeElement = tabRefs.current[activeIndex]
+    if (activeElement) {
+      const { offsetLeft, offsetWidth } = activeElement
+      setActiveStyle({
+        left: `${offsetLeft}px`,
+        width: `${offsetWidth}px`,
+      })
+    }
+  }, [activeIndex])
+
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      const overviewElement = tabRefs.current[0]
+      if (overviewElement) {
+        const { offsetLeft, offsetWidth } = overviewElement
+        setActiveStyle({
+          left: `${offsetLeft}px`,
+          width: `${offsetWidth}px`,
+        })
+      }
+    })
+  }, [])
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setScrollYPosition(latest); // Track scroll position
@@ -43,16 +80,14 @@ const Header = () => {
     // Only toggle visibility when crossing a scroll threshold
     const handleVisibility = () => {
       if (scrollYPosition > 50) {
-        setVisible(false); // Hide categories if scrolling down past 50px
+        setVisible(false) // Hide categories if scrolling down past 50px
       } else {
-        setVisible(true); // Show categories when near the top
+        setVisible(true) // Show categories when near the top
       }
-    };
+    }
 
-    handleVisibility();
-  }, [scrollYPosition]);
-
-  const role = user?.publicMetadata?.role;
+    handleVisibility()
+  }, [scrollYPosition])
 
   return (
     <header className="sticky top-0 z-10 w-full flex items-center justify-center bg-white bg-opacity-70 backdrop-blur-md">
@@ -70,19 +105,11 @@ const Header = () => {
           </h1>
 
           <div className="flex items-center justify-center gap-3 md:gap-4">
-            {role === "admin" ? (
-              <Link href={"/admin"}>
-                <Button className="hidden md:flex bg-opacity-50 bg-slate-400 hover:bg-slate-400 rounded-full text-black w-fit px-4 py-2">
-                  Admin
-                </Button>
-              </Link>
-            ) : (
-              <Link href={"/my-orders"}>
-                <Button className="hidden md:flex bg-opacity-50 bg-slate-400 hover:bg-slate-400 rounded-full text-black w-fit px-2 py-2">
-                  My Orders
-                </Button>
-              </Link>
-            )}
+            <Link href={"/my-orders"}>
+              <Button className="hidden md:flex bg-opacity-50 bg-slate-300 hover:bg-slate-200 rounded-full text-black w-fit px-2 py-2">
+                My Orders
+              </Button>
+            </Link>
 
             {/* Cart */}
             <Link href="/cart">
@@ -125,7 +152,7 @@ const Header = () => {
           initial={{ opacity: 0, height: "0px" }}
           animate={{
             opacity: visible ? 1 : 0,
-            height: visible ? "40px" : "0px", // Dynamically animate height
+            height: visible ? "40px" : "0px",
           }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
         >
@@ -141,20 +168,60 @@ const Header = () => {
                 transition={{ duration: 0.4, ease: "easeInOut" }}
                 className="w-full overflow-hidden"
               >
-                <div className="hidden lg:flex items-center justify-center gap-8 font-satoshi mt-1.5">
-                  {categories.map((category) => (
-                    <Link key={category.href} href={category.href}>
-                        {category.title}
-                    </Link>
-                  ))}
-                </div>
+                <Card className="w-full border-none shadow-none relative flex items-center justify-center bg-transparent">
+                  <CardContent className="p-0">
+                    <div className="relative">
+                      {/* Hover Highlight */}
+                      <div
+                        className="absolute h-[30px] transition-all duration-300 ease-out bg-[#0e0f1114] rounded-none flex items-center"
+                        style={{
+                          ...hoverStyle,
+                          opacity: hoveredIndex !== null ? 1 : 0,
+                        }}
+                      />
+
+                      {/* Active Indicator */}
+                      <div
+                        className="absolute bottom-[-6px] h-[2px] bg-[#0e0f11] transition-all duration-300 ease-out"
+                        style={activeStyle}
+                      />
+
+                      {/* Tabs */}
+                      <div className="relative flex space-x-[6px] items-center justify-center">
+                        {categories.map((category, index) => (
+                          <Link key={index} href={category.href}>
+                            <div
+                              key={index}
+                              ref={(el) => {
+                                tabRefs.current[index] = el;
+                              }}
+                              className={`px-3 py-2 cursor-pointer transition-colors duration-300 h-[30px] ${
+                                index === activeIndex ? "text-[#0e0e10]" : "text-[#0e0f1199]"
+                              }`}
+                              onMouseEnter={() => setHoveredIndex(index)}
+                              onMouseLeave={() => setHoveredIndex(null)}
+                              onClick={() => setActiveIndex(index)}
+                            >
+                              
+                                <div className="text-md font-satoshi leading-5 whitespace-nowrap flex items-center justify-center h-full">
+                                  {category.title}
+                                </div>
+                              
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </motion.div>
             )}
           </AnimatePresence>
         </motion.div>
       </div>
     </header>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header
+
