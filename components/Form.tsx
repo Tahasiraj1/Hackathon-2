@@ -92,8 +92,8 @@ export default function CheckoutForm() {
         toast({
           title: "✔️ Order placed successfully!",
         })
-        // router.push('/my-orders');
-        // clearCart();
+        router.push('/my-orders');
+        clearCart();
       }
     } catch (error) {
       console.error('Error placing order:', error);
