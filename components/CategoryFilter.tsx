@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Check } from "lucide-react";
 
-const transitionProps = {
-  type: "spring",
-  stiffness: 500,
-  damping: 30,
-  mass: 0.5,
-};
+// const transitionProps = {
+//   type: "spring",
+//   stiffness: 500,
+//   damping: 30,
+//   mass: 0.5,
+// };
 
 const productTypes = [
   "Mens",
