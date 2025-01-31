@@ -133,7 +133,7 @@ const BestSelling = () => {
                       />
                       <Button
                         variant="ghost"
-                        className="absolute top-0 right-0 md:translate-x-40 md:group-hover:translate-x-0 md:bg-white md:hover:bg-white/90 bg-transparent hover:bg-transparent active:scale-95 transition-transform transform duration-300 ease-in-out p-2 rounded-full w-fit h-fit"
+                        className="absolute top-0 right-0 md:translate-x-40 md:group-hover:translate-x-0 bg-white hover:bg-white/90 active:scale-95 transition-transform transform duration-300 ease-in-out p-2 rounded-full w-fit h-fit"
                         onClick={(e) =>
                           handleAddItemToWishList(e, {
                             id: p.id,
@@ -147,7 +147,7 @@ const BestSelling = () => {
                           className={`${
                             wishList.some((item) => item.id === p.id)
                               ? "text-red-600 fill-red-600"
-                              : "text-white md:text-black fill-white"
+                              : "text-black fill-white"
                           }`}
                         />
                       </Button>

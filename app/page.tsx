@@ -2,6 +2,7 @@ import React from "react";
 import Hero from "@/components/Hero";
 import BestSelling from "@/components/BestSelling"
 import PopularProducts from "@/components/PopularProducts";
+import Category from "@/components/Category";
 
 const WhatMakesUsDiff = React.lazy(() => import("@/components/WhatMakesUsDiff"));
 const JoinClub = React.lazy(() => import("@/components/JoinClub"));
@@ -12,6 +13,7 @@ export default function Home() {
     <>
       <Hero />
       <WhatMakesUsDiff />
+      <Category />
       <BestSelling />
       <PopularProducts />
       <JoinClub />
