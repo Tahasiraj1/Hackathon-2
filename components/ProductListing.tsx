@@ -185,10 +185,10 @@ const ProductListing = () => {
                         backgroundColor: isSelected ? "#2A254B" : "#CBD5E1",
                       }}
                       whileHover={{
-                        backgroundColor: isSelected ? "#363061" : "#94A3B8",
+                        backgroundColor: isSelected ? "#363061" : "#b0a7f1",
                       }}
                       whileTap={{
-                        backgroundColor: isSelected ? "#2A254B" : "#64748B",
+                        backgroundColor: isSelected ? "#2A254B" : "#9a91e0",
                       }}
                       transition={{
                         type: "spring",
@@ -299,10 +299,10 @@ const ProductListing = () => {
                             backgroundColor: isSelected ? "#2A254B" : "#CBD5E1",
                           }}
                           whileHover={{
-                            backgroundColor: isSelected ? "#363061" : "#94A3B8",
+                            backgroundColor: isSelected ? "#363061" : "#b0a7f1",
                           }}
                           whileTap={{
-                            backgroundColor: isSelected ? "#2A254B" : "#64748B",
+                            backgroundColor: isSelected ? "#2A254B" : "#9a91e0",
                           }}
                           transition={{
                             type: "spring",
