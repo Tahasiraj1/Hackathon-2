@@ -15,6 +15,8 @@ import { useCart } from "@/lib/CartContext";
 import { urlFor } from "@/sanity/lib/image";
 import { Plus, Minus, X } from "lucide-react";
 import Link from "next/link";
+import { motion } from "framer-motion"
+
 
 const Cart = () => {
   const { cart, incrementQuantity, decrementQuantity, removeFromCart } = useCart();
@@ -32,6 +34,26 @@ const Cart = () => {
   //   const handleRemoveFromCart = (item: CartItem) => {
   //     removeFromCart(item);
   //   };
+
+  const length = cart.length;
+
+  if (length === 0) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-red-600">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="bg-red-100 p-6 rounded-lg shadow-lg flex flex-col items-center justify-center text-center"
+        >
+          <h2 className="text-2xl font-bold mb-2">Your Cart Is Empty</h2>
+          <Link href="/products">
+            <Button className="mt-4 rounded-none bg-[#2A254B]">Continue Shopping</Button>
+          </Link>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col text-start px-4 md:px-10 font-clashDisplay">

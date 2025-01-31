@@ -88,17 +88,16 @@ const ProductDetails = () => {
         size: selectedSize,
       })
       toast({
-        className: "rounded-none border border-[#27224b]",
-        title: "Success!",
-        description: `${product.name} is added to cart.`,
+        className: "border border-[#27224b]",
+        title: `✔️ ${product.name} is added to cart!`,
+        description: ``,
         duration: 5000,
       })
     } else {
       toast({
-        className: "rounded-none text-white",
-        variant: "destructive",
-        title: "⚠️ Error!",
-        description: "Please select color and size.",
+        className: "border border-[#27224b]",
+        title: "⚠️ Please select color and size.",
+        description: "",
         duration: 5000,
       })
     }

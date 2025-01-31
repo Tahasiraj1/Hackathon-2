@@ -144,19 +144,16 @@ export default function CartProvider({ children }: { children: ReactNode }) {
 
       } else {
         // Add to wishlist
-        actionMessage = `${product.name} is added to wishlist.`;
+        actionMessage = `✔️ ${product.name} is added to wishlist.`;
         return [...prevWish, { ...product }];
       }
     });
 
     toast({
-        className: existingProduct
-          ? "rounded-none"
-          : "rounded-none border border-[#27224b]",
-        title: "Success!",
-        description: actionMessage,
+        className:"rounded-none border border-[#27224b]",
+        title: actionMessage,
+        description: "",
         duration: 5000,
-        variant: existingProduct ? "destructive" : "default",
       });
   };  
 
