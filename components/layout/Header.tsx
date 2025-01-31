@@ -93,7 +93,7 @@ const Header = () => {
     <header className="sticky top-0 z-10 w-full flex items-center justify-center bg-white bg-opacity-70 backdrop-blur-md">
       <div className="flex flex-col items-center justify-center w-full px-5 md:px-10">
         {/* Top Header Section */}
-        <div className="flex w-full justify-between pt-4">
+        <div className="flex w-full justify-between mt-4">
           {/* Search Option */}
           <div className="hidden md:flex">
             <SearchProduct />
@@ -152,7 +152,7 @@ const Header = () => {
           initial={{ opacity: 0, height: "0px" }}
           animate={{
             opacity: visible ? 1 : 0,
-            height: visible ? "40px" : "0px",
+            height: visible ? "30px" : "0px",
           }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
         >
@@ -182,7 +182,7 @@ const Header = () => {
 
                       {/* Active Indicator */}
                       <div
-                        className="absolute bottom-[-6px] h-[2px] bg-[#0e0f11] transition-all duration-300 ease-out"
+                        className="absolute bottom-[0.5px] h-[2px] bg-[#0e0f11] transition-all duration-300 ease-out"
                         style={activeStyle}
                       />
 

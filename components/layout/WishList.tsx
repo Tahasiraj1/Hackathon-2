@@ -58,7 +58,7 @@ const WishList = () => {
                 {wishList.map((item) => (
                   <li key={item.id} className="mb-4">
                     <Link href={`/products/${item.id}`}>
-                      <div className="relative flex items-center gap-4 bg-[#2A254B]/30  p-2 rounded-xl">
+                      <div className="relative flex items-center gap-4 bg-gray-200  p-2 rounded-xl">
                         <Image
                           src={urlFor(item.image).url()}
                           alt={item.name}
