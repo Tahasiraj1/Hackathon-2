@@ -482,7 +482,7 @@ const ProductListing = () => {
                 </p>
               )}
               <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogContent className="p-0">
+                <DialogContent className="p-0 border-4 border-[#363061]">
                 
                   {dialogProduct && (
                       <Ripple color="#363061">
