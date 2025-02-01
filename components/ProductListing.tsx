@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { Suspense, useEffect, useState } from "react";
 import { Button } from "./ui/button";
-import { ChevronDown, Heart } from "lucide-react";
+import { ChevronDown, EyeIcon, Heart } from "lucide-react";
 import { urlFor } from "@/sanity/lib/image";
 import { Image as SanityImage } from "@sanity/types";
 import { Slider } from "./ui/slider";
@@ -19,6 +19,8 @@ import { BarLoader } from "react-spinners";
 import { containerVariants, itemVariants } from "@/lib/motion";
 import { AnimatePresence, motion } from "framer-motion";
 import { Check } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "./ui/dialog";
+import { Ripple } from "./layout/Ripple";
 
 const productTypes = [
   "Mens",
@@ -52,6 +54,16 @@ const ProductListing = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const productsPerPage = 6;
   const { toggleWishList, wishList } = useCart();
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [dialogProduct, setDialogProduct] = useState<Product | null>(null)
+
+
+  const handleDialog = (event: React.MouseEvent, product: Product) => {
+    event.preventDefault()
+    event.stopPropagation()
+    setDialogProduct(product)
+    setIsDialogOpen(true)
+  }
 
   useEffect(() => {
     setLoading(true);
@@ -417,8 +429,8 @@ const ProductListing = () => {
                             alt={product.name}
                             width={300}
                             height={300}
-                            className="w-full h-auto object-cover"
-                          />
+                            className="w-full h-auto object-cover"                     
+                           />
                           <Button
                             variant="ghost"
                             className="absolute top-0 right-0 md:translate-x-40 md:group-hover:translate-x-0 bg-white hover:bg-white/90 active:scale-95 transition-transform transform duration-300 ease-in-out p-2 rounded-full w-fit h-fit"
@@ -438,6 +450,13 @@ const ProductListing = () => {
                                   : "text-black fill-white"
                               }`}
                             />
+                          </Button>
+                          <Button
+                            onClick={(e) => handleDialog(e, product)}
+                            variant="ghost"
+                            className="absolute top-10 right-0 md:translate-x-40 md:group-hover:translate-x-0 bg-white hover:bg-white/90 active:scale-95 transition-transform transform duration-300 ease-in-out p-2 rounded-full w-fit h-fit"
+                          >
+                            <EyeIcon />
                           </Button>
                           {/* <Badge className="absolute top-0 left-0 -translate-y-40 group-hover:translate-y-0 bg-[#2A254B] transition-transform transform duration-300 ease-in-out">
                             {product.tags.map((tag) => (
@@ -462,6 +481,31 @@ const ProductListing = () => {
                   No products found.
                 </p>
               )}
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogContent className="p-0">
+                
+                  {dialogProduct && (
+                      <Ripple color="#363061">
+                        <DialogHeader className="items-center px-4 pt-4">
+                          <DialogTitle>{dialogProduct.name}</DialogTitle>
+                          <DialogDescription>${dialogProduct.price}</DialogDescription>
+                        </DialogHeader>
+                        <Link href={`/products/${dialogProduct.id}`}>
+                          <div className="grid gap-4 py-4 px-4">
+                            <Image
+                              src={urlFor(dialogProduct.images[0] as SanityImage).url() || "/placeholder.svg" || "/placeholder.svg"}
+                              alt={dialogProduct.name}
+                              width={500}
+                              height={300}
+                              className="w-full h-auto object-cover rounded-md"
+                            />
+                            <p className="text-gray-700 px-4 pb-4">{dialogProduct.description}</p>
+                          </div>
+                        </Link>
+                      </Ripple>
+                  )}
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
           <div className="flex items-center justify-center mt-5">
