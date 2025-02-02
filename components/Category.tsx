@@ -1,13 +1,13 @@
 import React from "react";
-import { Card, CardContent } from "./ui/card";
+import { Card, CardContent, CardFooter } from "./ui/card";
 import Image from "next/image";
+import { Button } from "./ui/button";
+import Link from "next/link";
 
 
 const Category = () => {
   return (
-    <div className="flex flex-col items-center justify-center gap-2 py-10 px-4"  
-    style={{ backgroundImage: `url('/svg/Element.svg')`, backgroundPosition: '30% 100%', backgroundSize: 'cover' }}
-    >
+    <div className="flex flex-col items-center justify-center gap-2 py-10 px-4">
       <div className="flex flex-col md:flex-row items-center justify-center w-full gap-2">
       <Card className="relative rounded-none overflow-hidden group cursor-pointer ">
           <Image
@@ -24,6 +24,11 @@ const Category = () => {
               voluptates.
             </p>
           </CardContent>
+          <Link href="/products/category/Casual Wear">
+            <Button className="absolute bottom-4 right-4 rounded-none bg-opacity-50 bg-slate-400 group-hover:bg-slate-600 group-hover:bg-opacity-70">
+              View Collection
+            </Button>
+          </Link>
         </Card>
         <Card className="relative rounded-none overflow-hidden group cursor-pointer ">
           <Image
@@ -40,6 +45,11 @@ const Category = () => {
               voluptates.
             </p>
           </CardContent>
+          <Link href="/products/category/Active Wear">
+            <Button className="absolute bottom-4 right-4 rounded-none bg-opacity-50 bg-slate-400 group-hover:bg-slate-600 group-hover:bg-opacity-70">
+              View Collection
+            </Button>
+          </Link>
         </Card>
       </div>
       <div className="flex flex-col md:flex-row items-center justify-center w-full gap-2">
@@ -58,6 +68,11 @@ const Category = () => {
               voluptates.
             </p>
           </CardContent>
+          <Link href="/products/category/Formal Attire">
+            <Button className="absolute bottom-4 right-4 rounded-none bg-opacity-50 bg-slate-400 group-hover:bg-slate-600 group-hover:bg-opacity-70">
+              View Collection
+            </Button>
+          </Link>
         </Card>
         <Card className="relative rounded-none overflow-hidden group cursor-pointer ">
           <Image
@@ -74,6 +89,11 @@ const Category = () => {
               voluptates.
             </p>
           </CardContent>
+          <Link href="/products/category/Accessories">
+            <Button className="absolute bottom-4 right-4 rounded-none bg-opacity-50 bg-slate-400 group-hover:bg-slate-600 group-hover:bg-opacity-70">
+              View Collection
+            </Button>
+          </Link>
         </Card>
       </div>
     </div>
