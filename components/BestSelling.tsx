@@ -18,10 +18,22 @@ import { motion } from "framer-motion";
 import { useCart } from "@/lib/CartContext";
 import { WishItem } from "@/lib/CartContext";
 import { Button } from "./ui/button";
-import { Heart } from "lucide-react";
-
+import { EyeIcon, Heart } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
+import { Ripple } from "./layout/Ripple";
 import { containerVariants, itemVariants } from "@/lib/motion";
-
 
 interface Product {
   id: string;
@@ -41,6 +53,15 @@ const BestSelling = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const { toggleWishList, wishList } = useCart();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dialogProduct, setDialogProduct] = useState<Product | null>(null);
+
+  const handleDialog = (event: React.MouseEvent, product: Product) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setDialogProduct(product);
+    setIsDialogOpen(true);
+  };
 
   const plugin = React.useRef(
     Autoplay({ delay: 3000, stopOnInteraction: true })
@@ -131,26 +152,57 @@ const BestSelling = () => {
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                         className="object-cover"
                       />
-                      <Button
-                        variant="ghost"
-                        className="absolute top-0 right-0 md:translate-x-40 md:group-hover:translate-x-0 bg-white hover:bg-white/90 active:scale-95 transition-transform transform duration-300 ease-in-out p-2 rounded-full w-fit h-fit"
-                        onClick={(e) =>
-                          handleAddItemToWishList(e, {
-                            id: p.id,
-                            name: p.name,
-                            price: p.price,
-                            image: p.images[0] as SanityImage,
-                          })
-                        }
-                      >
-                        <Heart
-                          className={`${
-                            wishList.some((item) => item.id === p.id)
-                              ? "text-red-600 fill-red-600"
-                              : "text-black fill-white"
-                          }`}
-                        />
-                      </Button>
+                      <TooltipProvider delayDuration={0}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              className="absolute top-0 right-0 md:translate-x-40 md:group-hover:translate-x-0 bg-white hover:bg-white/90 active:scale-95 transition-transform transform duration-300 ease-in-out p-2 rounded-full w-fit h-fit"
+                              onClick={(e) =>
+                                handleAddItemToWishList(e, {
+                                  id: p.id,
+                                  name: p.name,
+                                  price: p.price,
+                                  image: p.images[0] as SanityImage,
+                                })
+                              }
+                            >
+                              <Heart
+                                className={`${
+                                  wishList.some((item) => item.id === p.id)
+                                    ? "text-red-600 fill-red-600"
+                                    : "text-black fill-white"
+                                }`}
+                              />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent
+                            className="dark bg-[#2A254B] px-2 py-1 text-xs"
+                            showArrow={true}
+                          >
+                            Add to wishList
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                      <TooltipProvider delayDuration={0}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              onClick={(e) => handleDialog(e, p)}
+                              variant="ghost"
+                              className="absolute top-10 right-0 md:translate-x-40 md:group-hover:translate-x-0 bg-white hover:bg-white/90 active:scale-95 transition-transform transform duration-300 ease-in-out p-2 rounded-full w-fit h-fit"
+                            >
+                              <EyeIcon />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent
+                            className="dark bg-[#2A254B] px-2 py-1 text-xs"
+                            showArrow={true}
+                          >
+                            Quick View
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </motion.div>
                     <motion.div variants={itemVariants}>
                       <h3 className="text-lg font-medium">{p.name}</h3>
@@ -167,6 +219,36 @@ const BestSelling = () => {
             </div>
           </Carousel>
         </motion.div>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogContent className="p-0 border-4 border-[#363061]">
+            {dialogProduct && (
+              <Ripple color="#363061">
+                <DialogHeader className="items-center px-4 pt-4">
+                  <DialogTitle>{dialogProduct.name}</DialogTitle>
+                  <DialogDescription>${dialogProduct.price}</DialogDescription>
+                </DialogHeader>
+                <Link href={`/products/${dialogProduct.id}`}>
+                  <div className="grid gap-4 py-4 px-4">
+                    <Image
+                      src={
+                        urlFor(dialogProduct.images[0] as SanityImage).url() ||
+                        "/placeholder.svg" ||
+                        "/placeholder.svg"
+                      }
+                      alt={dialogProduct.name}
+                      width={500}
+                      height={300}
+                      className="w-full h-auto object-cover rounded-md"
+                    />
+                    <p className="text-gray-700 px-4 pb-4">
+                      {dialogProduct.description}
+                    </p>
+                  </div>
+                </Link>
+              </Ripple>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
