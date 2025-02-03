@@ -79,7 +79,7 @@ const Header = () => {
   useEffect(() => {
     // Only toggle visibility when crossing a scroll threshold
     const handleVisibility = () => {
-      if (scrollYPosition > 50) {
+      if (scrollYPosition > 20) {
         setVisible(false) // Hide categories if scrolling down past 50px
       } else {
         setVisible(true) // Show categories when near the top
