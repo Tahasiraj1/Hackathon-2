@@ -143,10 +143,7 @@ const PopularProducts = () => {
                       variants={itemVariants}
                     >
                       <Image
-                        src={
-                          urlFor(p.images[0] as SanityImage).url() ||
-                          "/placeholder.svg"
-                        }
+                        src={urlFor(p.images[0] as SanityImage).url()}
                         alt={p.name}
                         fill
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"

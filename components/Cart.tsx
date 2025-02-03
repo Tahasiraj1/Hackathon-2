@@ -57,7 +57,7 @@ const Cart = () => {
 
   return (
     <div className="flex flex-col text-start px-4 md:px-10 font-clashDisplay">
-      <h1 className="text-3xl mb-10">Your shoping cart</h1>
+      <h1 className="text-3xl mb-10 mt-10">Your shoping cart</h1>
       <Table>
         <TableHeader className="hidden md:table-header-group">
           <TableRow>
