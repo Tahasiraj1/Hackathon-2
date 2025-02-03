@@ -10,6 +10,9 @@ import { useAuth } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { urlFor } from '@/sanity/lib/image';
 import { ScrollArea, ScrollBar } from './ui/scroll-area';
+import { Elements } from "@stripe/react-stripe-js"
+import { loadStripe } from "@stripe/stripe-js"
+import { convertToSubcurrency } from '@/lib/convertToSubcurrency';
 
 const Checkout = () => {
     const { cart } = useCart();
@@ -22,7 +25,15 @@ const Checkout = () => {
         }
     }, [isLoaded, isSignedIn, router]);
 
-    if (!cart || cart.length === 0) {
+    if (process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY === undefined) {
+        throw new Error("NEXT_PUBLIC_STRIPE_PUBLIC_KEY is not defined");
+      }
+      
+    const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string)
+
+    const amount = cart.reduce((total, item) => total + item.price * item.quantity, 0)
+
+    if (!cart || cart.length === 0 || amount === 0) {
         return (
             <div className='flex flex-col items-center justify-center h-screen'>
                 <p className='text-xl font-bold'>Your cart is empty!</p>
@@ -37,7 +48,16 @@ const Checkout = () => {
         <div className="flex flex-col md:flex-row w-full p-10 justify-between">
             <div className="w-full md:w-[55%]">
                 <h1 className='text-3xl font-bold font-clashDisplay'>Checkout</h1>
-                <CheckoutForm />
+                <Elements 
+                stripe={stripePromise}
+                options={{
+                    mode: "payment",
+                    currency: "usd",
+                    amount: convertToSubcurrency(amount),
+                }}
+                >
+                    <CheckoutForm />
+                </Elements>
             </div>
                 <div className='w-full md:w-[40%] h-fit flex flex-col border sticky top-36 py-4 px-2 rounded-none gap-2'>
                     <h1 className='text-2xl pb-4 font-clashDisplay'>Order Summary</h1>
