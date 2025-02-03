@@ -90,7 +90,7 @@ const Header = () => {
   }, [scrollYPosition])
 
   return (
-    <header className="sticky top-0 z-10 w-full flex items-center justify-center bg-white bg-opacity-70 backdrop-blur-md">
+    <header className="sticky top-0 z-10 w-full flex items-center justify-center bg-white bg-opacity-50 backdrop-blur-md">
       <div className="flex flex-col items-center justify-center w-full px-5 md:px-10">
         {/* Top Header Section */}
         <div className="flex w-full justify-between mt-4">
