@@ -27,6 +27,14 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Ripple } from "@/components/layout/Ripple";
+import { 
+  Pagination, 
+  PaginationContent, 
+  PaginationItem, 
+  PaginationLink, 
+  PaginationNext, 
+  PaginationPrevious 
+} from "@/components/ui/pagination";
 
 type Product = {
   id: string;
@@ -80,6 +88,8 @@ const CategoryPage = () => {
   );
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+  const totalPages = Math.ceil(products.length / productsPerPage);
 
   const handleAddItemToWishList = (
     event: React.MouseEvent,
@@ -238,24 +248,40 @@ const CategoryPage = () => {
           </DialogContent>
         </Dialog>
       </motion.div>
-      <div className="flex items-center justify-center mt-5">
-        {Array.from(
-          { length: Math.ceil(products.length / productsPerPage) },
-          (_, i) => (
-            <button
-              key={i}
-              onClick={() => paginate(i + 1)}
-              className={`mx-1 px-3 py-1 border rounded-full ${
-                currentPage === i + 1
-                  ? "bg-[#2A254B] text-white"
-                  : "bg-[#363061] text-white"
-              }`}
-            >
-              {i + 1}
-            </button>
-          )
-        )}
-      </div>
+          {/* Pagination Component */}
+          <Pagination className="mt-6">
+            <PaginationContent>
+              {/* Previous Button */}
+              <PaginationItem className="cursor-pointer">
+                {currentPage > 1 && (
+                  <PaginationPrevious onClick={() => paginate(currentPage - 1)} />
+                )}
+              </PaginationItem>
+
+              {/* Page Numbers */}
+              {Array.from({ length: totalPages }, (_, i) => (
+                <PaginationItem className="cursor-pointer" key={i}>
+                  <PaginationLink
+                    onClick={() => paginate(i + 1)}
+                    isActive={currentPage === i + 1}
+                  >
+                    {i + 1}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+
+              {/* Next Button */}
+              <PaginationItem className="cursor-pointer">
+                <PaginationNext
+                  onClick={() => {
+                    if (currentPage < totalPages) {
+                      paginate(currentPage + 1);
+                    }
+                  }}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
     </div>
   );
 };

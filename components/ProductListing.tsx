@@ -33,6 +33,14 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { 
+  Pagination, 
+  PaginationContent, 
+  PaginationItem, 
+  PaginationLink, 
+  PaginationNext, 
+  PaginationPrevious 
+} from "@/components/ui/pagination";
 
 const productTypes = [
   "Mens",
@@ -136,6 +144,8 @@ const ProductListing = () => {
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
+  const totalPages = Math.ceil(products.length / productsPerPage);
+
   // Trigger POSTING.
   // useEffect(() => {
   //   async function syncProducts() {
@@ -205,13 +215,13 @@ const ProductListing = () => {
                       layout
                       initial={false}
                       animate={{
-                        backgroundColor: isSelected ? "#2A254B" : "#CBD5E1",
+                        backgroundColor: isSelected ? "#2A254B" : "#E5E7EB",
                       }}
                       whileHover={{
-                        backgroundColor: isSelected ? "#363061" : "#b0a7f1",
+                        backgroundColor: isSelected ? "#363061" : "#D1D5DB",
                       }}
                       whileTap={{
-                        backgroundColor: isSelected ? "#2A254B" : "#9a91e0",
+                        backgroundColor: isSelected ? "#2A254B" : "#D1D5DB",
                       }}
                       transition={{
                         type: "spring",
@@ -319,13 +329,13 @@ const ProductListing = () => {
                           layout
                           initial={false}
                           animate={{
-                            backgroundColor: isSelected ? "#2A254B" : "#CBD5E1",
+                            backgroundColor: isSelected ? "#2A254B" : "#E5E7EB",
                           }}
                           whileHover={{
-                            backgroundColor: isSelected ? "#363061" : "#b0a7f1",
+                            backgroundColor: isSelected ? "#363061" : "#D1D5DB",
                           }}
                           whileTap={{
-                            backgroundColor: isSelected ? "#2A254B" : "#9a91e0",
+                            backgroundColor: isSelected ? "#2A254B" : "#D1D5DB",
                           }}
                           transition={{
                             type: "spring",
@@ -549,24 +559,40 @@ const ProductListing = () => {
               </Dialog>
             </div>
           </div>
-          <div className="flex items-center justify-center mt-5">
-            {Array.from(
-              { length: Math.ceil(products.length / productsPerPage) },
-              (_, i) => (
-                <button
-                  key={i}
-                  onClick={() => paginate(i + 1)}
-                  className={`mx-1 px-3 py-1 border rounded-full ${
-                    currentPage === i + 1
-                      ? "bg-[#2A254B] text-white"
-                      : "bg-[#363061] text-white"
-                  }`}
-                >
-                  {i + 1}
-                </button>
-              )
-            )}
-          </div>
+          {/* Pagination Component */}
+          <Pagination className="mt-6">
+            <PaginationContent>
+              {/* Previous Button */}
+              <PaginationItem className="cursor-pointer">
+                {currentPage > 1 && (
+                  <PaginationPrevious onClick={() => paginate(currentPage - 1)} />
+                )}
+              </PaginationItem>
+
+              {/* Page Numbers */}
+              {Array.from({ length: totalPages }, (_, i) => (
+                <PaginationItem className="cursor-pointer" key={i}>
+                  <PaginationLink
+                    onClick={() => paginate(i + 1)}
+                    isActive={currentPage === i + 1}
+                  >
+                    {i + 1}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+
+              {/* Next Button */}
+              <PaginationItem className="cursor-pointer">
+                <PaginationNext
+                  onClick={() => {
+                    if (currentPage < totalPages) {
+                      paginate(currentPage + 1);
+                    }
+                  }}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         </>
       )}
     </div>
