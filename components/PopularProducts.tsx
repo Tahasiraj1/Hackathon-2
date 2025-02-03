@@ -139,7 +139,7 @@ const PopularProducts = () => {
                 >
                   <Link href={`/products/${p.id}`}>
                     <motion.div
-                      className="relative group aspect-[4/5] w-full mb-4"
+                      className="relative group aspect-[4/5] w-full mb-4 overflow-hidden"
                       variants={itemVariants}
                     >
                       <Image
