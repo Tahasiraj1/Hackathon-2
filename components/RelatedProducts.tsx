@@ -187,8 +187,8 @@ const RelatedProducts: React.FC<RelatedProductsProps> = ({
               ))}
         </CarouselContent>
         <div className="w-[100px] h-32 absolute -bottom-8 left-0 right-0 m-auto flex items-center justify-between">
-          <CarouselPrevious className="bg-gray-300 rounded-none px-6 py-6 hover:bg-gray-400 text-black active:scale-95 transition-transform transform duration-300" />
-          <CarouselNext className="bg-gray-300 rounded-none px-6 py-6 hover:bg-gray-400 text-black active:scale-95 transition-transform transform duration-300" />
+          <CarouselPrevious className="bg-gray-200 rounded-md px-5 py-5 hover:bg-gray-300 text-black active:scale-95 transition-transform transform duration-300" />
+          <CarouselNext className="bg-gray-200 rounded-md px-5 py-5 hover:bg-gray-300 text-black active:scale-95 transition-transform transform duration-300" />
         </div>
       </Carousel>
     </motion.div>
