@@ -117,7 +117,7 @@ const Header = () => {
                 <TooltipTrigger asChild>
                   <button 
                   className="hidden md:flex">
-                    <LuFilePen className="w-5 h-5 text-black" />
+                    <LuFilePen className="w-6 h-6 text-black" />
                   </button>
                 </TooltipTrigger>
               <TooltipContent className="text-white bg-[#2A254B]" showArrow={true}>
@@ -129,7 +129,7 @@ const Header = () => {
 
             {/* Cart */}
             <Link href="/cart">
-              <ShoppingCart className="hidden md:flex" />
+              <ShoppingCart className="hidden md:flex w-6 h-6" />
             </Link>
 
             {/* Mobile Search */}
