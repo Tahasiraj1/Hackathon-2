@@ -6,8 +6,14 @@ import dynamic from "next/dynamic"
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion"
 import { CircleUser, ShoppingCart } from "lucide-react"
 import { SignedIn, SignInButton, SignedOut, UserButton } from "@clerk/nextjs"
-import { Button } from "../ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { LuFilePen } from "react-icons/lu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const SearchProduct = dynamic(() => import("../SearchProduct"))
 const MobileMenuSheet = dynamic(() => import("./MobileMenuSheet"))
@@ -90,7 +96,7 @@ const Header = () => {
   }, [scrollYPosition])
 
   return (
-    <header className="sticky top-0 z-10 w-full flex items-center justify-center bg-white bg-opacity-50 backdrop-blur-md">
+    <header className="sticky top-0 z-10 w-full flex items-center justify-center bg-white bg-opacity-70 backdrop-blur-md">
       <div className="flex flex-col items-center justify-center w-full px-5 md:px-10">
         {/* Top Header Section */}
         <div className="flex w-full justify-between mt-4">
@@ -106,9 +112,19 @@ const Header = () => {
 
           <div className="flex items-center justify-center gap-3 md:gap-4">
             <Link href={"/my-orders"}>
-              <Button className="hidden md:flex bg-opacity-50 bg-slate-300 hover:bg-slate-200 rounded-full text-black w-fit px-2 py-2">
-                My Orders
-              </Button>
+            <TooltipProvider delayDuration={0}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button 
+                  className="hidden md:flex">
+                    <LuFilePen className="w-5 h-5 text-black" />
+                  </button>
+                </TooltipTrigger>
+              <TooltipContent className="text-white bg-[#2A254B]" showArrow={true}>
+                My orders
+              </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             </Link>
 
             {/* Cart */}

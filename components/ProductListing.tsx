@@ -231,7 +231,7 @@ const ProductListing = () => {
                         backgroundColor: { duration: 0.1 },
                       }}
                       className={`
-                      inline-flex items-center px-4 py-2 rounded-full text-base font-medium
+                      inline-flex items-center px-4 py-2 rounded-lg text-base font-medium
                       whitespace-nowrap overflow-hidden ring-1 ring-inset
                       ${
                         isSelected
