@@ -59,7 +59,7 @@ const Checkout = () => {
                     <CheckoutForm />
                 </Elements>
             </div>
-                <div className='w-full md:w-[40%] h-fit flex flex-col border sticky top-36 py-4 px-2 rounded-none gap-2'>
+                <div className='w-full md:w-[40%] h-fit flex flex-col border sticky top-36 py-4 px-2 rounded-md gap-2'>
                     <h1 className='text-2xl pb-4 font-clashDisplay'>Order Summary</h1>
                     <ScrollArea className='h-auto max-h-[260px]'>
                         {cart.map((item) => (
@@ -69,7 +69,7 @@ const Checkout = () => {
                                         alt={item.name}
                                         width={100}
                                         height={100}
-                                        className='w-20 h-20 object-cover'
+                                        className='w-20 h-20 object-cover rounded-md'
                                     />
                                     <div className='flex-1'>
                                         <h2 className='text-lg font-semibold font-clashDisplay'>{item.name}</h2>
