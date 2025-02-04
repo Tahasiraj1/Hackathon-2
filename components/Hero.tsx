@@ -4,9 +4,7 @@ import Link from "next/link";
 
 const Hero = () => {
   return (
-    <div
-      className="flex items-center justify-center md:py-16 text-white font-clashDisplay relative overflow-hidden"
-    >
+    <div className="flex items-center justify-center md:py-16 text-white font-clashDisplay relative">
       <div className="flex-col px-10 w-full max-w-3xl bg-[#2A254B] h-[502px] md:h-[450px] py-20">
         <h2 className="text-2xl">
           The furniture brand for the
