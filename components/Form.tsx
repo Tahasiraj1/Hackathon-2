@@ -26,6 +26,8 @@ import { toast } from "@/hooks/use-toast";
 import { useRouter } from 'next/navigation';
 import { useStripe, useElements, PaymentElement } from "@stripe/react-stripe-js"
 import { convertToSubcurrency } from '@/lib/convertToSubcurrency';
+import { formVariants, itemVariants } from '@/lib/motion';
+import { motion } from 'framer-motion';
 
 const formSchema = z.object({
   firstName: z.string().min(3, "First name is required"),
@@ -85,7 +87,8 @@ export default function CheckoutForm() {
 
 
   const onSubmit = async (data: FormData) => {
-    setIsSubmitting(true)
+    setIsSubmitting(true);
+    setErrorMessage(null);
 
     if (!stripe || !elements) {
       setErrorMessage("Stripe has not been initialized")
@@ -170,11 +173,28 @@ export default function CheckoutForm() {
     }
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
+    if (
+      (e.ctrlKey || e.metaKey) &&
+      (e.key === 'Enter' || e.key === 'NumpadEnter')
+    ) {
+      e.preventDefault()
+      e.currentTarget.form?.requestSubmit()
+    }
+  }
+
   return (
     <div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-3xl mx-auto py-10">
-          <div className="grid grid-cols-2 gap-4">
+        <motion.form 
+          variants={formVariants}
+          initial="hidden"
+          animate="visible"
+          onSubmit={form.handleSubmit(onSubmit)} 
+          onKeyDown={handleKeyDown} 
+          className="space-y-8 max-w-3xl mx-auto py-10"
+        >
+          <motion.div variants={itemVariants} className="grid grid-cols-2 gap-4" initial="hidden" animate="visible">
             <FormField
               control={form.control}
               name="firstName"
@@ -201,35 +221,39 @@ export default function CheckoutForm() {
                 </FormItem>
               )}
             />
-          </div>
-          <FormField
-            control={form.control}
-            name="phoneNumber"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Phone Number</FormLabel>
-                <FormControl>
-                  <Input className="rounded-none border-gray-300" placeholder="e.g. 1234567890" type="tel" {...field} />
-                </FormControl>
-                <FormDescription>We will contact you on this number.</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input className="rounded-none border-gray-300" placeholder="e.g. john@example.com" type="email" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className="grid grid-cols-2 gap-4">
+          </motion.div>
+          <motion.div variants={itemVariants}>
+            <FormField
+              control={form.control}
+              name="phoneNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone Number</FormLabel>
+                  <FormControl>
+                    <Input className="rounded-none border-gray-300" placeholder="e.g. 1234567890" type="tel" {...field} />
+                  </FormControl>
+                  <FormDescription>We will contact you on this number.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </motion.div>
+          <motion.div variants={itemVariants}>
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input className="rounded-none border-gray-300" placeholder="e.g. john@example.com" type="email" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </motion.div>
+          <motion.div variants={itemVariants} className="grid grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="city"
@@ -256,8 +280,8 @@ export default function CheckoutForm() {
                 </FormItem>
               )}
             />
-          </div>
-          <div className="grid grid-cols-2 gap-4">
+          </motion.div>
+          <motion.div variants={itemVariants} className="grid grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="postalCode"
@@ -284,7 +308,7 @@ export default function CheckoutForm() {
                 </FormItem>
               )}
             />
-          </div>
+          </motion.div>
 
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="bank-transfer">
@@ -309,7 +333,7 @@ export default function CheckoutForm() {
           >
             {isSubmitting ? 'Processing...' : 'Place Order'}
           </Button>
-        </form>
+        </motion.form>
       </Form>
       {errorMessage && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-none relative" role="alert">
