@@ -1,32 +1,10 @@
-"use client";
-
-import { useRef } from "react";
 import { Button } from "./ui/button";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 const Hero = () => {
-  const containerRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"],
-  });
-
-  const width = useTransform(scrollYProgress, [0, 0.3], ["100%", "100vw"]);
-  const scale = useTransform(scrollYProgress, [0, 0.3], [1, 1.2]);
-
-  const isLargeScreen = useMediaQuery("(min-width: 768px)");
-
   return (
-    <motion.div
-      transition={{ duration: 1, ease: "easeInOut" }}
-      ref={containerRef}
-      style={{
-        width: isLargeScreen ? width : "100%",
-        scale: isLargeScreen ? scale : 1,
-      }}
+    <div
       className="flex items-center justify-center md:py-16 text-white font-clashDisplay relative overflow-hidden"
     >
       <div className="flex-col px-10 w-full max-w-3xl bg-[#2A254B] h-[502px] md:h-[450px] py-20">
@@ -62,7 +40,7 @@ const Hero = () => {
         height={400}
         className="hidden lg:flex"
       />
-    </motion.div>
+    </div>
   );
 };
 

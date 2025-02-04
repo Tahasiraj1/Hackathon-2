@@ -8,7 +8,6 @@ export default function ParallaxLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   return (
-    <div className="overflow-hidden">
       <AnimatePresence mode="popLayout" initial={false}>
         <motion.div
           key={pathname}
@@ -23,6 +22,5 @@ export default function ParallaxLayout({ children }: { children: ReactNode }) {
           {children}
         </motion.div>
       </AnimatePresence>
-    </div>
   );
 }

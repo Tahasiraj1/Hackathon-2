@@ -59,9 +59,9 @@ const Checkout = () => {
                     <CheckoutForm />
                 </Elements>
             </div>
-                <div className='w-full md:w-[40%] h-fit flex flex-col border sticky top-36 py-4 px-2 rounded-md gap-2'>
+                <div className='w-full md:w-[40%] h-[400px] flex flex-col border sticky top-36 py-4 px-2 rounded-md gap-2'>
                     <h1 className='text-2xl pb-4 font-clashDisplay'>Order Summary</h1>
-                    <ScrollArea className='h-auto max-h-[260px]'>
+                    <ScrollArea className='max-h-[260px]'>
                         {cart.map((item) => (
                                 <div key={`${item.id}-${item.color}-${item.size}`} className='flex items-center gap-4 rounded-none'>
                                     <Image
@@ -69,7 +69,7 @@ const Checkout = () => {
                                         alt={item.name}
                                         width={100}
                                         height={100}
-                                        className='w-20 h-20 md:w-24 md:h-24 object-cover rounded-md'
+                                        className='w-20 h-20 md:w-24 md:h-24 object-cover rounded-md mb-2'
                                     />
                                     <div className='flex-1'>
                                         <h2 className='text-sm md:text-lg md:font-clashDisplay'>{item.name}.</h2>
@@ -80,7 +80,6 @@ const Checkout = () => {
                                     <p className='text-md mr-4 font-satoshi'>PKR {item.price * item.quantity}</p>
                                 </div>
                         ))}
-                    <ScrollBar orientation="vertical" />
                     </ScrollArea>
                     <div className='mt-8 flex justify-between'>
                         <h2 className='text-xl font-clashDisplay'>Total: PKR {cart.reduce((total, item) => total + item.price * item.quantity, 0)}</h2>
