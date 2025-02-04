@@ -69,10 +69,10 @@ const Checkout = () => {
                                         alt={item.name}
                                         width={100}
                                         height={100}
-                                        className='w-20 h-20 object-cover rounded-md'
+                                        className='w-20 h-20 md:w-24 md:h-24 object-cover rounded-md'
                                     />
                                     <div className='flex-1'>
-                                        <h2 className='text-lg font-semibold font-clashDisplay'>{item.name}</h2>
+                                        <h2 className='text-sm md:text-lg md:font-clashDisplay'>{item.name}.</h2>
                                         <p className='text-sm'>Size: {item.size}</p>
                                         <p className='text-sm'>Color: {item.color}</p>
                                         <p className='text-sm'>Quantity: {item.quantity}</p>
