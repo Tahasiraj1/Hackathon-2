@@ -9,7 +9,7 @@ import CheckoutForm from '@/components/Form';
 import { useAuth } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { urlFor } from '@/sanity/lib/image';
-import { ScrollArea, ScrollBar } from './ui/scroll-area';
+import { ScrollArea } from './ui/scroll-area';
 import { Elements } from "@stripe/react-stripe-js"
 import { loadStripe } from "@stripe/stripe-js"
 import { convertToSubcurrency } from '@/lib/convertToSubcurrency';
