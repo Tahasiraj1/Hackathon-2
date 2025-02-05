@@ -7,7 +7,14 @@ import type { ReactNode } from "react";
 export default function ParallaxLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
+  const stickyPages = ["/checkout"]; 
+
   return (
+    <div
+    className={`${
+      stickyPages.includes(pathname) ? "" : "overflow-x-hidden"
+    }`}
+    >
       <AnimatePresence mode="popLayout" initial={false}>
         <motion.div
           key={pathname}
@@ -22,5 +29,6 @@ export default function ParallaxLayout({ children }: { children: ReactNode }) {
           {children}
         </motion.div>
       </AnimatePresence>
+    </div>
   );
 }
