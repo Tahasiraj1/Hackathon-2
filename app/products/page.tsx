@@ -1,10 +1,7 @@
 import ProductListing from '@/components/ProductListing'
 import React from 'react'
 
-
-async function fetchProducts() {
-  await new Promise((resolve) => setTimeout(resolve, 3000));
-  
+async function fetchProducts() {  
   const res = await fetch("https://hackathon-2-flax.vercel.app/api/products", {
     next: { revalidate: 3600 }, // ISR: Updates data every hour
   });
