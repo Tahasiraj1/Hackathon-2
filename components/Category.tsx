@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const Category = () => {
   return (
-    <div className="flex flex-col items-center justify-center gap-2 py-10 px-4">
+    <div className="flex flex-col items-center justify-center gap-2 py-10 px-4 font-clashDisplay">
       <div className="flex flex-col md:flex-row items-center justify-center w-full gap-2">
         <Link href="/products/category/Casual Wear">
           <Card className="relative rounded-none overflow-hidden group cursor-pointer ">
