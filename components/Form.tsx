@@ -29,6 +29,16 @@ import { convertToSubcurrency } from '@/lib/convertToSubcurrency';
 import { formVariants, itemVariants } from '@/lib/motion';
 import { motion } from 'framer-motion';
 
+interface ShippingLabel {
+  label_id: string;
+  tracking_number: string;
+  label_download: {
+    pdf: string;
+    png: string;
+    zpl: string;
+  };
+}
+
 const formSchema = z.object({
   firstName: z.string().min(3, "First name is required"),
   lastName: z.string().min(3, "Last name is required"),
@@ -46,6 +56,7 @@ export default function CheckoutForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [clientSecret, setClientSecret] = useState("");
+  const [label, setLabel] = useState<ShippingLabel | null>(null);
   const router = useRouter();
   const { clearCart, cart } = useCart();
   const stripe = useStripe();
@@ -150,12 +161,34 @@ export default function CheckoutForm() {
           throw new Error(errorData.error || errorData.details || "Failed to place order")
         }
 
+        const shippingresponse = await fetch("/api/shipping", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            customerDetails: {
+              firstName: "John",
+              lastName: "Doe",
+              phoneNumber: "+1 415-555-5678",
+              houseNo: "567 Maple St",
+              city: "San Francisco",
+              state: "CA",
+              postalCode: "94107",
+              country: "US",
+            },
+          }),
+        })
+
+        const data = await shippingresponse.json()
+        setLabel(data);
+
         toast({
           title: "✔️ Order placed successfully!",
           description: `PKR ${orderData.totalAmount} is sent successfully.`
         })
-        clearCart()
-        router.push("/my-orders")
+        // clearCart()
+        // router.push("/my-orders")
       } else {
         // Payment requires additional action
         setErrorMessage("Payment requires additional action. Please complete the payment process.")
@@ -339,6 +372,19 @@ export default function CheckoutForm() {
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-none relative" role="alert">
           <strong className="font-bold">Error:</strong>
           <span className="block sm:inline"> {errorMessage}</span>
+        </div>
+      )}
+      {label && (
+        <div className="mt-4">
+          <h3 className="text-xl font-semibold">Label Created</h3>
+          <p>Tracking Number: {label.tracking_number}</p>
+          <p>Label ID: {label.label_id}</p>
+          <h4 className="mt-2 font-semibold">Download Links:</h4>
+          <ul className="list-disc list-inside">
+            <li><a href={label.label_download.pdf} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">PDF</a></li>
+            <li><a href={label.label_download.png} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">PNG</a></li>
+            <li><a href={label.label_download.zpl} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">ZPL</a></li>
+          </ul>
         </div>
       )}
     </div>

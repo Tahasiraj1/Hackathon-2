@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import React, { Suspense, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { ChevronDown, EyeIcon, Heart } from "lucide-react";
 import { urlFor } from "@/sanity/lib/image";
@@ -66,12 +66,10 @@ interface Product {
   description: string;
 }
 
-const ProductListing = () => {
-  const [products, setProducts] = useState<Product[]>([]);
+const ProductListing = ({ products }: { products: Product[] }) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [sliderValue, setSliderValue] = useState([0, 1000]);
-  const [loading, setLoading] = useState<boolean>(true);
   const productsPerPage = 6;
   const { toggleWishList, wishList } = useCart();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -83,17 +81,6 @@ const ProductListing = () => {
     setDialogProduct(product);
     setIsDialogOpen(true);
   };
-
-  useEffect(() => {
-    setLoading(true);
-    fetch("/api/products")
-      .then((res) => res.json())
-      .then((data) => setProducts(data.data))
-      .catch((error) => {
-        console.error("Error fetching featured products:", error);
-      })
-      .finally(() => setLoading(false));
-  }, []);
 
   const handleAddItemToWishList = (
     event: React.MouseEvent,
@@ -185,12 +172,10 @@ const ProductListing = () => {
         height={100}
         className="w-full md:hidden"
       />
-      {loading ? (
-        <Suspense>
+      {!products ? (
           <div className="flex justify-center items-center min-h-[400px] w-full">
             <BarLoader color="#2A254B" />
           </div>
-        </Suspense>
       ) : (
         <>
           <div className="flex w-full px-2 md:px-6 lg:px-8 mt-8 gap-8">
