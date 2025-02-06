@@ -7,7 +7,7 @@ export const revalidate = 3600 // Revalidate every hour
 
 export async function generateStaticParams() {
   // Fetch all unique categories from products
-  const categories = await client.fetch(`*[_type == "product"].categories[]`)
+  const categories = await client.fetch<string[]>(`*[_type == "product"].categories[]`)
   const uniqueCategories = Array.from(new Set(categories))
 
   return uniqueCategories.map((category) => ({
