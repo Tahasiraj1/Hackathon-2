@@ -26,7 +26,7 @@ async function fetchBestSellingProducts() {
 }
 
 async function fetchPopularProducts() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products?tags=Best Selling`,
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products?tags=Popular`,
     { cache: "no-store" } // Ensures fresh data
   );
 
