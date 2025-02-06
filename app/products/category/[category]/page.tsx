@@ -2,6 +2,7 @@ import { Suspense } from "react"
 import { BarLoader } from "react-spinners"
 import CategoryBasedProducts from "@/components/CategoryBasedProducts"
 import { client } from "@/sanity/lib/client";
+import type React from "react" // Added import for React
 
 export const revalidate = 3600 // Revalidate every hour
 
@@ -15,7 +16,12 @@ export async function generateStaticParams() {
   }))
 }
 
-async function CategoryPage({ params }: { params: { category: string } }) {
+interface CategoryPageProps {
+  params: { category: string }
+  searchParams: { [key: string]: string | string[] | undefined }
+}
+
+const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
   // Fetch products for this category
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products?category=${params.category}`)
   const { data: products } = await res.json()
