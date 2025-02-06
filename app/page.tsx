@@ -8,14 +8,50 @@ const WhatMakesUsDiff = React.lazy(() => import("@/components/WhatMakesUsDiff"))
 const JoinClub = React.lazy(() => import("@/components/JoinClub"));
 const BriefAbout = React.lazy(() => import ("@/components/BriefAbout"));
 
-export default function Home() {
+
+export async function fetchBestSellingProducts() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products?tags=Best Selling`,
+    { cache: "no-store" } // Ensures fresh data
+  );
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch products");
+  }
+
+  const data = await res.json();
+
+  console.log("Fetched Data:", data);
+
+  return data.data;
+}
+
+export async function fetchPopularProducts() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products?tags=Best Selling`,
+    { cache: "no-store" } // Ensures fresh data
+  );
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch products");
+  }
+
+  const data = await res.json();
+
+  console.log("Fetched Data:", data);
+
+  return data.data;
+}
+
+export default async function Home() {
+  const bestSellers = await fetchBestSellingProducts();
+  const popularProducts = await fetchPopularProducts();
+  
   return (
     <>
       <Hero />
       <WhatMakesUsDiff />
       <Category />
-      <BestSelling />
-      <PopularProducts />
+      <BestSelling products={bestSellers} />
+      <PopularProducts products={popularProducts} />
       <JoinClub />
       <BriefAbout />
     </>

@@ -1,11 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Image as SanityImage } from "@sanity/types";
 import { urlFor } from "@/sanity/lib/image";
-import { BarLoader } from "react-spinners";
 import {
   Carousel,
   CarouselContent,
@@ -49,12 +48,15 @@ interface Product {
   description: string;
 }
 
-const BestSelling = () => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+const BestSelling = ({ products }: { products: Product[] }) => {
   const { toggleWishList, wishList } = useCart();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dialogProduct, setDialogProduct] = useState<Product | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true); // Trigger animation on mount
+  }, []);
 
   const handleDialog = (event: React.MouseEvent, product: Product) => {
     event.preventDefault();
@@ -66,22 +68,6 @@ const BestSelling = () => {
   const plugin = React.useRef(
     Autoplay({ delay: 3000, stopOnInteraction: true })
   );
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await fetch(`/api/products?tags=${"Best Selling"}`);
-        const data = await res.json();
-        setProducts(data.data);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
-  }, []);
 
   const handleAddItemToWishList = (
     event: React.MouseEvent,
@@ -100,16 +86,6 @@ const BestSelling = () => {
     });
   };
 
-  if (loading) {
-    return (
-      <Suspense>
-        <div className="flex justify-center items-center min-h-[400px] w-full">
-          <BarLoader color="#2A254B" />
-        </div>
-      </Suspense>
-    );
-  }
-
   return (
     <div className="flex flex-col w-full items-center justify-center bg-white text-black py-10 px-4 sm:px-6 lg:px-10 font-clashDisplay">
       <div className="w-full">
@@ -120,6 +96,7 @@ const BestSelling = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
+          animate={mounted ? "visible" : "hidden"}
         >
           <Carousel
             className="w-full py-10 px-10"
@@ -141,6 +118,7 @@ const BestSelling = () => {
                     <motion.div
                       className="relative group aspect-[4/5] w-full mb-4 overflow-hidden"
                       variants={itemVariants}
+                      animate={mounted ? "visible" : "hidden"}
                     >
                       <Image
                         src={
