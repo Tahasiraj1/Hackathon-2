@@ -11,11 +11,17 @@ export async function generateStaticParams() {
   const uniqueCategories = Array.from(new Set(categories))
 
   return uniqueCategories.map((category) => ({
-    category: (category as string).toString(),
+    category: category,
   }))
 }
 
-async function CategoryPage({ params }: { params: { category: string } }) {
+interface CategoryPageProps {
+  params: {
+    category: string
+  }
+}
+
+async function CategoryPage({ params }: CategoryPageProps) {
   // Fetch products for this category
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products?category=${params.category}`)
   const { data: products } = await res.json()
