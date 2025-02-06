@@ -42,6 +42,7 @@ import {
   PaginationPrevious 
 } from "@/components/ui/pagination";
 
+
 const productTypes = [
   "Mens",
   "Womens",

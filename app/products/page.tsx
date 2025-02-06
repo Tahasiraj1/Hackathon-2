@@ -1,6 +1,7 @@
 import ProductListing from '@/components/ProductListing'
 import React from 'react'
 
+
 async function fetchProducts() {
   await new Promise((resolve) => setTimeout(resolve, 3000));
   

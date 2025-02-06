@@ -7,6 +7,7 @@ import { decrementProductQuantity } from "@/lib/decrementProductQuantity";
 import { sendOrderConfirmationEmail } from "@/lib/orderConfirmationEmail";
 import { OrderItem, Variation } from "@/types/order";
 
+
 export async function POST(request: Request) {
   const { userId } = await auth();
 

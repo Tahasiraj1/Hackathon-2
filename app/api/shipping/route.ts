@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import axios from 'axios';
+
 
 const SHIP_ENGINE_API_KEY = process.env.TEST_SHIPENGINE_API_KEY;
 const SHIP_ENGINE_API_URL = 'https://api.shipengine.com/v1/labels';

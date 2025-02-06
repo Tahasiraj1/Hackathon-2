@@ -1,6 +1,7 @@
 import nodemailer from "nodemailer";
 import { CustomerDetails, OrderItem } from "@/types/order";
 
+
 // Email configuration
 const transporter = nodemailer.createTransport({
   service: "gmail", 
