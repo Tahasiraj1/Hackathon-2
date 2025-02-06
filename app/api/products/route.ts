@@ -181,3 +181,6 @@ export async function GET(req: Request) {
     )
   }
 }
+
+
+export const revalidate = 3600 // Revalidate every hour
