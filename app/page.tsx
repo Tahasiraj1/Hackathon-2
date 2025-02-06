@@ -1,17 +1,20 @@
-import React from "react";
+import React, { Suspense } from "react";
 import Hero from "@/components/Hero";
-import BestSelling from "@/components/BestSelling"
+import BestSelling from "@/components/BestSelling";
 import PopularProducts from "@/components/PopularProducts";
 import Category from "@/components/Category";
+import { BarLoader } from "react-spinners";
 
-const WhatMakesUsDiff = React.lazy(() => import("@/components/WhatMakesUsDiff"));
+const WhatMakesUsDiff = React.lazy(
+  () => import("@/components/WhatMakesUsDiff")
+);
 const JoinClub = React.lazy(() => import("@/components/JoinClub"));
-const BriefAbout = React.lazy(() => import ("@/components/BriefAbout"));
-
+const BriefAbout = React.lazy(() => import("@/components/BriefAbout"));
 
 async function fetchBestSellingProducts() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products?tags=Best Selling`,
-    { cache: "no-store" } // Ensures fresh data
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/products?tags=Best Selling`,
+    { cache: "no-store" } // Ensures fresh data - SSR
   );
 
   if (!res.ok) {
@@ -26,8 +29,9 @@ async function fetchBestSellingProducts() {
 }
 
 async function fetchPopularProducts() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products?tags=Popular`,
-    { cache: "no-store" } // Ensures fresh data
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/products?tags=Popular`,
+    { cache: "no-store" } // Ensures fresh data - SSR
   );
 
   if (!res.ok) {
@@ -44,14 +48,22 @@ async function fetchPopularProducts() {
 export default async function Home() {
   const bestSellers = await fetchBestSellingProducts();
   const popularProducts = await fetchPopularProducts();
-  
+
   return (
     <>
       <Hero />
       <WhatMakesUsDiff />
       <Category />
-      <BestSelling products={bestSellers} />
-      <PopularProducts products={popularProducts} />
+      <Suspense
+        fallback={
+          <div className="flex justify-center items-center min-h-screen w-full">
+            <BarLoader color="#2A254B" />
+          </div>
+        }
+      >
+        <BestSelling products={bestSellers} />
+        <PopularProducts products={popularProducts} />
+      </Suspense>
       <JoinClub />
       <BriefAbout />
     </>
