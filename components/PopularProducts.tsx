@@ -53,6 +53,7 @@ const PopularProducts = ({ products }: { products: Product[] }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dialogProduct, setDialogProduct] = useState<Product | null>(null);
   const [mounted, setMounted] = useState(false);
+    const [inView, setInView] = useState(false);
 
   useEffect(() => {
     setMounted(true); // Trigger animation on mount
@@ -96,7 +97,9 @@ const PopularProducts = ({ products }: { products: Product[] }) => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          animate={mounted ? "visible" : "hidden"}
+          onViewportEnter={() => setInView(true)}
+          onViewportLeave={() => setInView(false)}
+          animate={mounted && inView ? "visible" : "hidden"}
         >
           <Carousel
             className="w-full py-10 px-10"
@@ -118,7 +121,12 @@ const PopularProducts = ({ products }: { products: Product[] }) => {
                     <motion.div
                       className="relative group aspect-[4/5] w-full mb-4 overflow-hidden"
                       variants={itemVariants}
-                      animate={mounted ? "visible" : "hidden"}
+                      initial="hidden"
+                      whileInView="visible"
+                      viewport={{ once: true }}
+                      onViewportEnter={() => setInView(true)}
+                      onViewportLeave={() => setInView(false)}
+                      animate={mounted && inView ? "visible" : "hidden"}
                     >
                       <Image
                         src={urlFor(p.images[0] as SanityImage).url()}
