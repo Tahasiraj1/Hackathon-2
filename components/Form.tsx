@@ -23,7 +23,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import { toast } from "@/hooks/use-toast";
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import { useStripe, useElements, PaymentElement } from "@stripe/react-stripe-js"
 import { convertToSubcurrency } from '@/lib/convertToSubcurrency';
 import { formVariants, itemVariants } from '@/lib/motion';
@@ -57,8 +57,8 @@ export default function CheckoutForm() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [clientSecret, setClientSecret] = useState("");
   const [label, setLabel] = useState<ShippingLabel | null>(null);
-  const router = useRouter();
-  const { clearCart, cart } = useCart();
+  // const router = useRouter();
+  const { cart } = useCart();
   const stripe = useStripe();
   const elements = useElements();
 
