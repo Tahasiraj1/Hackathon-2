@@ -123,7 +123,6 @@ const BestSelling = ({ products }: { products: Product[] }) => {
                       variants={itemVariants}
                       initial="hidden"
                       whileInView="visible"
-                      viewport={{ once: true }}
                       onViewportEnter={() => setInView(true)}
                       onViewportLeave={() => setInView(false)}
                       animate={mounted && inView ? "visible" : "hidden"}
