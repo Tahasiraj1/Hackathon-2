@@ -9,7 +9,7 @@ const JoinClub = React.lazy(() => import("@/components/JoinClub"));
 const BriefAbout = React.lazy(() => import ("@/components/BriefAbout"));
 
 
-export async function fetchBestSellingProducts() {
+async function fetchBestSellingProducts() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products?tags=Best Selling`,
     { cache: "no-store" } // Ensures fresh data
   );
@@ -25,7 +25,7 @@ export async function fetchBestSellingProducts() {
   return data.data;
 }
 
-export async function fetchPopularProducts() {
+async function fetchPopularProducts() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products?tags=Best Selling`,
     { cache: "no-store" } // Ensures fresh data
   );
