@@ -25,3 +25,13 @@ export interface CustomerDetails {
   postalCode: string;
   country: string;
 }
+
+export interface ShippingLabel {
+  label_id: string;
+  tracking_number: string;
+  label_download: {
+    pdf: string;
+    png: string;
+    zpl: string;
+  };
+}

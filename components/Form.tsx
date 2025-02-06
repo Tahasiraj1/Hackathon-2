@@ -28,16 +28,7 @@ import { useStripe, useElements, PaymentElement } from "@stripe/react-stripe-js"
 import { convertToSubcurrency } from '@/lib/convertToSubcurrency';
 import { formVariants, itemVariants } from '@/lib/motion';
 import { motion } from 'framer-motion';
-
-interface ShippingLabel {
-  label_id: string;
-  tracking_number: string;
-  label_download: {
-    pdf: string;
-    png: string;
-    zpl: string;
-  };
-}
+import { ShippingLabel } from '@/types/order';
 
 const formSchema = z.object({
   firstName: z.string().min(3, "First name is required"),
