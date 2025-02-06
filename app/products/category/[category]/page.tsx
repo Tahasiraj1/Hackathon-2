@@ -3,12 +3,6 @@ import { BarLoader } from "react-spinners"
 import CategoryBasedProducts from "@/components/CategoryBasedProducts"
 import { client } from "@/sanity/lib/client";
 
-interface CategoryPageProps {
-  params: {
-    category: string
-  }
-}
-
 export const revalidate = 3600 // Revalidate every hour
 
 export async function generateStaticParams() {
@@ -17,11 +11,11 @@ export async function generateStaticParams() {
   const uniqueCategories = Array.from(new Set(categories))
 
   return uniqueCategories.map((category) => ({
-    category: category,
+    category: (category as string).toString(),
   }))
 }
 
-async function CategoryPage({ params }: CategoryPageProps) {
+async function CategoryPage({ params }: { params: { category: string } }) {
   // Fetch products for this category
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products?category=${params.category}`)
   const { data: products } = await res.json()
