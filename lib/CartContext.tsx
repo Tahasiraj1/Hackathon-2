@@ -123,7 +123,7 @@ export default function CartProvider({ children }: { children: ReactNode }) {
           item.color === product.color &&
           item.size === product.size &&
           item.quantity < productStock
-            ? { ...item, quantity: item.quantity + 1 }
+            ? { ...item, quantity: item.quantity + product.quantity }
             : item
         );
       } else {

@@ -1,7 +1,7 @@
 import { client } from "@/sanity/lib/client";
 import axios from "axios";
 import { NextResponse } from "next/server";
-import { nanoid } from 'nanoid';
+import { nanoid } from "nanoid";
 
 interface Variation {
   color: string; // Color of the product (e.g., "Red", "Blue")
@@ -22,7 +22,6 @@ interface Product {
 }
 
 const MOCK_API_URL = `${process.env.NEXT_MOCK_API}`;
-
 
 async function uploadImagesToSanity(image: string | string[]) {
   if (!image) {
@@ -85,7 +84,7 @@ export async function POST() {
     // await client.delete({query: '*[_type == "product"]'});
 
     for (const product of products) {
-      await delay(1000); 
+      await delay(1000);
       console.log("Processing product:", product);
       console.log("Image URL:", product.image);
 
@@ -145,31 +144,40 @@ export async function POST() {
   }
 }
 
-
 export async function GET(req: Request) {
   try {
-    const url = new URL(req.url)
-    const category = url.searchParams.get("category")
-    const tag = url.searchParams.get("tags")
+    const url = new URL(req.url);
+    const category = url.searchParams.get("category");
+    const tag = url.searchParams.get("tags");
+    const id = url.searchParams.get("id");
 
-    let query = '*[_type == "product"'
-    const params: Record<string, string> = {}
+    let query = '*[_type == "product"';
+    const params: Record<string, string> = {};
+
+    if (id) {
+      query += " && id == $id";
+      params.id = id;
+    }
 
     if (category) {
-      query += ' && $category in categories'
-      params.category = category
+      query += " && $category in categories";
+      params.category = category;
     }
 
     if (tag) {
-      query += ' && $tag in tags'
-      params.tag = tag
+      query += " && $tag in tags";
+      params.tag = tag;
     }
 
-    query += ']'
+    query +=
+      ']{id,name,price,"images": images[].asset->url,ratings,discountPercentage,priceWithoutDiscount,ratingCount,description,variations[]{color,size,quantity},tags,categories}';
 
-    const products = await client.fetch(query, params)
+    const products = await client.fetch(query, params);
 
-    return NextResponse.json({ success: true, data: products }, { status: 200 })
+    return NextResponse.json(
+      { success: true, data: id ? products[0] : products },
+      { status: 200 }
+    );
   } catch (error) {
     return NextResponse.json(
       {
@@ -177,10 +185,9 @@ export async function GET(req: Request) {
         message: "Error fetching products",
         error: error instanceof Error ? error.message : String(error),
       },
-      { status: 500 },
-    )
+      { status: 500 }
+    );
   }
 }
 
-
-export const revalidate = 3600 // Revalidate every hour
+export const revalidate = 3600; // Revalidate every hour
