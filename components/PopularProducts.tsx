@@ -53,7 +53,7 @@ const PopularProducts = ({ products }: { products: Product[] }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dialogProduct, setDialogProduct] = useState<Product | null>(null);
   const [mounted, setMounted] = useState(false);
-    const [inView, setInView] = useState(false);
+  const [inView, setInView] = useState(false);
 
   useEffect(() => {
     setMounted(true); // Trigger animation on mount

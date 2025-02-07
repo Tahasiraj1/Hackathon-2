@@ -5,6 +5,8 @@ import { client } from "@/sanity/lib/client"
 
 export const revalidate = 3600 // Revalidate every hour
 
+export const dynamicParams = true // or false, to 404 on unknown paths
+
 export async function generateStaticParams() {
   // Fetch all unique categories from products
   const categories: string[] = await client.fetch(`*[_type == "product"].categories[]`)

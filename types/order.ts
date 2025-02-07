@@ -29,6 +29,7 @@ export interface CustomerDetails {
 export interface ShippingLabel {
   label_id: string;
   tracking_number: string;
+  tracking_url: string;
   label_download: {
     pdf: string;
     png: string;
