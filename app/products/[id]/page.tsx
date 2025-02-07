@@ -15,13 +15,15 @@ export async function generateStaticParams() {
 }
 
 interface ProductIdProps {
-  params: { id: string };
+  params: Promise<{ id: string }>
 }
 
 const Page = async ({ params }: ProductIdProps) => {
+  const resolvedParams = await params;
+
   return (
     <div>
-      <ProductDetails productId={params.id} />
+      <ProductDetails productId={resolvedParams.id} />
     </div>
   );
 };
