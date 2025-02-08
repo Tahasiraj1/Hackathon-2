@@ -576,6 +576,7 @@ const ProductListing = ({ products }: { products: Product[] }) => {
                     if (currentPage < totalPages) {
                       paginate(currentPage + 1);
                     }
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
                 />
               </PaginationItem>
