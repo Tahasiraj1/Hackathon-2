@@ -67,6 +67,8 @@ interface Product {
   description: string;
 }
 
+// Implement Tanstack Virtualization for improved performance...
+
 const ProductListing = ({ products }: { products: Product[] }) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);

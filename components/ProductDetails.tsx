@@ -31,7 +31,7 @@ const ProductDetails = ({ productId }: { productId: string }) => {
     `/api/products?id=${productId}`,
     fetcher,
     {
-      refreshInterval: 5000, // Re-fetch every 5s for real-time stock
+      refreshInterval: 10000, // Re-fetch every 10s for real-time stock
     }
   );
 
