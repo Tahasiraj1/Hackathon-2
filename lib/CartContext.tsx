@@ -150,7 +150,7 @@ export default function CartProvider({ children }: { children: ReactNode }) {
     });
 
     toast({
-        className:"rounded-none border border-[#27224b]",
+        className:"border border-[#27224b]",
         title: actionMessage,
         description: "",
         duration: 5000,

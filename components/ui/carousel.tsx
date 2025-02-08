@@ -216,7 +216,7 @@ const CarouselPrevious = React.forwardRef<
       onClick={scrollPrev}
       {...props}
     >
-      <ChevronLeft className="h-4 w-4 group-hover:-translate-x-1 transition-all transform duration-200" />
+      <ChevronLeft className="h-4 w-4 md:group-hover:-translate-x-1 transition-all transform duration-200" />
       <span className="sr-only">Previous slide</span>
     </Button>
   )
@@ -245,7 +245,7 @@ const CarouselNext = React.forwardRef<
       onClick={scrollNext}
       {...props}
     >
-      <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-all transform duration-200" />
+      <ChevronRight className="h-4 w-4 md:group-hover:translate-x-1 transition-all transform duration-200" />
       <span className="sr-only">Next slide</span>
     </Button>
   )
