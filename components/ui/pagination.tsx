@@ -52,7 +52,7 @@ const PaginationLink = ({
         variant: isActive ? "outline" : "ghost",
         className: cn(
           isActive
-            ? "bg-gray-200 hover:bg-gray-200 border-gray-300"
+            ? "bg-gray-200 hover:bg-gray-200 border-[#7068a5]"
             : "bg-gray-100"
         ),
         size,
