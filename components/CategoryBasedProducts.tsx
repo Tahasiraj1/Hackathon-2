@@ -171,7 +171,7 @@ const CategoryBasedProducts = ({ products }: { products: Product[] }) => {
                   </div>
                 )}
                 <motion.div variants={itemVariants} className="p-4">
-                  <motion.h3 layoutId={`name-${product.id}`} className="text-lg font-semibold">{product.name}</motion.h3>
+                  <motion.h3 layoutId={`name-${product.id}`} className="text-lg font-clashDisplay">{product.name}</motion.h3>
                   <p className="text-gray-600">{product.price}</p>
                 </motion.div>
               </motion.div>
