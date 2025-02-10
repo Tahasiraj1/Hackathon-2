@@ -118,7 +118,7 @@ const CategoryBasedProducts = ({ products }: { products: Product[] }) => {
                         <TooltipTrigger asChild>
                           <Button
                             variant="ghost"
-                            className="absolute top-0 right-0 md:translate-x-40 md:group-hover:translate-x-0 bg-white hover:bg-white/90 active:scale-95 transition-transform transform duration-300 ease-in-out p-2 rounded-full w-fit h-fit"
+                            className="absolute top-0 right-0 md:opacity-0 md:group-hover:opacity-100 md:translate-x-40 md:group-hover:translate-x-0 bg-white hover:bg-white/90 active:scale-95 transition-transform transform duration-300 ease-in-out p-2 rounded-full w-fit h-fit"
                             onClick={(e) =>
                               handleAddItemToWishList(e, {
                                 id: product.id,
@@ -151,7 +151,7 @@ const CategoryBasedProducts = ({ products }: { products: Product[] }) => {
                           <Button
                             onClick={(e) => handleDialog(e, product)}
                             variant="ghost"
-                            className="absolute top-10 right-0 md:translate-x-40 md:group-hover:translate-x-0 bg-white hover:bg-white/90 active:scale-95 transition-transform transform duration-300 ease-in-out p-2 rounded-full w-fit h-fit"
+                            className="absolute top-10 right-0 md:opacity-0 md:group-hover:opacity-100 md:translate-x-40 md:group-hover:translate-x-0 bg-white hover:bg-white/90 active:scale-95 transition-transform transform duration-300 ease-in-out p-2 rounded-full w-fit h-fit"
                           >
                             <EyeIcon />
                           </Button>
