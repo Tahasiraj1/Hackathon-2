@@ -426,12 +426,14 @@ const ProductListing = ({ products }: { products: Product[] }) => {
                       initial="hidden"
                       whileInView="visible"
                       viewport={{ once: true }}
+                      layoutId={`product-${product.id}`}
                     >
                       {/* Check if image exists before rendering */}
                       {product.images?.[0] ? (
                         <motion.div
                           variants={itemVariants}
                           className="relative group"
+                          layoutId={`image-${product.id}`}
                         >
                           <Image
                             src={urlFor(product.images[0]).url()}
@@ -500,7 +502,7 @@ const ProductListing = ({ products }: { products: Product[] }) => {
                         </div>
                       )}
                       <motion.div variants={itemVariants} className="p-4">
-                        <h3 className="text-lg">{product.name}</h3>
+                        <motion.h3 layoutId={`name-${product.id}`} className="text-lg">{product.name}</motion.h3>
                         <p className="text-gray-600">{product.price}</p>
                       </motion.div>
                     </motion.div>

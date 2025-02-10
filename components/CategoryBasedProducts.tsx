@@ -102,10 +102,10 @@ const CategoryBasedProducts = ({ products }: { products: Product[] }) => {
               key={product.id}
               className="block"
             >
-              <motion.div className="overflow-hidden" variants={itemVariants}>
+              <motion.div layoutId={`product-${product.id}`} className="overflow-hidden" variants={itemVariants}>
                 {/* Check if image exists before rendering */}
                 {product.images?.[0] ? (
-                  <div className="relative group">
+                  <motion.div layoutId={`image-${product.id}`} className="relative group">
                     <Image
                       src={urlFor(product.images[0]).url()}
                       alt={product.name}
@@ -164,14 +164,14 @@ const CategoryBasedProducts = ({ products }: { products: Product[] }) => {
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
-                  </div>
+                  </motion.div>
                 ) : (
                   <div className="w-full h-24 md:h-60 bg-gray-200 flex items-center justify-center text-gray-500">
                     No Image Available
                   </div>
                 )}
                 <motion.div variants={itemVariants} className="p-4">
-                  <h3 className="text-lg font-semibold">{product.name}</h3>
+                  <motion.h3 layoutId={`name-${product.id}`} className="text-lg font-semibold">{product.name}</motion.h3>
                   <p className="text-gray-600">{product.price}</p>
                 </motion.div>
               </motion.div>

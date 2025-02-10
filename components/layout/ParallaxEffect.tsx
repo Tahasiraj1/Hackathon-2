@@ -8,6 +8,9 @@ export default function ParallaxLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   const stickyPages = ["/checkout"]; 
+  const sharedLayoutPages = ["/products"];
+
+  const shouldAnimate = !stickyPages.includes(pathname) && !sharedLayoutPages.some((page) => pathname.startsWith(page))
 
   return (
     <div
@@ -16,18 +19,22 @@ export default function ParallaxLayout({ children }: { children: ReactNode }) {
     }`}
     >
       <AnimatePresence mode="popLayout" initial={false}>
-        <motion.div
-          key={pathname}
-          initial={{ opacity: 0, x: "100%" }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: "-100%" }}
-          transition={{
-            type: "tween",
-          }}
-          className="w-full min-h-screen"
-        >
-          {children}
-        </motion.div>
+        {shouldAnimate ? (
+          <motion.div
+            key={pathname}
+            initial={{ opacity: 0, x: "100%" }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: "-100%" }}
+            transition={{
+              type: "tween",
+            }}
+            className="w-full min-h-screen"
+          >
+            {children}
+          </motion.div>
+        ) : (
+          children
+        )}
       </AnimatePresence>
     </div>
   );

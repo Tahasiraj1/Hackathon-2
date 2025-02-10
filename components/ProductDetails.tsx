@@ -114,8 +114,9 @@ const ProductDetails = ({ productId }: { productId: string }) => {
         initial="hidden"
         animate="visible"
         className="flex lg:flex-row flex-col"
+        layoutId={`product-${product.id}`}
       >
-        <div className="flex space-x-2">
+        <motion.div layoutId={`image-${product.id}`} className="flex space-x-2">
           <Image
             src={urlFor(product.images[0]).url() || "/placeholder.svg"}
             alt={`Image of ${product.name}`}
@@ -123,10 +124,10 @@ const ProductDetails = ({ productId }: { productId: string }) => {
             height={1000}
             className="w-full h-full lg:w-[600px] lg:h-[600px]"
           />
-        </div>
+        </motion.div>
         <div className="flex flex-col lg:pl-20 pr-5 w-full max-w-2xl px-10">
           <motion.h1
-            variants={itemVariants}
+            layoutId={`name-${product.id}`}
             className="text-3xl md:text-4xl mb-5 mt-4 font-clashDisplay"
           >
             {product.name}
