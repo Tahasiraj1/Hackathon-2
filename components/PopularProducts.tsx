@@ -119,7 +119,7 @@ const PopularProducts = ({ products }: { products: Product[] }) => {
                 >
                   <Link href={`/products/${p.id}`}>
                     <AnimatePresence mode="wait">
-                      <motion.div layoutId={`product-${p.id}`}>
+                      <motion.div layoutId={`popular-product-${p.id}`}>
                       <motion.div
                         className="relative group h-full w-full mb-4 overflow-hidden"
                         variants={itemVariants}
@@ -129,7 +129,7 @@ const PopularProducts = ({ products }: { products: Product[] }) => {
                         onViewportLeave={() => setInView(false)}
                         animate={mounted && inView ? "visible" : "hidden"}
                       >
-                        <motion.div layoutId={`image-${p.id}`}>
+                        <motion.div layoutId={`popular-image-${p.id}`}>
                           <Image
                             src={urlFor(p.images[0] as SanityImage).url()}
                             alt={p.name}
@@ -193,8 +193,8 @@ const PopularProducts = ({ products }: { products: Product[] }) => {
                       <motion.div 
                         variants={itemVariants}
                       >
-                        <motion.h3 layoutId={`name-${p.id}`} className="text-lg font-medium">{p.name}</motion.h3>
-                        <motion.span layoutId={`price-${p.id}`} className="text-sm text-gray-600">{p.price}</motion.span>
+                        <motion.h3 layoutId={`popular-name-${p.id}`} className="text-lg font-medium">{p.name}</motion.h3>
+                        <motion.span layoutId={`popular-price-${p.id}`} className="text-sm text-gray-600">{p.price}</motion.span>
                       </motion.div>
                       </motion.div>
                     </AnimatePresence>
@@ -210,12 +210,13 @@ const PopularProducts = ({ products }: { products: Product[] }) => {
           </Carousel>
         </motion.div>
         <Dialog key={`dialog-${dialogProduct?.id}`} open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="p-0 border-4 border-[#363061]">
+          <DialogContent className="p-0 border-2 rounded-md border-[#363061] w-full md:max-w-screen-lg md:flex md:items-center md:justify-center">
             {dialogProduct && (
               <AnimatePresence mode="wait">
-                <motion.div layoutId={`product-${dialogProduct.id}`}>
+                <motion.div layoutId={`popular-product-${dialogProduct.id}`} className="w-full">
                   <Ripple color="#363061">
-                    <DialogHeader className="items-center px-4 pt-4">
+                    {/* Mobile Header */}
+                    <DialogHeader className="md:hidden flex items-center px-4 pt-4">
                       <motion.div layoutId={`name-${dialogProduct.id}`}>
                         <DialogTitle>{dialogProduct.name}</DialogTitle>
                       </motion.div>
@@ -223,24 +224,36 @@ const PopularProducts = ({ products }: { products: Product[] }) => {
                         <DialogDescription>${dialogProduct.price}</DialogDescription>
                       </motion.div>
                     </DialogHeader>
-                    <Link href={`/products/${dialogProduct.id}`}>
-                      <div className="grid gap-4 py-4 px-4">
-                        <motion.div layoutId={`image-${dialogProduct.id}`}>
+
+                    {/* Main Content */}
+                    <Link href={`/products/${dialogProduct.id}`} className="block">
+                      <div className="grid md:flex md:gap-6 py-4 px-4 w-full">
+                        {/* Image */}
+                        <motion.div layoutId={`popular-image-${dialogProduct.id}`} className="md:w-1/2">
                           <Image
                             src={
                               urlFor(dialogProduct.images[0] as SanityImage).url() ||
-                              "/placeholder.svg" ||
                               "/placeholder.svg"
                             }
                             alt={dialogProduct.name}
                             width={500}
-                            height={300}
-                            className="w-full h-auto object-cover rounded-md"
+                            height={500}
+                            className="w-full md:w-[500px] md:h-[500px] object-cover rounded-md"
                           />
                         </motion.div>
-                        <p className="text-gray-700 px-4 pb-4">
-                          {dialogProduct.description}
-                        </p>
+
+                        {/* Description */}
+                        <div className="md:w-1/2 flex flex-col text-start justify-start md:py-8 space-y-2">
+                          <motion.div layoutId={`popular-name-${dialogProduct.id}`} className="hidden md:block">
+                            <DialogTitle className="text-2xl font-bold">{dialogProduct.name}</DialogTitle>
+                          </motion.div>
+                          <motion.div layoutId={`popular-price-${dialogProduct.id}`} className="hidden md:block">
+                            <DialogDescription className="text-lg text-gray-600">
+                              ${dialogProduct.price}
+                            </DialogDescription>
+                          </motion.div>
+                          <p className="text-gray-700 pb-4">{dialogProduct.description}</p>
+                        </div>
                       </div>
                     </Link>
                   </Ripple>

@@ -503,7 +503,7 @@ const ProductListing = ({ products }: { products: Product[] }) => {
                       )}
                       <motion.div variants={itemVariants} className="p-4">
                         <motion.h3 layoutId={`name-${product.id}`} className="text-lg font-clashDisplay">{product.name}</motion.h3>
-                        <p className="text-gray-600">{product.price}</p>
+                        <motion.span layoutId={`price-${product.id}`} className="text-gray-600">{product.price}</motion.span>
                       </motion.div>
                     </motion.div>
                   </Link>
@@ -513,37 +513,56 @@ const ProductListing = ({ products }: { products: Product[] }) => {
                   No products found.
                 </p>
               )}
-              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogContent className="p-0 border-4 border-[#363061]">
+              <Dialog key={`dialog-${dialogProduct?.id}`} open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogContent className="p-0 border-2 rounded-md border-[#363061] w-full md:max-w-screen-lg md:flex md:items-center md:justify-center">
                   {dialogProduct && (
-                    <Ripple color="#363061">
-                      <DialogHeader className="items-center px-4 pt-4">
-                        <DialogTitle>{dialogProduct.name}</DialogTitle>
-                        <DialogDescription>
-                          ${dialogProduct.price}
-                        </DialogDescription>
-                      </DialogHeader>
-                      <Link href={`/products/${dialogProduct.id}`}>
-                        <div className="grid gap-4 py-4 px-4">
-                          <Image
-                            src={
-                              urlFor(
-                                dialogProduct.images[0] as SanityImage
-                              ).url() ||
-                              "/placeholder.svg" ||
-                              "/placeholder.svg"
-                            }
-                            alt={dialogProduct.name}
-                            width={500}
-                            height={300}
-                            className="w-full h-auto object-cover rounded-md"
-                          />
-                          <p className="text-gray-700 px-4 pb-4">
-                            {dialogProduct.description}
-                          </p>
-                        </div>
-                      </Link>
-                    </Ripple>
+                    <AnimatePresence mode="wait">
+                      <motion.div layoutId={`product-${dialogProduct.id}`} className="w-full">
+                        <Ripple color="#363061">
+                          {/* Mobile Header */}
+                          <DialogHeader className="md:hidden flex items-center px-4 pt-4">
+                            <motion.div layoutId={`p-name-${dialogProduct.id}`}>
+                              <DialogTitle>{dialogProduct.name}</DialogTitle>
+                            </motion.div>
+                            <motion.div layoutId={`p-price-${dialogProduct.id}`}>
+                              <DialogDescription>${dialogProduct.price}</DialogDescription>
+                            </motion.div>
+                          </DialogHeader>
+
+                          {/* Main Content */}
+                          <Link href={`/products/${dialogProduct.id}`} className="block">
+                            <div className="grid md:flex md:gap-6 py-4 px-4 w-full">
+                              {/* Image */}
+                              <motion.div layoutId={`image-${dialogProduct.id}`} className="md:w-1/2">
+                                <Image
+                                  src={
+                                    urlFor(dialogProduct.images[0] as SanityImage).url() ||
+                                    "/placeholder.svg"
+                                  }
+                                  alt={dialogProduct.name}
+                                  width={500}
+                                  height={500}
+                                  className="w-full md:w-[500px] md:h-[500px] object-cover rounded-md"
+                                />
+                              </motion.div>
+
+                              {/* Description */}
+                              <div className="md:w-1/2 flex flex-col text-start justify-start md:py-8 space-y-2">
+                                <motion.div layoutId={`name-${dialogProduct.id}`} className="hidden md:block">
+                                  <DialogTitle className="text-2xl font-bold">{dialogProduct.name}</DialogTitle>
+                                </motion.div>
+                                <motion.div layoutId={`price-${dialogProduct.id}`} className="hidden md:block">
+                                  <DialogDescription className="text-lg text-gray-600">
+                                    ${dialogProduct.price}
+                                  </DialogDescription>
+                                </motion.div>
+                                <p className="text-gray-700 pb-4">{dialogProduct.description}</p>
+                              </div>
+                            </div>
+                          </Link>
+                        </Ripple>
+                      </motion.div>
+                    </AnimatePresence>
                   )}
                 </DialogContent>
               </Dialog>
