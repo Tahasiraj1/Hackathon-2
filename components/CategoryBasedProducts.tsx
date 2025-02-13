@@ -6,7 +6,6 @@ import { urlFor } from "@/sanity/lib/image";
 import { Image as SanityImage } from "@sanity/types";
 import Link from "next/link";
 import { useCart } from "@/lib/CartContext";
-import { WishItem } from "@/lib/CartContext";
 import { EyeIcon, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
@@ -33,15 +32,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-
-type Product = {
-  id: string;
-  name: string;
-  categories: string[];
-  price: number;
-  images: SanityImage[];
-  description: string;
-};
+import { handleAddItemToWishList } from "@/lib/AddToWishList";
+import { Product } from "@/Types/types";
 
 const CategoryBasedProducts = ({ products }: { products: Product[] }) => {
   const { toggleWishList, wishList } = useCart();
@@ -62,22 +54,6 @@ const CategoryBasedProducts = ({ products }: { products: Product[] }) => {
 
   const totalPages = Math.ceil(products.length / productsPerPage);
 
-  const handleAddItemToWishList = (
-    event: React.MouseEvent,
-    product: WishItem
-  ) => {
-    event.preventDefault(); // Prevent navigation
-    event.stopPropagation(); // Stop event from bubbling up to parent elements
-
-    if (!product?.id) return;
-
-    toggleWishList({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.image,
-    });
-  };
 
   const handleDialog = (event: React.MouseEvent, product: Product) => {
     event.preventDefault();
@@ -125,7 +101,7 @@ const CategoryBasedProducts = ({ products }: { products: Product[] }) => {
                                 name: product.name,
                                 price: product.price,
                                 image: product.images[0] as SanityImage,
-                              })
+                              }, toggleWishList)
                             }
                           >
                             <Heart

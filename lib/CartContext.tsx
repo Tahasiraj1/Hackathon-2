@@ -8,7 +8,7 @@ import {
   ReactNode,
 } from "react";
 import { toast } from "@/hooks/use-toast";
-import { CartItem, WishItem, Product } from "@/types/types";
+import { CartItem, WishItem, Product } from "@/Types/types";
 
 interface CartContextType {
   cart: CartItem[];

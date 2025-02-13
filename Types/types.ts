@@ -59,10 +59,14 @@ export interface WishItem {
 export interface Product {
   id: string;
   name: string;
+  quantity: number;
   price: number;
-  images: { asset: { url: string } }[];
+  images: SanityImage;
   ratings: string;
+  sizes: string[];
+  colors: string[];
   tags: string[];
+  categories: string[];
   description: string;
   variations: Variation[];
 }

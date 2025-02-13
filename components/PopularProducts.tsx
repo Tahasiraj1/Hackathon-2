@@ -15,7 +15,7 @@ import {
 import Autoplay from "embla-carousel-autoplay";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/lib/CartContext";
-import { WishItem } from "@/lib/CartContext";
+import { WishItem, Product } from "@/Types/types";
 import { Button } from "./ui/button";
 import { EyeIcon, Heart } from "lucide-react";
 import { containerVariants, itemVariants } from "@/lib/motion";
@@ -33,20 +33,8 @@ import {
   DialogTitle,
 } from "./ui/dialog";
 import { Ripple } from "./layout/Ripple";
+import { handleAddItemToWishList } from "@/lib/AddToWishList";
 
-interface Product {
-  id: string;
-  name: string;
-  quantity: number;
-  price: number;
-  images: SanityImage;
-  ratings: string;
-  sizes: string[];
-  colors: string[];
-  tags: string[];
-  categories: string[];
-  description: string;
-}
 
 const PopularProducts = ({ products }: { products: Product[] }) => {
   const { toggleWishList, wishList } = useCart();
@@ -69,23 +57,6 @@ const PopularProducts = ({ products }: { products: Product[] }) => {
   const plugin = React.useRef(
     Autoplay({ delay: 3000, stopOnInteraction: true })
   );
-
-  const handleAddItemToWishList = (
-    event: React.MouseEvent,
-    product: WishItem
-  ) => {
-    event.preventDefault(); // Prevent navigation
-    event.stopPropagation(); // Stop event from bubbling up to parent elements
-
-    if (!product?.id) return;
-
-    toggleWishList({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.image,
-    });
-  };
 
   return (
     <div className="flex flex-col w-full items-center justify-center bg-white text-black py-10 px-4 sm:px-6 lg:px-10 font-clashDisplay">
@@ -150,7 +121,7 @@ const PopularProducts = ({ products }: { products: Product[] }) => {
                                     name: p.name,
                                     price: p.price,
                                     image: p.images[0] as SanityImage,
-                                  })
+                                  }, toggleWishList)
                                 }
                               >
                                 <Heart

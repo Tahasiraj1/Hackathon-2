@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useCart } from "@/lib/CartContext";
-import { WishItem } from "@/lib/CartContext";
+import { WishItem, Product } from "@/Types/types";
 import { BarLoader } from "react-spinners";
 import { containerVariants, itemVariants } from "@/lib/motion";
 import { AnimatePresence, motion } from "framer-motion";
@@ -41,6 +41,8 @@ import {
   PaginationNext, 
   PaginationPrevious 
 } from "@/components/ui/pagination";
+import { handleAddItemToWishList } from "@/lib/AddToWishList";
+
 
 
 const productTypes = [
@@ -52,20 +54,6 @@ const productTypes = [
   "Active Wear",
   "Accessories",
 ];
-
-interface Product {
-  id: string;
-  name: string;
-  quantity: number;
-  price: number;
-  images: SanityImage;
-  ratings: string;
-  sizes: string[];
-  colors: string[];
-  tags: string[];
-  categories: string[];
-  description: string;
-}
 
 // Implement Tanstack Virtualization for improved performance...
 
@@ -85,22 +73,6 @@ const ProductListing = ({ products }: { products: Product[] }) => {
     setIsDialogOpen(true);
   };
 
-  const handleAddItemToWishList = (
-    event: React.MouseEvent,
-    product: WishItem
-  ) => {
-    event.preventDefault(); // Prevent navigation
-    event.stopPropagation(); // Stop event from bubbling up to parent elements
-
-    if (!product?.id) return;
-
-    toggleWishList({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.image,
-    });
-  };
 
   const toggleCategory = (category: string) => {
     setSelectedCategories((prev) =>
@@ -454,7 +426,7 @@ const ProductListing = ({ products }: { products: Product[] }) => {
                                       name: product.name,
                                       price: product.price,
                                       image: product.images[0] as SanityImage,
-                                    })
+                                    }, toggleWishList)
                                   }
                                 >
                                   <Heart
