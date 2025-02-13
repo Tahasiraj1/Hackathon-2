@@ -1,3 +1,4 @@
+import { Image as SanityImage } from "@sanity/types";
 
 export interface OrderItem {
   productId: string;
@@ -35,4 +36,33 @@ export interface ShippingLabel {
     png: string;
     zpl: string;
   };
+}
+
+export interface CartItem {
+  image: SanityImage;
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+  color: string;
+  size: string;
+  description: string;
+}
+
+export interface WishItem {
+    id: string;
+    name: string;
+    image: SanityImage;
+    price: number;
+}
+
+export interface Product {
+  id: string;
+  name: string;
+  price: number;
+  images: { asset: { url: string } }[];
+  ratings: string;
+  tags: string[];
+  description: string;
+  variations: Variation[];
 }

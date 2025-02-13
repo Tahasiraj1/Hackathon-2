@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import { CustomerDetails, OrderItem } from "@/types/order";
+import { CustomerDetails, OrderItem } from "@/types/types";
 
 
 // Email configuration

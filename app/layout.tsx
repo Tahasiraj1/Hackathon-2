@@ -8,7 +8,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { GoogleAnalytics } from '@next/third-parties/google'
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-// import ParallaxLayout from "@/components/layout/ParallaxEffect";
+import ParallaxLayout from "@/components/layout/ParallaxEffect";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -40,9 +40,9 @@ export default function RootLayout({
           <CartProvider>
               <NetworkStatus />
             <Header />
-            {/* <ParallaxLayout> */}
+            <ParallaxLayout>
               {children}
-            {/* </ParallaxLayout> */}
+            </ParallaxLayout>
             <Toaster />
             <Footer />
           </CartProvider>

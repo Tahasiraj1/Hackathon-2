@@ -23,7 +23,7 @@ async function fetchBestSellingProducts() {
 
   const data = await res.json();
 
-  console.log("Fetched Data:", data);
+  console.log("Fetched Best Selling Products Data:", data);
 
   return data.data;
 }
@@ -40,7 +40,7 @@ async function fetchPopularProducts() {
 
   const data = await res.json();
 
-  console.log("Fetched Data:", data);
+  console.log("Fetched Popular Products Data:", data);
 
   return data.data;
 }

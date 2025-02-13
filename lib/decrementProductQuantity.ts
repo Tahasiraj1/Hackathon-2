@@ -1,5 +1,5 @@
 import { client } from "@/sanity/lib/client";
-import { Variation } from "@/types/order";
+import { Variation } from "@/types/types";
 
 
 export async function decrementProductQuantity(

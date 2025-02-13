@@ -7,26 +7,8 @@ import {
   useEffect,
   ReactNode,
 } from "react";
-import { Image as SanityImage } from "@sanity/types";
 import { toast } from "@/hooks/use-toast";
-
-export interface CartItem {
-  image: SanityImage;
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-  color: string;
-  size: string;
-  description: string;
-}
-
-export interface WishItem {
-    id: string;
-    name: string;
-    image: SanityImage;
-    price: number;
-}
+import { CartItem, WishItem, Product } from "@/types/types";
 
 interface CartContextType {
   cart: CartItem[];
@@ -38,23 +20,6 @@ interface CartContextType {
   clearCart: () => void;
   incrementQuantity: (item: CartItem) => void;
   decrementQuantity: (item: CartItem) => void;
-}
-
-interface Variation {
-  color: string; // Color of the product (e.g., "Red", "Blue")
-  size: string; // Size of the product (e.g., "S", "M", "L")
-  quantity: number; // Available quantity for the specific color and size
-}
-
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  images: { asset: { url: string } }[];
-  ratings: string;
-  tags: string[];
-  description: string;
-  variations: Variation[];
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
