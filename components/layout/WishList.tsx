@@ -14,8 +14,8 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import { useCart } from "@/lib/CartContext";
-import { WishItem } from "@/lib/CartContext";
 import { urlFor } from "@/sanity/lib/image";
+import { WishItem } from "@/Types/types";
 
 const WishList = () => {
     const { wishList, removeFromWishlist } = useCart();
