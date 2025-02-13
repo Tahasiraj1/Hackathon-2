@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useCart } from "@/lib/CartContext";
-import { WishItem, Product } from "@/Types/types";
+import { Product } from "@/Types/types";
 import { BarLoader } from "react-spinners";
 import { containerVariants, itemVariants } from "@/lib/motion";
 import { AnimatePresence, motion } from "framer-motion";

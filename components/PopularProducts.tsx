@@ -15,7 +15,7 @@ import {
 import Autoplay from "embla-carousel-autoplay";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/lib/CartContext";
-import { WishItem, Product } from "@/Types/types";
+import { Product } from "@/Types/types";
 import { Button } from "./ui/button";
 import { EyeIcon, Heart } from "lucide-react";
 import { containerVariants, itemVariants } from "@/lib/motion";
