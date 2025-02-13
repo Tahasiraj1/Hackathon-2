@@ -5,7 +5,7 @@ import { auth } from "@clerk/nextjs/server";
 import { rollbackOrder } from "@/lib/orderRollback";
 import { decrementProductQuantity } from "@/lib/decrementProductQuantity";
 import { sendOrderConfirmationEmail } from "@/lib/orderConfirmationEmail";
-import { OrderItem, Variation } from "@/types/types";
+import { OrderItem, Variation } from "@/Types/types";
 
 
 export async function POST(request: Request) {
