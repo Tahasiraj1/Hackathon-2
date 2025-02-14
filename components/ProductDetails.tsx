@@ -163,6 +163,7 @@ const ProductDetails = ({ productId }: { productId: string }) => {
               .map((color) => (
                 <li key={color}>
                   <Button
+                    variant="outline"
                     className={`rounded-none text-black ${
                       selectedColor === color
                         ? "bg-gray-300 hover:bg-gray-300"
@@ -193,6 +194,7 @@ const ProductDetails = ({ productId }: { productId: string }) => {
                     .map((variation) => (
                       <li key={variation.size}>
                         <Button
+                          variant="outline"
                           className={`rounded-none text-black ${
                             selectedSize === variation.size
                               ? "bg-gray-300 hover:bg-gray-300"
