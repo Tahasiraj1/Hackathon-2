@@ -88,48 +88,55 @@ export async function POST(request: Request) {
     }
 
     // Start a transaction
-    const [order, updateResults] = await prisma.$transaction(
-      async (prismaClient) => {
-        // Create the order
-        const newOrder = await prismaClient.order.create({
-          data: {
-            clerkId: userId,
-            customerDetails: {
-              create: customerDetails,
-            },
-            items: {
-              create: items.map((item: OrderItem) => ({
-                productId: item.productId,
-                name: item.name,
-                quantity: item.quantity,
-                price: Number.parseFloat(item.price.toString()),
-                color: item.color,
-                size: item.size,
-              })),
-            },
-            totalAmount,
-            status: "pending",
+    const [order, updateResults] = await prisma.$transaction(async (prismaClient) => {
+      // Create or connect customer details
+      const customer = await prismaClient.customerDetails.upsert({
+        where: { email: customerDetails.email },
+        update: customerDetails,
+        create: customerDetails,
+      });
+    
+      // Create the order
+      const newOrder = await prismaClient.order.create({
+        data: {
+          clerkId: userId,
+          customerDetails: {
+            connect: { id: customer.id },
           },
-          include: {
-            customerDetails: true,
-            items: true,
+          items: {
+            create: items.map((item: OrderItem) => ({
+              productId: item.productId,
+              name: item.name,
+              quantity: item.quantity,
+              price: Number.parseFloat(item.price.toString()),
+              color: item.color,
+              size: item.size,
+            })),
           },
-        });
-        // Update product quantities in Sanity
-        const results = await Promise.allSettled(
-          items.map((item) =>
-            decrementProductQuantity(
-              item.productId,
-              item.color!,
-              item.size!,
-              item.quantity
-            )
+          totalAmount,
+          status: "pending",
+        },
+        include: {
+          customerDetails: true,
+          items: true,
+        },
+      });
+    
+      // Update product quantities in Sanity
+      const results = await Promise.allSettled(
+        items.map((item) =>
+          decrementProductQuantity(
+            item.productId,
+            item.color!,
+            item.size!,
+            item.quantity
           )
-        );
-
-        return [newOrder, results];
-      }
-    );
+        )
+      );
+    
+      return [newOrder, results];
+    });
+    
 
     // Check for any failed updates
     const failedUpdates = updateResults.filter(
