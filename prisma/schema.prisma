@@ -21,6 +21,7 @@ model Order {
 
 model CustomerDetails {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  clerkId     String  
   firstName   String
   lastName    String
   phoneNumber String
@@ -34,6 +35,7 @@ model CustomerDetails {
 
 model OrderItem {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  clerkId   String
   productId String   // Add this field to reference Sanity product ID
   name      String
   price     Float

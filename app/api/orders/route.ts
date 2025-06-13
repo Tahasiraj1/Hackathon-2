@@ -92,8 +92,14 @@ export async function POST(request: Request) {
       // Create or connect customer details
       const customer = await prismaClient.customerDetails.upsert({
         where: { email: customerDetails.email },
-        update: customerDetails,
-        create: customerDetails,
+        update: {
+          ...customerDetails,
+          clerkId: userId,
+        },
+        create: {
+          ...customerDetails,
+          clerkId: userId,
+        },
       });
     
       // Create the order
@@ -106,6 +112,7 @@ export async function POST(request: Request) {
           items: {
             create: items.map((item: OrderItem) => ({
               productId: item.productId,
+              clerkId: userId,
               name: item.name,
               quantity: item.quantity,
               price: Number.parseFloat(item.price.toString()),
