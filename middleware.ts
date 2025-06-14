@@ -19,6 +19,11 @@ export default clerkMiddleware(async (auth, req) => {
     return NextResponse.next(); // Allow the request
   }
 
+  // Allow POST requests to /api/chat for unauthenticated users
+  if ((req.method === 'POST') && req.nextUrl.pathname === '/api/chat') {
+    return NextResponse.next();
+  }
+
   if (req.method === 'GET' && req.nextUrl.pathname === '/my-orders') {
     if (userId) {
       return NextResponse.next();

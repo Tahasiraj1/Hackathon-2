@@ -4,6 +4,7 @@ import BestSelling from "@/components/BestSelling";
 import PopularProducts from "@/components/PopularProducts";
 import Category from "@/components/Category";
 import { BarLoader } from "react-spinners";
+import Chat from "@/components/ChatPopup";
 
 const WhatMakesUsDiff = React.lazy(
   () => import("@/components/WhatMakesUsDiff")
@@ -51,6 +52,7 @@ export default async function Home() {
 
   return (
     <>
+      <Chat />
       <Hero />
       <WhatMakesUsDiff />
       <Category />
