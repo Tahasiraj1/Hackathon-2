@@ -93,7 +93,7 @@ export default function ChatPopup() {
                 <DialogTitle className="text-lg font-semibold">
                   Customer Support
                 </DialogTitle>
-                <p className="text-sm text-white/80">We're here to help!</p>
+                <p className="text-sm text-white/80">We&apos;re here to help!</p>
               </div>
             </div>
           </DialogHeader>
