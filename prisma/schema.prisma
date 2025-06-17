@@ -10,7 +10,6 @@ datasource db {
 model Order {
   id               String           @id @default(auto()) @map("_id") @db.ObjectId
   clerkId          String   
-  paymentIntentId  String
   customerDetails  CustomerDetails  @relation(fields: [customerDetailsId], references: [id])
   customerDetailsId String           @db.ObjectId
   items            OrderItem[]
