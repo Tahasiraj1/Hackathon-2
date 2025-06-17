@@ -26,7 +26,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const { customerDetails, items, totalAmount } = body;
+    const { paymentIntentId, customerDetails, items, totalAmount } = body;
 
     if (
       !customerDetails ||
@@ -106,6 +106,7 @@ export async function POST(request: Request) {
       const newOrder = await prismaClient.order.create({
         data: {
           clerkId: userId,
+          paymentIntentId: paymentIntentId,
           customerDetails: {
             connect: { id: customer.id },
           },

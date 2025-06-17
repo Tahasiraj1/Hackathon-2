@@ -143,6 +143,7 @@ export default function CheckoutForm() {
           },
           body: JSON.stringify({
             ...orderData,
+            paymentIntentId: paymentIntent.id,
           }),
         })
 
