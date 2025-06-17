@@ -151,27 +151,27 @@ export default function CheckoutForm() {
           throw new Error(errorData.error || errorData.details || "Failed to place order")
         }
 
-        const shippingresponse = await fetch("/api/shipping", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            customerDetails: {
-              firstName: "John",
-              lastName: "Doe",
-              phoneNumber: "+1 415-555-5678",
-              houseNo: "567 Maple St",
-              city: "San Francisco",
-              state: "CA",
-              postalCode: "94107",
-              country: "US",
-            },
-          }),
-        })
+        // const shippingresponse = await fetch("/api/shipping", {
+        //   method: "POST",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+        //   body: JSON.stringify({
+        //     customerDetails: {
+        //       firstName: "John",
+        //       lastName: "Doe",
+        //       phoneNumber: "+1 415-555-5678",
+        //       houseNo: "567 Maple St",
+        //       city: "San Francisco",
+        //       state: "CA",
+        //       postalCode: "94107",
+        //       country: "US",
+        //     },
+        //   }),
+        // })
 
-        const data = await shippingresponse.json()
-        setLabel(data);
+        // const data = await shippingresponse.json()
+        // setLabel(data);
 
         toast({
           title: "✔️ Order placed successfully!",
