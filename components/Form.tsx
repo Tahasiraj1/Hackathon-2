@@ -46,7 +46,7 @@ export default function CheckoutForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [clientSecret, setClientSecret] = useState("");
-  const [label, setLabel] = useState<ShippingLabel | null>(null);
+  // const [label, setLabel] = useState<ShippingLabel | null>(null);
   // const router = useRouter();
   const { cart } = useCart();
   const stripe = useStripe();
@@ -364,7 +364,7 @@ export default function CheckoutForm() {
           <span className="block sm:inline"> {errorMessage}</span>
         </div>
       )}
-      {label && (
+      {/* {label && (
         <div className="mt-4">
           <h3 className="text-xl font-semibold">Label Created</h3>
           <p>Tracking Number: {label.tracking_number}</p>
@@ -376,7 +376,7 @@ export default function CheckoutForm() {
             <li><a href={label.label_download.zpl} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">ZPL</a></li>
           </ul>
         </div>
-      )}
+      )} */}
     </div>
   );
 }
